@@ -70,7 +70,6 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'email_verified' => false,
-            'otp' => $otp, // For development/testing only
             'message' => 'Registration successful. Please verify your email with the OTP sent.',
         ], 201);
     }
@@ -105,7 +104,6 @@ class AuthController extends Controller
                 'user' => $user,
                 'token' => $token,
                 'email_verified' => false,
-                'otp' => $otp, // For development/testing only
                 'message' => 'Email not verified. A new OTP has been sent.',
             ], 200);
         }
@@ -244,7 +242,6 @@ class AuthController extends Controller
 
         return response([
             'message' => 'A new verification code has been sent to your email.',
-            'otp' => $otp, // For development/testing only
         ], 200);
     }
 
@@ -274,6 +271,7 @@ class AuthController extends Controller
         if (!$user) {
             return response([
                 'message' => 'We could not find a user with that email address.',
+                'status' => 'error'
             ], 404);
         }
 
@@ -289,11 +287,17 @@ class AuthController extends Controller
             ]
         );
 
-        // In production, we would send this code via email.
-        // For development/testing convenience, we return it directly in the response.
+        // Send OTP via mail
+        try {
+            \Illuminate\Support\Facades\Mail::raw("Your HomiQ password reset verification code is: {$code}. This code is valid for 15 minutes.", function ($message) use ($fields) {
+                $message->to($fields['email'])->subject("HomiQ - Password Reset OTP");
+            });
+        } catch (\Exception $e) {
+            Log::error("Failed to send password reset OTP email to {$fields['email']}: " . $e->getMessage());
+        }
+
         return response([
-            'message' => 'Password reset code has been generated.',
-            'code' => $code,
+            'message' => 'Password reset code has been sent to your email.',
         ], 200);
     }
 

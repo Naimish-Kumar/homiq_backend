@@ -17,6 +17,7 @@ Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::post('/social-login', [AuthController::class, 'socialLogin']);
+Route::post('/subscription/revenuecat-webhook', [\App\Http\Controllers\Api\RevenueCatWebhookController::class, 'handleWebhook']);
 
 // Public Property browse routes
 Route::get('/properties', [PropertyController::class, 'index']);

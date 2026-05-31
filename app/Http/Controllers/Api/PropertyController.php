@@ -221,6 +221,43 @@ class PropertyController extends Controller
             'status' => 'string|in:pending,approved,rejected'
         ]);
 
+        $imageUrls = [];
+        $hasNewImages = false;
+
+        // Process file uploads
+        if ($request->hasFile('images')) {
+            $hasNewImages = true;
+            $files = $request->file('images');
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('uploads/properties'), $fileName);
+                    $imageUrls[] = asset('uploads/properties/' . $fileName);
+                }
+            } else {
+                $fileName = time() . '_' . uniqid() . '.' . $files->getClientOriginalExtension();
+                $files->move(public_path('uploads/properties'), $fileName);
+                $imageUrls[] = asset('uploads/properties/' . $fileName);
+            }
+        }
+
+        // Process existing image URLs
+        if ($request->has('images')) {
+            $hasNewImages = true;
+            $inputImages = $request->input('images');
+            if (is_array($inputImages)) {
+                foreach ($inputImages as $img) {
+                    if (is_string($img) && !empty($img)) {
+                        $imageUrls[] = $img;
+                    }
+                }
+            }
+        }
+
+        if ($hasNewImages) {
+            $fields['images'] = $imageUrls;
+        }
+
         $property->update($fields);
 
         return response($property->load('owner'), 200);
