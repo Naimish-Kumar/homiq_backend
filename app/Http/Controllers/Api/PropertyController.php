@@ -80,6 +80,7 @@ class PropertyController extends Controller
             'longitude' => 'nullable|numeric',
             'amenities' => 'nullable|array',
             'images' => 'nullable|array',
+            'existing_images' => 'nullable|array',
             'category' => 'required|string|max:255',
             'bedrooms' => 'required|integer|min:0',
             'bathrooms' => 'required|integer|min:0',
@@ -133,7 +134,18 @@ class PropertyController extends Controller
                 }
             }
         }
+        if ($request->has('existing_images')) {
+            $existing = $request->input('existing_images');
+            if (is_array($existing)) {
+                foreach ($existing as $img) {
+                    if (is_string($img) && !empty($img)) {
+                        $imageUrls[] = $img;
+                    }
+                }
+            }
+        }
         $fields['images'] = $imageUrls;
+        unset($fields['existing_images']);
 
         // Create property listing as pending approval by default
         $property = Property::create(array_merge($fields, [
@@ -212,6 +224,7 @@ class PropertyController extends Controller
             'longitude' => 'nullable|numeric',
             'amenities' => 'nullable|array',
             'images' => 'nullable|array',
+            'existing_images' => 'nullable|array',
             'category' => 'string|max:255',
             'bedrooms' => 'integer|min:0',
             'bathrooms' => 'integer|min:0',
@@ -242,14 +255,20 @@ class PropertyController extends Controller
         }
 
         // Process existing image URLs
-        if ($request->has('images')) {
+        if ($request->has('images') || $request->has('existing_images')) {
             $hasNewImages = true;
-            $inputImages = $request->input('images');
-            if (is_array($inputImages)) {
-                foreach ($inputImages as $img) {
-                    if (is_string($img) && !empty($img)) {
-                        $imageUrls[] = $img;
-                    }
+            
+            $inputImages = [];
+            if ($request->has('images')) {
+                $inputImages = array_merge($inputImages, (array)$request->input('images'));
+            }
+            if ($request->has('existing_images')) {
+                $inputImages = array_merge($inputImages, (array)$request->input('existing_images'));
+            }
+
+            foreach ($inputImages as $img) {
+                if (is_string($img) && !empty($img)) {
+                    $imageUrls[] = $img;
                 }
             }
         }
@@ -257,6 +276,8 @@ class PropertyController extends Controller
         if ($hasNewImages) {
             $fields['images'] = $imageUrls;
         }
+
+        unset($fields['existing_images']);
 
         $property->update($fields);
 

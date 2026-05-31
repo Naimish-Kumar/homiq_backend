@@ -31,16 +31,16 @@ class WebHomeController extends Controller
         }
 
         $properties = $query->latest()->get();
-        $categories = [
-            ['name' => 'Apartment', 'image' => 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'House', 'image' => 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Villa', 'image' => 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Studio', 'image' => 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'PG', 'image' => 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Room', 'image' => 'https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Shop', 'image' => 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Hall', 'image' => 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=350&q=80'],
-        ];
+        $categories = \App\Models\Category::all()->map(function ($cat) {
+            $image = $cat->image;
+            if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
+                $image = asset($image);
+            }
+            return [
+                'name' => $cat->name,
+                'image' => $image ?? 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=350&q=80',
+            ];
+        })->toArray();
 
         return view('home', compact('properties', 'categories', 'search'));
     }
@@ -56,16 +56,16 @@ class WebHomeController extends Controller
             ->latest()
             ->get();
 
-        $categories = [
-            ['name' => 'Apartment', 'image' => 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'House', 'image' => 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Villa', 'image' => 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Studio', 'image' => 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'PG', 'image' => 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Room', 'image' => 'https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Shop', 'image' => 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=350&q=80'],
-            ['name' => 'Hall', 'image' => 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=350&q=80'],
-        ];
+        $categories = \App\Models\Category::all()->map(function ($cat) {
+            $image = $cat->image;
+            if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
+                $image = asset($image);
+            }
+            return [
+                'name' => $cat->name,
+                'image' => $image ?? 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=350&q=80',
+            ];
+        })->toArray();
 
         return view('category', compact('properties', 'name', 'categories'));
     }

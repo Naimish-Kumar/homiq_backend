@@ -47,7 +47,10 @@ class CustomerDashboardController extends Controller
             $limit = 999999;
         }
 
-        return view('dashboard', compact('bookings', 'myListings', 'bookingRequests', 'currentListingsCount', 'limit'));
+        $categories = \App\Models\Category::all();
+        $amenities = \App\Models\Amenity::all();
+
+        return view('dashboard', compact('bookings', 'myListings', 'bookingRequests', 'currentListingsCount', 'limit', 'categories', 'amenities'));
     }
 
     /**
@@ -78,14 +81,40 @@ class CustomerDashboardController extends Controller
             'category' => 'required|string',
             'bedrooms' => 'required|integer|min:0',
             'bathrooms' => 'required|integer|min:0',
+            'is_furnished' => 'boolean',
+            'has_parking' => 'boolean',
+            'is_pet_friendly' => 'boolean',
+            'amenities' => 'nullable|array',
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
 
-        Property::create(array_merge($fields, [
+        $imageUrls = [];
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+            foreach ($files as $file) {
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/properties'), $fileName);
+                $imageUrls[] = asset('uploads/properties/' . $fileName);
+            }
+        }
+
+        Property::create([
             'owner_id' => $user->id,
+            'title' => $fields['title'],
+            'description' => $fields['description'],
+            'price' => $fields['price'],
+            'address' => $fields['address'],
+            'category' => $fields['category'],
+            'bedrooms' => $fields['bedrooms'],
+            'bathrooms' => $fields['bathrooms'],
+            'is_furnished' => $request->boolean('is_furnished'),
+            'has_parking' => $request->boolean('has_parking'),
+            'is_pet_friendly' => $request->boolean('is_pet_friendly'),
+            'amenities' => $fields['amenities'] ?? [],
+            'images' => $imageUrls,
             'status' => 'approved', // Auto-approve for demo convenience
-            'amenities' => ['WiFi', 'AC', 'Parking'],
-            'images' => ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'],
-        ]));
+        ]);
 
         return back()->with('success', 'Your property space has been successfully listed!');
     }

@@ -260,7 +260,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
                     </div>
-                    <form action="/dashboard/listings" method="POST" class="space-y-4">
+                    <form action="/dashboard/listings" method="POST" enctype="multipart/form-data" class="space-y-4">
                         @csrf
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Property Title</label>
@@ -290,12 +290,9 @@
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Category</label>
                                 <select name="category" required
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
-                                    <option value="Apartment">Apartment</option>
-                                    <option value="House">House</option>
-                                    <option value="Villa">Villa</option>
-                                    <option value="Studio">Studio</option>
-                                    <option value="Shop">Shop</option>
-                                    <option value="Hall">Hall</option>
+                                    @foreach ($categories as $cat)
+                                        <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -311,6 +308,45 @@
                                 <input type="number" name="bathrooms" required min="0" value="1"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                             </div>
+                        </div>
+
+                        <!-- Key Options -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Key Specifications</label>
+                            <div class="grid grid-cols-3 gap-4">
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                    <input type="checkbox" name="is_furnished" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                    Furnished
+                                </label>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                    <input type="checkbox" name="has_parking" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                    Parking
+                                </label>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                    <input type="checkbox" name="is_pet_friendly" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                    Allows Pets
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Amenities checkboxes -->
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Included Amenities</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-xl border border-slate-100">
+                                @foreach ($amenities as $am)
+                                    <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer hover:text-slate-800">
+                                        <input type="checkbox" name="amenities[]" value="{{ $am->name }}" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                        {{ $am->name }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Upload Space Photos (Multiple Files) -->
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Upload Photos (Select Multiple)</label>
+                            <input type="file" name="images[]" multiple required accept="image/*"
+                                class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                         </div>
 
                         <button type="submit" class="w-full py-3.5 bg-steelAzure hover:bg-steelAzure/95 text-white font-bold rounded-xl shadow-md transition duration-150 text-xs">
