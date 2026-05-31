@@ -87,6 +87,57 @@
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
     }
+
+    /* Category Limit CSS */
+    .category-btn-wrapper:nth-child(n+5) {
+        display: none;
+    }
+    .categories-expanded .category-btn-wrapper:nth-child(n+5) {
+        display: flex;
+    }
+    @media (min-width: 640px) {
+        .category-btn-wrapper:nth-child(n+5) {
+            display: flex;
+        }
+        .category-btn-wrapper:nth-child(n+7) {
+            display: none;
+        }
+        .categories-expanded .category-btn-wrapper:nth-child(n+7) {
+            display: flex;
+        }
+    }
+    @media (min-width: 1024px) {
+        .category-btn-wrapper:nth-child(n+7) {
+            display: flex;
+        }
+        .category-btn-wrapper:nth-child(n+13) {
+            display: none;
+        }
+        .categories-expanded .category-btn-wrapper:nth-child(n+13) {
+            display: flex;
+        }
+    }
+    .view-more-btn-wrapper {
+        display: none;
+    }
+    @media (max-width: 639px) {
+        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+5)) .view-more-btn-wrapper {
+            display: flex;
+        }
+    }
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+7)) .view-more-btn-wrapper {
+            display: flex;
+        }
+    }
+    @media (min-width: 1024px) {
+        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+13)) .view-more-btn-wrapper {
+            display: flex;
+        }
+    }
+    .categories-expanded + .view-more-btn-wrapper {
+        display: none !important;
+    }
 </style>
 
 <!-- Search Bar Section -->
@@ -106,21 +157,30 @@
 </section>
 
 <!-- Section 3: Interactive Category cards with Big Icons -->
-<section class="max-w-7xl mx-auto px-6 py-16 scroll-reveal">
+<section class="max-w-7xl mx-auto px-6 py-16 scroll-reveal categories-container-wrapper">
     <div class="mb-10 text-center md:text-left">
         <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Browse Spaces by Category</h2>
         <p class="text-sm text-slate-400 mt-1">Select a category to view all properties of that type</p>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+    <div id="categories-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
         @foreach ($categories as $cat)
-            <a href="/category/{{ $cat['name'] }}" 
-               class="category-btn group bg-white border border-slate-100 rounded-xl p-6 text-center flex flex-col items-center justify-center gap-4 hover:shadow-[0_25px_50px_rgba(26,68,124,0.08)]">
-                <div class="icon-wrapper h-24 w-24 rounded-full overflow-hidden border-2 border-slate-100 group-hover:border-steelAzure/50 transition-all duration-300">
-                    <img src="{{ $cat['image'] }}" alt="{{ $cat['name'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                </div>
-                <span class="text-xs font-extrabold text-slate-800 tracking-wider uppercase transition group-hover:text-steelAzure">{{ $cat['name'] }}</span>
-            </a>
+            <div class="category-btn-wrapper flex">
+                <a href="/category/{{ $cat['name'] }}" 
+                   class="category-btn w-full group bg-white border border-slate-100 rounded-xl p-6 text-center flex flex-col items-center justify-center gap-4 hover:shadow-[0_25px_50px_rgba(26,68,124,0.08)]">
+                    <div class="icon-wrapper h-24 w-24 rounded-full overflow-hidden border-2 border-slate-100 group-hover:border-steelAzure/50 transition-all duration-300">
+                        <img src="{{ $cat['image'] }}" alt="{{ $cat['name'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                    <span class="text-xs font-extrabold text-slate-800 tracking-wider uppercase transition group-hover:text-steelAzure">{{ $cat['name'] }}</span>
+                </a>
+            </div>
         @endforeach
+    </div>
+    <div class="view-more-btn-wrapper justify-center mt-8">
+        <button onclick="document.getElementById('categories-grid').classList.add('categories-expanded')" 
+                class="px-6 py-3 bg-white border border-slate-200 hover:border-steelAzure hover:text-steelAzure text-slate-600 font-bold rounded-xl text-xs shadow-sm transition duration-150 flex items-center gap-2">
+            View More Categories
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+        </button>
     </div>
 </section>
 

@@ -344,9 +344,10 @@
 
                         <!-- Upload Space Photos (Multiple Files) -->
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Upload Photos (Select Multiple)</label>
-                            <input type="file" name="images[]" multiple required accept="image/*"
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Upload Photos (Select Multiple, Max 5)</label>
+                            <input type="file" name="images[]" multiple required accept="image/*" onchange="validateImagesCount(this)"
                                 class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            <p id="image-error" class="text-rose-600 text-[10px] font-bold mt-1.5 hidden">You can upload a maximum of 5 images.</p>
                         </div>
 
                         <button type="submit" class="w-full py-3.5 bg-steelAzure hover:bg-steelAzure/95 text-white font-bold rounded-xl shadow-md transition duration-150 text-xs">
@@ -552,6 +553,17 @@
     function toggleAddSpaceForm() {
         const el = document.getElementById('add-space-form-wrapper');
         if (el) el.classList.toggle('hidden');
+    }
+
+    // Validate maximum 5 images selection
+    function validateImagesCount(input) {
+        const errorEl = document.getElementById('image-error');
+        if (input.files.length > 5) {
+            if (errorEl) errorEl.classList.remove('hidden');
+            input.value = ''; // Reset selection
+        } else {
+            if (errorEl) errorEl.classList.add('hidden');
+        }
     }
 
     // Restore last active tab on page load

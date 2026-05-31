@@ -85,7 +85,7 @@ class CustomerDashboardController extends Controller
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
             'amenities' => 'nullable|array',
-            'images' => 'required|array',
+            'images' => 'required|array|max:5',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
 
