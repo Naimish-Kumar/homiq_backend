@@ -625,4 +625,31 @@
     </div>
 </section>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const storedLat = localStorage.getItem('user_latitude');
+        const storedLng = localStorage.getItem('user_longitude');
+
+        if (!urlParams.has('latitude') && !urlParams.has('longitude')) {
+            if (storedLat && storedLng) {
+                urlParams.set('latitude', storedLat);
+                urlParams.set('longitude', storedLng);
+                window.location.search = urlParams.toString();
+            } else if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    localStorage.setItem('user_latitude', lat);
+                    localStorage.setItem('user_longitude', lng);
+                    urlParams.set('latitude', lat);
+                    urlParams.set('longitude', lng);
+                    window.location.search = urlParams.toString();
+                }, (error) => {
+                    console.log('Location access denied:', error);
+                });
+            }
+        }
+    });
+</script>
 @endsection

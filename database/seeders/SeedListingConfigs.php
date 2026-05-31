@@ -11,6 +11,14 @@ class SeedListingConfigs extends Seeder
     {
         $configs = [
             [
+                'key' => 'google_maps_api_key',
+                'value' => 'AIzaSyDummyKey_PleaseReplaceThisInAdminConfig',
+                'type' => 'text',
+                'group' => 'general',
+                'label' => 'Google Maps API Key',
+                'description' => 'Google Maps API key used for geocoding, reverse geocoding, and locating properties on both app and website.',
+            ],
+            [
                 'key' => 'listing_categories',
                 'value' => 'Apartment,House,Villa,Studio,PG,Room,Shop,Hall',
                 'type' => 'text',

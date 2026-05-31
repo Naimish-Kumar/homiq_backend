@@ -20,6 +20,8 @@ class WebHomeController extends Controller
     public function index(Request $request)
     {
         $search = $request->query('search');
+        $lat = $request->query('latitude');
+        $lng = $request->query('longitude');
 
         $query = Property::with('owner')->where('status', 'approved');
 
@@ -30,7 +32,14 @@ class WebHomeController extends Controller
             });
         }
 
-        $properties = $query->latest()->get();
+        if ($lat && $lng) {
+            $query->selectRaw("*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance", [$lat, $lng, $lat])
+                  ->orderBy('distance');
+        } else {
+            $query->latest();
+        }
+
+        $properties = $query->get();
         $categories = \App\Models\Category::all()->map(function ($cat) {
             $image = $cat->image;
             if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {

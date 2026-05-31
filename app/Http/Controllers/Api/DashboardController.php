@@ -48,11 +48,16 @@ class DashboardController extends Controller
 
         // ── Curated Home Sections ──────────────────────────────
         // Top Flats Nearby You
-        $topFlats = $baseQuery()
-            ->where('category', 'Apartment')
-            ->latest()
-            ->take(8)
-            ->get();
+        $topFlatsQuery = $baseQuery()->where('category', 'Apartment');
+        if ($request->has(['latitude', 'longitude'])) {
+            $lat = $request->latitude;
+            $lng = $request->longitude;
+            $topFlatsQuery->selectRaw("*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance", [$lat, $lng, $lat])
+                          ->orderBy('distance');
+        } else {
+            $topFlatsQuery->latest();
+        }
+        $topFlats = $topFlatsQuery->take(8)->get();
 
         // Best PG for Girls
         $bestPg = $baseQuery()

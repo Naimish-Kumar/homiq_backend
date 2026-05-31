@@ -9,7 +9,19 @@ class PropertySeeder extends Seeder
 {
     public function run(): void
     {
-        $ownerIds = [1, 3, 4];
+        $ownerIds = \App\Models\User::pluck('id')->toArray();
+        if (empty($ownerIds)) {
+            $user = \App\Models\User::create([
+                'name' => 'Default Owner',
+                'email' => 'owner@homiq.com',
+                'password' => bcrypt('password123'),
+                'phone' => '1234567890',
+                'subscription_plan' => 'unlimited',
+                'is_admin' => false,
+                'email_verified_at' => now(),
+            ]);
+            $ownerIds = [$user->id];
+        }
 
         $properties = [
             // ── Apartment (5) ─────────────────────────────────────
@@ -434,7 +446,58 @@ class PropertySeeder extends Seeder
             ],
         ];
 
-        foreach ($properties as $index => $property) {
+        // Ensure 10 properties of each category (retrieved dynamically from the database/API)
+        $categoriesList = \App\Models\Category::pluck('name')->toArray();
+        if (empty($categoriesList)) {
+            $categoriesList = ['Apartment', 'House', 'Villa', 'Studio', 'PG', 'Room', 'Shop', 'Hall'];
+        }
+
+        $byCategory = [];
+        foreach ($properties as $p) {
+            $byCategory[$p['category']][] = $p;
+        }
+
+        $finalProperties = [];
+        foreach ($categoriesList as $cat) {
+            $existing = $byCategory[$cat] ?? [];
+            $count = count($existing);
+            
+            // Add existing first
+            foreach ($existing as $p) {
+                $finalProperties[] = $p;
+            }
+
+            // Fill up to 10
+            for ($i = $count; $i < 10; $i++) {
+                if ($count > 0) {
+                    $base = $existing[$i % $count];
+                    $newProperty = $base;
+                    $newProperty['title'] = $base['title'] . " - Option " . ($i - $count + 2);
+                    $newProperty['address'] = $base['address'] . " (Suite " . ($i - $count + 2) . ")";
+                    $newProperty['price'] = $base['price'] + ($i * 45);
+                } else {
+                    $newProperty = [
+                        'title' => "Premium $cat Space (Unit " . ($i + 1) . ")",
+                        'description' => "Excellent high quality $cat located in prime location with all modern amenities.",
+                        'price' => 1500 + ($i * 120),
+                        'address' => "Street " . ($i + 1) . ", Prime Zone, HomiQ Town (Suite " . ($i + 1) . ")",
+                        'latitude' => 28.6 + (0.01 * $i),
+                        'longitude' => 77.2 + (0.01 * $i),
+                        'category' => $cat,
+                        'bedrooms' => in_array($cat, ['Shop', 'Hall']) ? 0 : 2,
+                        'bathrooms' => 2,
+                        'is_furnished' => true,
+                        'has_parking' => true,
+                        'is_pet_friendly' => false,
+                        'amenities' => ['WiFi', 'AC', 'Parking'],
+                        'images' => ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'],
+                    ];
+                }
+                $finalProperties[] = $newProperty;
+            }
+        }
+
+        foreach ($finalProperties as $index => $property) {
             $ownerId = $ownerIds[$index % count($ownerIds)];
             Property::create(array_merge($property, [
                 'owner_id' => $ownerId,

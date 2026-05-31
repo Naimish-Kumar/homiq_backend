@@ -274,10 +274,30 @@
                                 class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs"></textarea>
                         </div>
 
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Address</label>
-                            <input type="text" name="address" required placeholder="Street address, city"
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase">Address</label>
+                                <button type="button" onclick="fetchCurrentLocationWeb()" class="flex items-center gap-1 text-[10px] font-extrabold text-steelAzure hover:text-steelAzure/80 transition bg-transparent border-0 p-0 cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    Fetch Current Location
+                                </button>
+                            </div>
+                            <input type="text" name="address" id="listing-address" required placeholder="Street address, city"
                                 class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            <span id="loc-loading" class="text-[10px] font-bold text-slate-450 hidden animate-pulse">Locating & Resolving Address...</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Latitude</label>
+                                <input type="number" step="any" name="latitude" id="listing-latitude" required placeholder="e.g. 28.6273"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Longitude</label>
+                                <input type="number" step="any" name="longitude" id="listing-longitude" required placeholder="e.g. 77.3714"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -563,6 +583,43 @@
             input.value = ''; // Reset selection
         } else {
             if (errorEl) errorEl.classList.add('hidden');
+        }
+    }
+
+    // Fetch browser location and reverse geocode
+    function fetchCurrentLocationWeb() {
+        const addressInput = document.getElementById('listing-address');
+        const latInput = document.getElementById('listing-latitude');
+        const lngInput = document.getElementById('listing-longitude');
+        const loadingSpan = document.getElementById('loc-loading');
+
+        if (navigator.geolocation) {
+            loadingSpan.classList.remove('hidden');
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                latInput.value = lat;
+                lngInput.value = lng;
+
+                // Reverse geocode via OpenStreetMap Nominatim
+                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                    .then(response => response.json())
+                    .then(data => {
+                        loadingSpan.classList.add('hidden');
+                        if (data && data.display_name) {
+                            addressInput.value = data.display_name;
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error resolving address:', err);
+                        loadingSpan.classList.add('hidden');
+                    });
+            }, (error) => {
+                alert('Failed to access location: ' + error.message);
+                loadingSpan.classList.add('hidden');
+            });
+        } else {
+            alert('Geolocation not supported by this browser.');
         }
     }
 
