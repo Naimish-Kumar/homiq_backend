@@ -113,36 +113,20 @@
 
         <!-- Custom CSS bar chart matching reference layout style -->
         <div class="flex items-end justify-between h-36 px-4">
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-slate-100 rounded-full h-24 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 3px, #e2e8f0 3px, #e2e8f0 6px)"></div>
-                <span class="text-[10px] font-bold text-slate-400">S</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-[#1e483b] rounded-full h-28"></div>
-                <span class="text-[10px] font-bold text-slate-400">M</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-emerald-400 rounded-full h-16 relative">
-                    <span class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white font-extrabold text-[8px] px-1.5 py-0.5 rounded-sm">74%</span>
+            @foreach ($listingVolume as $vol)
+                <div class="flex flex-col items-center gap-2">
+                    @if ($vol['count'] == 0)
+                        <div class="w-7 bg-slate-100 rounded-full h-4 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 3px, #e2e8f0 3px, #e2e8f0 6px)" title="0 listings"></div>
+                    @else
+                        <div class="w-7 rounded-full relative {{ $vol['is_max'] ? 'bg-[#1e483b]' : 'bg-emerald-400' }}" style="height: {{ $vol['height'] }}px;" title="{{ $vol['count'] }} listings">
+                            @if ($vol['is_max'])
+                                <span class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white font-extrabold text-[8px] px-1.5 py-0.5 rounded-sm">{{ $vol['count'] }}</span>
+                            @endif
+                        </div>
+                    @endif
+                    <span class="text-[10px] font-bold text-slate-400">{{ $vol['letter'] }}</span>
                 </div>
-                <span class="text-[10px] font-bold text-slate-400">T</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-donezoGreen rounded-full h-32"></div>
-                <span class="text-[10px] font-bold text-slate-400">W</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-slate-100 rounded-full h-28 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 3px, #e2e8f0 3px, #e2e8f0 6px)"></div>
-                <span class="text-[10px] font-bold text-slate-400">T</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-slate-100 rounded-full h-20 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 3px, #e2e8f0 3px, #e2e8f0 6px)"></div>
-                <span class="text-[10px] font-bold text-slate-400">F</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-7 bg-slate-100 rounded-full h-24 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 3px, #e2e8f0 3px, #e2e8f0 6px)"></div>
-                <span class="text-[10px] font-bold text-slate-400">S</span>
-            </div>
+            @endforeach
         </div>
     </div>
 
@@ -207,44 +191,20 @@
         </div>
 
         <div class="space-y-3.5">
-            <div class="flex items-center justify-between bg-slate-50/50 p-3 rounded-xl border border-slate-100">
-                <div class="flex items-center gap-3">
-                    <div class="h-8.5 w-8.5 rounded-lg bg-donezoLightGreen text-[#187053] flex items-center justify-center font-bold text-xs">
-                        SA
+            @foreach ($latestUsers as $user)
+                <div class="flex items-center justify-between bg-slate-50/50 p-3 rounded-xl border border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="h-8.5 w-8.5 rounded-lg {{ $user->is_admin ? 'bg-donezoLightGreen text-[#187053]' : 'bg-slate-100 text-slate-500' }} flex items-center justify-center font-bold text-xs">
+                            {{ $user->initials }}
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">{{ $user->name }}</h4>
+                            <span class="text-[9px] text-slate-400 block mt-0.5">{{ $user->role_desc }}</span>
+                        </div>
                     </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-800">System Admin</h4>
-                        <span class="text-[9px] text-slate-400 block mt-0.5">Working on properties moderation</span>
-                    </div>
+                    <span class="px-2 py-0.5 {{ $user->badge_class }} border rounded-md text-[8px] font-extrabold uppercase">{{ $user->display_role }}</span>
                 </div>
-                <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-md text-[8px] font-extrabold uppercase">Active</span>
-            </div>
-
-            <div class="flex items-center justify-between bg-slate-50/50 p-3 rounded-xl border border-slate-100">
-                <div class="flex items-center gap-3">
-                    <div class="h-8.5 w-8.5 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-xs">
-                        JL
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-800">John Lister</h4>
-                        <span class="text-[9px] text-slate-400 block mt-0.5">Active landlord lister profile</span>
-                    </div>
-                </div>
-                <span class="px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-md text-[8px] font-extrabold uppercase">Lister</span>
-            </div>
-
-            <div class="flex items-center justify-between bg-slate-50/50 p-3 rounded-xl border border-slate-100">
-                <div class="flex items-center gap-3">
-                    <div class="h-8.5 w-8.5 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-xs">
-                        AR
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-800">Alice Renter</h4>
-                        <span class="text-[9px] text-slate-400 block mt-0.5">Active renter customer profile</span>
-                    </div>
-                </div>
-                <span class="px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-md text-[8px] font-extrabold uppercase">Renter</span>
-            </div>
+            @endforeach
         </div>
     </div>
 

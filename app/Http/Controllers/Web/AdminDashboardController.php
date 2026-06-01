@@ -191,6 +191,68 @@ class AdminDashboardController extends Controller
         // Recent bookings
         $recentBookings = Booking::with(['property', 'renter'])->latest()->take(5)->get();
 
+        // Listing volume for the last 7 days
+        $listingVolume = [];
+        $maxCount = 0;
+        $tempVolume = [];
+        
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $dayLetter = $date->format('D')[0]; // S, M, T, W, T, F, S
+            $count = Property::whereDate('created_at', $date->toDateString())->count();
+            
+            if ($count > $maxCount) {
+                $maxCount = $count;
+            }
+            
+            $tempVolume[] = [
+                'letter' => $dayLetter,
+                'count' => $count,
+            ];
+        }
+
+        $divisor = $maxCount > 0 ? $maxCount : 1;
+        foreach ($tempVolume as $item) {
+            $percentage = round(($item['count'] / $divisor) * 100);
+            // Height mapping from 16px to 110px
+            $height = $item['count'] > 0 ? (16 + round(($percentage / 100) * 94)) : 0;
+            
+            $listingVolume[] = [
+                'letter' => $item['letter'],
+                'count' => $item['count'],
+                'percentage' => $percentage,
+                'height' => $height,
+                'is_max' => $maxCount > 0 && $item['count'] === $maxCount,
+            ];
+        }
+
+        // Latest users for active administrators / users panel
+        $latestUsers = User::latest()->take(3)->get()->map(function ($user) {
+            $initials = '';
+            $parts = explode(' ', $user->name);
+            foreach ($parts as $part) {
+                if (!empty($part)) {
+                    $initials .= strtoupper($part[0]);
+                }
+            }
+            $user->initials = !empty($initials) ? substr($initials, 0, 2) : 'U';
+            
+            if ($user->is_admin) {
+                $user->display_role = 'Admin';
+                $user->role_desc = 'Working on properties moderation';
+                $user->badge_class = 'bg-emerald-50 text-emerald-700 border-emerald-100';
+            } elseif ($user->is_host) {
+                $user->display_role = 'Lister';
+                $user->role_desc = 'Active landlord lister profile';
+                $user->badge_class = 'bg-slate-100 text-slate-500 border-slate-200';
+            } else {
+                $user->display_role = 'Renter';
+                $user->role_desc = 'Active renter customer profile';
+                $user->badge_class = 'bg-slate-100 text-slate-500 border-slate-200';
+            }
+            return $user;
+        });
+
         return view('admin.index', compact(
             'totalUsers',
             'totalBookings',
@@ -199,7 +261,9 @@ class AdminDashboardController extends Controller
             'approvedProperties',
             'rejectedProperties',
             'totalRevenue',
-            'recentBookings'
+            'recentBookings',
+            'listingVolume',
+            'latestUsers'
         ));
     }
 

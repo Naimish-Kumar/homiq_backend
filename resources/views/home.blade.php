@@ -252,6 +252,7 @@
     @endif
 </section>
 
+@if ($properties->where('category', 'Villa')->isNotEmpty())
 <!-- Section 5: Premium Beachfront Villas -->
 <section class="bg-slate-50/50 border-y border-slate-100 py-20 px-6 scroll-reveal">
     <div class="max-w-7xl mx-auto">
@@ -267,7 +268,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @forelse ($properties->where('category', 'Villa')->take(3) as $villa)
+            @foreach ($properties->where('category', 'Villa')->take(3) as $villa)
                 <a href="/properties/{{ $villa->id }}" class="premium-card group flex flex-col">
                     <div class="h-48 overflow-hidden relative">
                         <img src="{{ !empty($villa->images) && is_array($villa->images) ? $villa->images[0] : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80' }}" alt="villa" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
@@ -281,15 +282,13 @@
                         </div>
                     </div>
                 </a>
-            @empty
-                <div class="col-span-3 text-center text-xs text-slate-400 py-8 bg-white border border-slate-100 rounded-xl">
-                    No premium villas available at the moment.
-                </div>
-            @endforelse
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 
+@if ($properties->where('category', 'Apartment')->isNotEmpty())
 <!-- Section 6: Top Flats Nearby You -->
 <section class="max-w-7xl mx-auto px-6 py-20 scroll-reveal">
     <div class="flex flex-col md:flex-row items-baseline justify-between mb-12">
@@ -301,7 +300,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @forelse ($properties->where('category', 'Apartment')->take(3) as $flat)
+        @foreach ($properties->where('category', 'Apartment')->take(3) as $flat)
             <a href="/properties/{{ $flat->id }}" class="premium-card group flex flex-col">
                 <div class="h-48 overflow-hidden relative">
                     <img src="{{ !empty($flat->images) && is_array($flat->images) ? $flat->images[0] : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80' }}" alt="flat" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
@@ -315,14 +314,12 @@
                     </div>
                 </div>
             </a>
-        @empty
-            <div class="col-span-3 text-center text-xs text-slate-400 py-8 bg-white border border-slate-100 rounded-xl">
-                No flats listed in your area currently.
-            </div>
-        @endforelse
+        @endforeach
     </div>
 </section>
+@endif
 
+@if ($properties->where('category', 'Studio')->isNotEmpty())
 <!-- Section 7: Best PG for Girls -->
 <section class="bg-rose-50/30 border-y border-rose-100/50 py-20 px-6 scroll-reveal">
     <div class="max-w-7xl mx-auto">
@@ -335,7 +332,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @forelse ($properties->where('category', 'Studio')->take(3) as $pg)
+            @foreach ($properties->where('category', 'Studio')->take(3) as $pg)
                 <a href="/properties/{{ $pg->id }}" class="premium-card group flex flex-col">
                     <div class="h-48 overflow-hidden relative">
                         <img src="{{ !empty($pg->images) && is_array($pg->images) ? $pg->images[0] : 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80' }}" alt="pg" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
@@ -352,15 +349,13 @@
                         </div>
                     </div>
                 </a>
-            @empty
-                <div class="col-span-3 text-center text-xs text-slate-400 py-8 bg-white border border-slate-100 rounded-xl">
-                    No girl-friendly PGs listed currently.
-                </div>
-            @endforelse
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 
+@if ($properties->where('category', 'Studio')->isNotEmpty())
 <!-- Section 8: PG Nearby You -->
 <section class="max-w-7xl mx-auto px-6 py-20 scroll-reveal">
     <div class="flex flex-col md:flex-row items-baseline justify-between mb-12">
@@ -372,7 +367,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @forelse ($properties->where('category', 'Studio')->take(3) as $pgRoom)
+        @foreach ($properties->where('category', 'Studio')->take(3) as $pgRoom)
             <a href="/properties/{{ $pgRoom->id }}" class="premium-card group flex flex-col">
                 <div class="h-48 overflow-hidden relative">
                     <img src="{{ !empty($pgRoom->images) && is_array($pgRoom->images) ? $pgRoom->images[0] : 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80' }}" alt="pg" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
@@ -386,14 +381,12 @@
                     </div>
                 </div>
             </a>
-        @empty
-            <div class="col-span-3 text-center text-xs text-slate-400 py-8 bg-white border border-slate-100 rounded-xl">
-                No budget PG rooms available.
-            </div>
-        @endforelse
+        @endforeach
     </div>
 </section>
+@endif
 
+@if ($properties->whereIn('category', ['Shop', 'Hall'])->isNotEmpty())
 <!-- Section 9: Elite Business & Event Venues -->
 <section class="max-w-7xl mx-auto px-6 py-12 scroll-reveal">
     <div class="flex flex-col md:flex-row items-baseline justify-between mb-12">
@@ -409,7 +402,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @forelse ($properties->whereIn('category', ['Shop', 'Hall'])->take(3) as $venue)
+        @foreach ($properties->whereIn('category', ['Shop', 'Hall'])->take(3) as $venue)
             <a href="/properties/{{ $venue->id }}" class="premium-card group flex flex-col">
                 <div class="h-48 overflow-hidden relative">
                     <img src="{{ !empty($venue->images) && is_array($venue->images) ? $venue->images[0] : 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80' }}" alt="venue" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
@@ -424,14 +417,12 @@
                     </div>
                 </div>
             </a>
-        @empty
-            <div class="col-span-3 text-center text-xs text-slate-400 py-8 bg-white border border-slate-100 rounded-xl">
-                No business or event spaces currently listed.
-            </div>
-        @endforelse
+        @endforeach
     </div>
 </section>
+@endif
 
+@if ($properties->whereIn('category', ['Studio', 'Apartment'])->isNotEmpty())
 <!-- Section 10: Exquisite Urban Studios & Condos -->
 <section class="bg-slate-900 text-white py-20 px-6 scroll-reveal">
     <div class="max-w-7xl mx-auto">
@@ -444,7 +435,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @forelse ($properties->whereIn('category', ['Studio', 'Apartment'])->take(3) as $studio)
+            @foreach ($properties->whereIn('category', ['Studio', 'Apartment'])->take(3) as $studio)
                 <a href="/properties/{{ $studio->id }}" class="premium-card dark-theme group flex flex-col">
                     <div class="h-48 overflow-hidden relative">
                         <img src="{{ !empty($studio->images) && is_array($studio->images) ? $studio->images[0] : 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80' }}" alt="studio" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
@@ -458,14 +449,11 @@
                         </div>
                     </div>
                 </a>
-            @empty
-                <div class="col-span-3 text-center text-xs text-slate-400 py-8 bg-slate-800 border border-slate-700 rounded-xl">
-                    No active urban studios available.
-                </div>
-            @endforelse
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 
 
 
