@@ -15,6 +15,8 @@ Route::get('/about', [WebHomeController::class, 'about']);
 Route::get('/privacy', [WebHomeController::class, 'privacy']);
 Route::get('/terms', [WebHomeController::class, 'terms']);
 Route::view('/contact', 'contact');
+Route::get('/delete-account', [WebHomeController::class, 'showDeleteAccount']);
+Route::post('/delete-account', [WebHomeController::class, 'deleteAccount']);
 
 // Authentication (Guest)
 Route::middleware(['guest'])->group(function () {

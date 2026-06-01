@@ -249,4 +249,38 @@ class WebHomeController extends Controller
         $page = \App\Models\Page::where('slug', 'terms')->firstOrFail();
         return view('terms', compact('page'));
     }
+
+    public function showDeleteAccount()
+    {
+        return view('auth.delete-account');
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'The provided password does not match our records.']);
+        }
+
+        // Cascade delete user listings and reservations to avoid integrity issues
+        $user->properties()->delete();
+        $user->bookings()->delete();
+
+        // Logout if it's the current user
+        if (Auth::check() && Auth::id() === $user->id) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        $user->delete();
+
+        return redirect('/delete-account')->with('success', 'Your account deleted successfully.');
+    }
 }

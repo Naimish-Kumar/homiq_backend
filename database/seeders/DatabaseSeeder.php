@@ -359,31 +359,26 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 7. Seed Dynamic Pages from existing Blade files to keep layout design
-        $pagesToSeed = [
-            ['slug' => 'about', 'title' => 'About Us', 'file' => 'about.blade.php'],
-            ['slug' => 'privacy', 'title' => 'Privacy Policy', 'file' => 'privacy.blade.php'],
-            ['slug' => 'terms', 'title' => 'Terms & Conditions', 'file' => 'terms.blade.php'],
-        ];
+        // 7. Seed Dynamic Pages with clean styled defaults
+        $aboutHtml = '<h1>About HomiQ</h1><p>HomiQ is a cutting-edge space rental marketplace built for the modern sharing economy. We bridge the gap between property owners looking to list spaces and renters seeking high-quality, verified, and flexible rental accommodations.</p><h2>Our Mission</h2><p>Our mission is to simplify property management and space rental by providing secure, transparent, and responsive digital pipelines. From beachfront villas to urban co-working desks, we ensure that locating and leasing a property is as simple as a few taps on your mobile device.</p><h2>Why Choose HomiQ?</h2><ul><li><strong>Verified Spaces:</strong> Every listing goes through a comprehensive administrative review process before going live.</li><li><strong>Integrated Messaging:</strong> Landlords and renters can communicate securely using our real-time messaging pipeline.</li><li><strong>Simple Subscriptions:</strong> Simple tiers designed to scale with your listing requirements.</li></ul><p>Thank you for choosing HomiQ as your trusted space partner.</p>';
 
-        foreach ($pagesToSeed as $pageData) {
-            $path = resource_path('views/' . $pageData['file']);
-            $htmlContent = "";
-            if (file_exists($path)) {
-                $raw = file_get_contents($path);
-                // Extract everything inside @section('content') ... @endsection
-                if (preg_match('/@section\(\'content\'\)(.*)@endsection/s', $raw, $matches)) {
-                    $htmlContent = trim($matches[1]);
-                }
-            }
+        $privacyHtml = '<h1>Privacy Policy for HomiQ</h1><p><strong>Last Updated:</strong> June 2026</p><p>Welcome to <strong>HomiQ (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)</strong>. We are committed to protecting your privacy and ensuring transparency about how your information is collected, used, and shared.</p><p>This Privacy Policy explains how HomiQ collects, uses, stores, and protects your information when you use our mobile application, website, and related services (collectively, the &quot;Services&quot;).</p><p>By using HomiQ, you agree to the practices described in this Privacy Policy.</p><h1>1. Information We Collect</h1><h2>A. Information You Provide</h2><p>When you create an account or use our Services, we may collect:</p><ul><li>Full name</li><li>Email address</li><li>Phone number</li><li>Profile photo</li><li>Date of birth</li><li>Gender (optional)</li><li>Property listing information</li><li>Messages exchanged with other users</li><li>Reviews and ratings</li><li>Support requests and feedback</li></ul><h2>B. Property &amp; Listing Information</h2><p>If you are a property owner or host, we may collect:</p><ul><li>Property title</li><li>Property description</li><li>Address and location</li><li>Property photos</li><li>Amenities and pricing information</li><li>Availability information</li><li>Verification documents (if applicable)</li></ul><h2>C. Payment Information</h2><p>When you make payments through HomiQ:</p><ul><li>Payment details are processed by secure third-party payment providers.</li><li>We do not store complete credit card, debit card, or banking information on our servers.</li><li>We may receive transaction confirmations and payment status information.</li></ul><h2>D. Automatically Collected Information</h2><p>We may automatically collect:</p><ul><li>Device type</li><li>Device identifiers</li><li>Operating system version</li><li>App version</li><li>IP address</li><li>Language settings</li><li>Crash logs</li><li>Usage statistics</li><li>Referral information</li></ul><h2>E. Location Information</h2><p>With your permission, we may collect:</p><ul><li>Precise location</li><li>Approximate location</li></ul><p>Location data helps users:</p><ul><li>Discover nearby properties</li><li>Improve search results</li><li>Display property locations on maps</li></ul><p>You can disable location access anytime from your device settings.</p>';
 
-            \App\Models\Page::updateOrCreate(
-                ['slug' => $pageData['slug']],
-                [
-                    'title' => $pageData['title'],
-                    'content' => $htmlContent
-                ]
-            );
-        }
+        $termsHtml = '<h1>Terms & Conditions</h1><p>Welcome to HomiQ. By accessing our mobile application, website, and related services, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.</p><h2>1. Acceptance of Terms</h2><p>By creating an account, posting listings, or booking properties through HomiQ, you signify your acceptance of these Terms and Conditions. If you do not agree, you must immediately discontinue using our services.</p><h2>2. Listing & Moderation</h2><p>Property hosts must provide accurate and truthful details regarding their listed spaces. HomiQ retains the right to approve, reject, or remove any listing at its sole discretion if it violates our quality standards or listing policies.</p><h2>3. Booking Contracts & Payments</h2><p>All rental bookings made through the platform are contracts between the respective host and renter. Payments are processed securely via third-party providers. Platform fees collected by HomiQ are non-refundable unless specified otherwise.</p><h2>4. Account Suspension</h2><p>We reserve the right to suspend or terminate accounts that engage in fraudulent actions, spam, or behaviors that degrade the safety and experience of the community.</p><h2>5. Amendments</h2><p>HomiQ reserves the right to modify these Terms & Conditions at any time. Continued use of the platform constitutes agreement to the updated terms.</p>';
+
+        \App\Models\Page::updateOrCreate(
+            ['slug' => 'about'],
+            ['title' => 'About Us', 'content' => $aboutHtml]
+        );
+
+        \App\Models\Page::updateOrCreate(
+            ['slug' => 'privacy'],
+            ['title' => 'Privacy Policy', 'content' => $privacyHtml]
+        );
+
+        \App\Models\Page::updateOrCreate(
+            ['slug' => 'terms'],
+            ['title' => 'Terms & Conditions', 'content' => $termsHtml]
+        );
     }
 }
