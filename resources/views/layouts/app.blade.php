@@ -88,6 +88,12 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
+                            @if (isset($unreadMessagesCount) && $unreadMessagesCount > 0)
+                                <span id="chat-badge" class="absolute top-1 right-1 flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                </span>
+                            @endif
                         </a>
 
                         <!-- Notification Dropdown Toggle -->
@@ -118,7 +124,7 @@
                                 <div class="max-h-64 overflow-y-auto divide-y divide-slate-50">
                                     @if(isset($notifications) && !$notifications->isEmpty())
                                         @foreach($notifications as $notif)
-                                            <div class="p-3.5 hover:bg-slate-50 transition text-left relative {{ !$notif->is_read ? 'bg-blue-50/20' : '' }}">
+                                            <div class="notification-item p-3.5 hover:bg-slate-50 transition text-left relative {{ !$notif->is_read ? 'bg-blue-50/20 is-unread' : '' }}" data-id="{{ $notif->id }}">
                                                 <div class="flex items-center gap-1.5 mb-1">
                                                     @if($notif->type === 'chat')
                                                         <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
@@ -310,6 +316,78 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        @auth
+        // Request browser notification permission on load
+        if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Track notification IDs that have been notified in this session
+        const notifiedIds = new Set();
+        document.querySelectorAll('.notification-item.is-unread').forEach(item => {
+            const id = item.getAttribute('data-id');
+            if (id) notifiedIds.add(id);
+        });
+
+        // Global Real-time Polling for Badge Counts & Notification Box
+        setInterval(async () => {
+            try {
+                const response = await fetch('/');
+                if (response.ok) {
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Check for new unread notifications if not on chat page
+                    if (window.location.pathname !== '/chat' && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                        doc.querySelectorAll('.notification-item.is-unread').forEach(item => {
+                            const id = item.getAttribute('data-id');
+                            if (id && !notifiedIds.has(id)) {
+                                notifiedIds.add(id);
+                                
+                                // Retrieve notification title and text body
+                                const titleSpan = item.querySelector('.font-extrabold');
+                                const bodyP = item.querySelector('p');
+                                if (titleSpan && bodyP) {
+                                    new Notification(titleSpan.textContent.trim(), {
+                                        body: bodyP.textContent.trim(),
+                                        icon: '/logo.png'
+                                    });
+                                }
+                            }
+                        });
+                    }
+
+                    // Update Notification Icon Badge
+                    const newNotifBadgeBtn = doc.querySelector('#notification-dropdown-wrapper button');
+                    const currentNotifBadgeBtn = document.querySelector('#notification-dropdown-wrapper button');
+                    if (newNotifBadgeBtn && currentNotifBadgeBtn) {
+                        currentNotifBadgeBtn.innerHTML = newNotifBadgeBtn.innerHTML;
+                    }
+
+                    // Update Chat Icon Badge
+                    const newChatLink = doc.querySelector('a[href="/chat"]');
+                    const currentChatLink = document.querySelector('a[href="/chat"]');
+                    if (newChatLink && currentChatLink) {
+                        currentChatLink.innerHTML = newChatLink.innerHTML;
+                    }
+
+                    // Update Dropdown Notifications List silently
+                    const newDropdown = doc.getElementById('notification-dropdown');
+                    const currentDropdown = document.getElementById('notification-dropdown');
+                    if (newDropdown && currentDropdown) {
+                        // Only replace inner contents if it is hidden to avoid breaking user interactions
+                        if (currentDropdown.classList.contains('hidden')) {
+                            currentDropdown.innerHTML = newDropdown.innerHTML;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error syncing global notification counts:', e);
+            }
+        }, 5000);
+        @endauth
     </script>
 </body>
 </html>

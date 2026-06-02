@@ -182,6 +182,13 @@ class WebHomeController extends Controller
             Message::where('chat_id', $activeChat->id)
                 ->where('sender_id', '!=', $user->id)
                 ->update(['is_read' => true]);
+
+            // Broadcast presence safely
+            try {
+                broadcast(new \App\Events\UserPresence($activeChat->id, $user->id, true));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+            }
         }
 
         return view('chat', compact('myQueries', 'othersQueries', 'activeChat'));
@@ -194,7 +201,8 @@ class WebHomeController extends Controller
     {
         $request->validate([
             'chat_id' => 'required|exists:chats,id',
-            'message' => 'required|string',
+            'message' => 'required_without:attachment|nullable|string',
+            'attachment' => 'required_without:message|nullable|file|max:10240|mimes:jpg,jpeg,png,gif,webp,pdf',
         ]);
 
         $chat = Chat::findOrFail($request->chat_id);
@@ -204,23 +212,141 @@ class WebHomeController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        $attachmentUrl = null;
+        $type = 'text';
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('attachments', $fileName, 'public');
+            $attachmentUrl = asset('storage/' . $path);
+            
+            $extension = strtolower($file->getClientOriginalExtension());
+            if ($extension === 'pdf') {
+                $type = 'pdf';
+            } else {
+                $type = 'image';
+            }
+        }
+
         $message = Message::create([
             'chat_id' => $chat->id,
             'sender_id' => $user->id,
-            'message' => $request->message,
-            'type' => 'text',
+            'message' => $request->message ?? '',
+            'type' => $type,
+            'attachment_url' => $attachmentUrl,
         ]);
+
+        // Touch the updated_at timestamp on chat
+        $chat->touch();
 
         // Create a notification for the other user
         $recipientId = ($chat->user_one_id === $user->id) ? $chat->user_two_id : $chat->user_one_id;
-        Notification::create([
-            'user_id' => $recipientId,
-            'title' => 'New Message from ' . $user->name,
-            'message' => 'Regarding ' . ($chat->property ? $chat->property->title : 'your space') . ': "' . substr($request->message, 0, 40) . '..."',
-            'type' => 'chat',
-        ]);
+        $recipient = User::find($recipientId);
+        if ($recipient) {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $msgContent = $attachmentUrl ? '[Sent ' . $type . ' attachment]' : substr($request->message, 0, 40) . '...';
+            $notificationService->notify(
+                $recipient,
+                'New Message from ' . $user->name,
+                'Regarding ' . ($chat->property ? $chat->property->title : 'your space') . ': "' . $msgContent . '"',
+                'chat',
+                false,
+                null,
+                [],
+                ['chat_id' => (string) $chat->id]
+            );
+        }
+
+        // Broadcast to Pusher Channels safely
+        try {
+            broadcast(new \App\Events\MessageSent($message->load('sender')));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
+        if ($request->expectsJson() || $request->wantsJson() || $request->ajax()) {
+            return response()->json($message, 201);
+        }
 
         return redirect('/chat?chat_id=' . $chat->id);
+    }
+
+    /**
+     * Update the authenticated user's typing status.
+     */
+    public function updateTypingStatus(Request $request, $id)
+    {
+        $request->validate(['is_typing' => 'required|boolean']);
+        $chat = Chat::findOrFail($id);
+        $user = Auth::user();
+
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $cacheKey = "chat_{$chat->id}_user_{$user->id}_typing";
+        if ($request->is_typing) {
+            \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addSeconds(5));
+        } else {
+            \Illuminate\Support\Facades\Cache::forget($cacheKey);
+        }
+
+        // Broadcast typing event safely
+        try {
+            broadcast(new \App\Events\UserTyping($chat->id, $request->is_typing, $user->name));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Update the authenticated user's presence status.
+     */
+    public function updatePresenceStatus(Request $request, $id)
+    {
+        $request->validate(['is_online' => 'required|boolean']);
+        $chat = Chat::findOrFail($id);
+        $user = Auth::user();
+
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Broadcast presence event safely
+        try {
+            broadcast(new \App\Events\UserPresence($chat->id, $user->id, $request->is_online));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Get the typing status of the other user in the chat room.
+     */
+    public function getTypingStatus($id)
+    {
+        $chat = Chat::findOrFail($id);
+        $user = Auth::user();
+
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $otherUserId = ($chat->user_one_id === $user->id) ? $chat->user_two_id : $chat->user_one_id;
+        $cacheKey = "chat_{$chat->id}_user_{$otherUserId}_typing";
+        $isTyping = \Illuminate\Support\Facades\Cache::has($cacheKey);
+
+        $otherUser = User::find($otherUserId);
+
+        return response()->json([
+            'is_typing' => $isTyping,
+            'user_name' => $otherUser ? $otherUser->name : 'Someone',
+        ]);
     }
 
     /**

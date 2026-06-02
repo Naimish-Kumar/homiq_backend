@@ -54,7 +54,16 @@ class AppServiceProvider extends ServiceProvider
                 $unreadNotificationsCount = \App\Models\Notification::where('user_id', auth()->id())
                     ->where('is_read', false)
                     ->count();
-                $view->with(compact('notifications', 'unreadNotificationsCount'));
+                
+                $unreadMessagesCount = \App\Models\Message::whereHas('chat', function ($query) {
+                    $query->where('user_one_id', auth()->id())
+                          ->orWhere('user_two_id', auth()->id());
+                })
+                ->where('sender_id', '!=', auth()->id())
+                ->where('is_read', false)
+                ->count();
+
+                $view->with(compact('notifications', 'unreadNotificationsCount', 'unreadMessagesCount'));
             }
         });
     }

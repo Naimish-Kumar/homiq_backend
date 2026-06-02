@@ -48,6 +48,9 @@ Route::middleware(['auth'])->group(function () {
         // Chat messaging system
         Route::get('/chat', [WebHomeController::class, 'chat']);
         Route::post('/chat/send', [WebHomeController::class, 'sendChatMessage']);
+        Route::post('/chat/{id}/typing', [WebHomeController::class, 'updateTypingStatus']);
+        Route::get('/chat/{id}/typing', [WebHomeController::class, 'getTypingStatus']);
+        Route::post('/chat/{id}/presence', [WebHomeController::class, 'updatePresenceStatus']);
         // Notifications
         Route::post('/notifications/read-all', [WebHomeController::class, 'readAllNotifications']);
         // Landlord Reservation Status Updates

@@ -57,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/chats', [ChatController::class, 'store']);
     Route::get('/chats/{id}', [ChatController::class, 'show']);
     Route::post('/chats/{id}/messages', [ChatController::class, 'sendMessage']);
+    Route::post('/chats/{id}/typing', [ChatController::class, 'updateTypingStatus']);
+    Route::get('/chats/{id}/typing', [ChatController::class, 'getTypingStatus']);
+    Route::post('/chats/{id}/presence', [ChatController::class, 'updatePresenceStatus']);
 
     // Dashboards
     Route::get('/dashboard/renter', [DashboardController::class, 'renterDashboard']);

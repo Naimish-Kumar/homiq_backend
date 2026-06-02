@@ -27,7 +27,8 @@ class NotificationService
         string $type,
         bool $sendEmail = false,
         ?string $mailableClass = null,
-        array $mailableParams = []
+        array $mailableParams = [],
+        array $extraData = []
     ): Notification {
         // 1. Create in-app notification record
         $notification = Notification::create([
@@ -40,10 +41,10 @@ class NotificationService
 
         // 2. Dispatch FCM push notification
         try {
-            $this->fcmService->sendToUser($user, $title, $message, [
+            $this->fcmService->sendToUser($user, $title, $message, array_merge([
                 'type' => $type,
                 'notification_id' => (string) $notification->id,
-            ]);
+            ], $extraData));
         } catch (\Exception $e) {
             Log::error('NotificationService: Failed to send FCM push to user #' . $user->id . ': ' . $e->getMessage());
         }

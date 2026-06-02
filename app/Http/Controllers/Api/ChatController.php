@@ -109,6 +109,13 @@ class ChatController extends Controller
             ->where('sender_id', '!=', $user->id)
             ->update(['is_read' => true]);
 
+        // Broadcast presence safely
+        try {
+            broadcast(new \App\Events\UserPresence($chat->id, $user->id, true));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
         $messages = Message::where('chat_id', $chat->id)
             ->with('sender')
             ->orderBy('created_at', 'asc')
@@ -126,7 +133,8 @@ class ChatController extends Controller
     public function sendMessage(Request $request, $id)
     {
         $fields = $request->validate([
-            'message' => 'required|string',
+            'message' => 'required_without:attachment|nullable|string',
+            'attachment' => 'required_without:message|nullable|file|max:10240|mimes:jpg,jpeg,png,gif,webp,pdf',
         ]);
 
         $chat = Chat::find($id);
@@ -139,11 +147,29 @@ class ChatController extends Controller
             return response(['message' => 'Unauthorized'], 403);
         }
 
+        $attachmentUrl = null;
+        $type = 'text';
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('attachments', $fileName, 'public');
+            $attachmentUrl = asset('storage/' . $path);
+            
+            $extension = strtolower($file->getClientOriginalExtension());
+            if ($extension === 'pdf') {
+                $type = 'pdf';
+            } else {
+                $type = 'image';
+            }
+        }
+
         $message = Message::create([
             'chat_id' => $chat->id,
             'sender_id' => $user->id,
-            'message' => $fields['message'],
-            'type' => 'text',
+            'message' => $fields['message'] ?? '',
+            'type' => $type,
+            'attachment_url' => $attachmentUrl,
         ]);
 
         // Touch the updated_at timestamp on chat
@@ -155,14 +181,112 @@ class ChatController extends Controller
         
         if ($recipient) {
             $notificationService = app(\App\Services\NotificationService::class);
+            $msgContent = $attachmentUrl ? '[Sent ' . $type . ' attachment]' : substr($fields['message'], 0, 40) . '...';
             $notificationService->notify(
                 $recipient,
                 'New message from ' . $user->name,
-                'Regarding ' . ($chat->property ? $chat->property->title : 'your space') . ': "' . substr($fields['message'], 0, 40) . '..."',
-                'chat'
+                'Regarding ' . ($chat->property ? $chat->property->title : 'your space') . ': "' . $msgContent . '"',
+                'chat',
+                false,
+                null,
+                [],
+                ['chat_id' => (string) $chat->id]
             );
         }
 
-        return response($message->load('sender'), 201);
+        // Broadcast to Pusher Channels safely
+        try {
+            broadcast(new \App\Events\MessageSent($message->load('sender')));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
+        return response($message, 201);
+    }
+
+    /**
+     * Update the authenticated user's typing status.
+     */
+    public function updateTypingStatus(Request $request, $id)
+    {
+        $fields = $request->validate(['is_typing' => 'required|boolean']);
+        $chat = Chat::find($id);
+        if (!$chat) {
+            return response(['message' => 'Chat room not found'], 404);
+        }
+
+        $user = $request->user();
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response(['message' => 'Unauthorized'], 403);
+        }
+
+        $cacheKey = "chat_{$chat->id}_user_{$user->id}_typing";
+        if ($fields['is_typing']) {
+            \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addSeconds(5));
+        } else {
+            \Illuminate\Support\Facades\Cache::forget($cacheKey);
+        }
+
+        // Broadcast typing event safely
+        try {
+            broadcast(new \App\Events\UserTyping($chat->id, $fields['is_typing'], $user->name));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
+        return response(['success' => true], 200);
+    }
+
+    /**
+     * Get the typing status of the other user in the chat room.
+     */
+    public function getTypingStatus(Request $request, $id)
+    {
+        $chat = Chat::find($id);
+        if (!$chat) {
+            return response(['message' => 'Chat room not found'], 404);
+        }
+
+        $user = $request->user();
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response(['message' => 'Unauthorized'], 403);
+        }
+
+        $otherUserId = ($chat->user_one_id === $user->id) ? $chat->user_two_id : $chat->user_one_id;
+        $cacheKey = "chat_{$chat->id}_user_{$otherUserId}_typing";
+        $isTyping = \Illuminate\Support\Facades\Cache::has($cacheKey);
+
+        $otherUser = \App\Models\User::find($otherUserId);
+
+        return response([
+            'is_typing' => $isTyping,
+            'user_name' => $otherUser ? $otherUser->name : 'Someone',
+        ], 200);
+    }
+
+    /**
+     * Update the authenticated user's presence status.
+     */
+    public function updatePresenceStatus(Request $request, $id)
+    {
+        $fields = $request->validate(['is_online' => 'required|boolean']);
+        $chat = Chat::find($id);
+        if (!$chat) {
+            return response(['message' => 'Chat room not found'], 404);
+        }
+
+        $user = $request->user();
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response(['message' => 'Unauthorized'], 403);
+        }
+
+        // Broadcast presence event safely
+        try {
+            broadcast(new \App\Events\UserPresence($chat->id, $user->id, $fields['is_online']));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+        }
+
+        return response(['success' => true], 200);
     }
 }
