@@ -93,6 +93,15 @@
 
         <!-- Moderation Actions -->
         <div class="border-t border-slate-100 pt-6 flex justify-end gap-3">
+            <!-- Delete Property Form -->
+            <form action="/admin/properties/{{ $property->id }}" method="POST" class="m-0" onsubmit="return confirm('Are you sure you want to permanently delete this property listing? This will also cancel all associated bookings.')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-extrabold rounded-lg shadow-sm transition">
+                    Delete Listing
+                </button>
+            </form>
+
             @if ($property->status !== 'approved')
                 <form action="/admin/properties/{{ $property->id }}/status" method="POST" class="m-0">
                     @csrf

@@ -218,6 +218,12 @@
                 <p class="text-xs text-slate-400 leading-relaxed">
                     Connecting property customer listings and flexible rental requests through modern verification pipelines.
                 </p>
+                <!-- Play Store Link -->
+                <div class="pt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="inline-block transition hover:opacity-80">
+                        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" class="h-12 w-auto -ml-2.5">
+                    </a>
+                </div>
                 <!-- Social Icons -->
                 <div class="flex gap-4">
                     <a href="#" class="text-slate-400 hover:text-emerald-400 transition">

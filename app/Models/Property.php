@@ -52,4 +52,13 @@ class Property extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    /**
+     * Get the bookings for the property.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'property_id');
+    }
 }
+

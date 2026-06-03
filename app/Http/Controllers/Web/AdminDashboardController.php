@@ -582,4 +582,21 @@ class AdminDashboardController extends Controller
 
         return back()->with('success', 'Configurations updated successfully.');
     }
+
+    /**
+     * Delete property listing.
+     */
+    public function deleteProperty($id)
+    {
+        $property = Property::findOrFail($id);
+
+        // Delete associated bookings
+        $property->bookings()->delete();
+
+        // Delete property
+        $property->delete();
+
+        return redirect('/admin/properties')->with('success', 'Property listing deleted successfully.');
+    }
 }
+
