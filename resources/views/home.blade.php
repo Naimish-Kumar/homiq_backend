@@ -88,14 +88,25 @@
         100% { transform: translateX(-50%); }
     }
 
-    /* Category Limit CSS */
-    .category-btn-wrapper:nth-child(n+5) {
+    /* Category Limit CSS for Exactly 1 Row */
+    .category-btn-wrapper:nth-child(n+4) {
         display: none;
     }
-    .categories-expanded .category-btn-wrapper:nth-child(n+5) {
+    .categories-expanded .category-btn-wrapper:nth-child(n+4) {
         display: flex;
     }
     @media (min-width: 640px) {
+        .category-btn-wrapper:nth-child(n+4) {
+            display: flex;
+        }
+        .category-btn-wrapper:nth-child(n+5) {
+            display: none;
+        }
+        .categories-expanded .category-btn-wrapper:nth-child(n+5) {
+            display: flex;
+        }
+    }
+    @media (min-width: 1024px) {
         .category-btn-wrapper:nth-child(n+5) {
             display: flex;
         }
@@ -106,32 +117,21 @@
             display: flex;
         }
     }
-    @media (min-width: 1024px) {
-        .category-btn-wrapper:nth-child(n+7) {
-            display: flex;
-        }
-        .category-btn-wrapper:nth-child(n+13) {
-            display: none;
-        }
-        .categories-expanded .category-btn-wrapper:nth-child(n+13) {
-            display: flex;
-        }
-    }
     .view-more-btn-wrapper {
         display: none;
     }
     @media (max-width: 639px) {
-        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+5)) .view-more-btn-wrapper {
+        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+4)) .view-more-btn-wrapper {
             display: flex;
         }
     }
     @media (min-width: 640px) and (max-width: 1023px) {
-        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+7)) .view-more-btn-wrapper {
+        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+5)) .view-more-btn-wrapper {
             display: flex;
         }
     }
     @media (min-width: 1024px) {
-        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+13)) .view-more-btn-wrapper {
+        .categories-container-wrapper:has(.category-btn-wrapper:nth-child(n+7)) .view-more-btn-wrapper {
             display: flex;
         }
     }
@@ -140,34 +140,112 @@
     }
 </style>
 
-<!-- Search Bar Section -->
-<section class="max-w-4xl mx-auto px-6 pt-12 pb-6">
-    <form action="/" method="GET" class="w-full bg-white p-2.5 rounded-xl flex flex-col md:flex-row items-center gap-2 shadow-md border border-slate-100">
-        <div class="flex items-center w-full px-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input type="text" name="search" placeholder="Search address, city, space title..." value="{{ $search }}"
-                class="w-full py-3 text-slate-800 text-sm focus:outline-none placeholder-slate-400 bg-transparent">
+<!-- Hero Carousel Section -->
+<section class="max-w-7xl mx-auto px-6 pt-8 pb-4">
+    <div class="relative overflow-hidden rounded-[32px] w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[480px] shadow-lg border border-slate-100 bg-slate-100 group">
+        <!-- Carousel Slides -->
+        <div id="hero-carousel" class="w-full h-full flex transition-transform duration-700 ease-out">
+            <!-- Slide 1 -->
+            <div class="w-full h-full flex-shrink-0 relative">
+                <img src="/images/carousel1.jpg" alt="HomiQ Banner 1" class="w-full h-full object-fill">
+            </div>
+            <!-- Slide 2 -->
+            <div class="w-full h-full flex-shrink-0 relative">
+                <img src="/images/carousel2.png" alt="HomiQ Banner 2" class="w-full h-full object-fill">
+            </div>
+            <!-- Slide 3 -->
+            <div class="w-full h-full flex-shrink-0 relative">
+                <img src="/images/carousel3.jpg" alt="HomiQ Banner 3" class="w-full h-full object-fill">
+            </div>
         </div>
-        <button type="submit" class="w-full md:w-auto px-8 py-3.5 bg-steelAzure hover:bg-steelAzure/95 text-white rounded-lg text-xs font-bold transition-all duration-200 whitespace-nowrap flex-shrink-0">
-            Search Spaces
+
+        <!-- Left/Right Controls -->
+        <button id="carousel-prev" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/30 backdrop-blur-md hover:bg-white/80 text-white hover:text-slate-800 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
         </button>
-    </form>
+        <button id="carousel-next" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/30 backdrop-blur-md hover:bg-white/80 text-white hover:text-slate-800 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+
+        <!-- Indicators (Dots) -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all" data-slide="0"></button>
+            <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all" data-slide="1"></button>
+            <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all" data-slide="2"></button>
+        </div>
+    </div>
+</section>
+
+<!-- Features Row Section -->
+<section class="max-w-7xl mx-auto px-6 py-6 border-b border-slate-100">
+    <div class="flex flex-wrap md:flex-nowrap justify-between items-center gap-8 w-full">
+        <!-- Feature 1 -->
+        <div class="flex items-center gap-3">
+            <div class="h-11 w-11 rounded-full bg-steelAzure/10 text-steelAzure flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">VERIFIED SPACES</h4>
+                <p class="text-[10px] text-slate-400">Safe & premium listings</p>
+            </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="flex items-center gap-3">
+            <div class="h-11 w-11 rounded-full bg-steelAzure/10 text-steelAzure flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">24/7 CHAT</h4>
+                <p class="text-[10px] text-slate-400">Instant support & replies</p>
+            </div>
+        </div>
+        <!-- Feature 3 -->
+        <div class="flex items-center gap-3">
+            <div class="h-11 w-11 rounded-full bg-steelAzure/10 text-steelAzure flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">SECURE LEASING</h4>
+                <p class="text-[10px] text-slate-400">Secure digital payments</p>
+            </div>
+        </div>
+        <!-- Feature 4 -->
+        <div class="flex items-center gap-3">
+            <div class="h-11 w-11 rounded-full bg-steelAzure/10 text-steelAzure flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">EASY DISCOVERY</h4>
+                <p class="text-[10px] text-slate-400">Find spaces instantly</p>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Section 3: Interactive Category cards with Big Icons -->
 <section class="max-w-7xl mx-auto px-6 py-16 scroll-reveal categories-container-wrapper">
-    <div class="mb-10 text-center md:text-left">
-        <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Browse Spaces by Category</h2>
+    <div class="mb-10 text-center">
+        <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Explore Spaces by Category</h2>
         <p class="text-sm text-slate-400 mt-1">Select a category to view all properties of that type</p>
     </div>
-    <div id="categories-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+    <div id="categories-grid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-6">
         @foreach ($categories as $cat)
             <div class="category-btn-wrapper flex">
                 <a href="/category/{{ $cat['name'] }}" 
-                   class="category-btn w-full group bg-white border border-slate-100 rounded-xl p-6 text-center flex flex-col items-center justify-center gap-4 hover:shadow-[0_25px_50px_rgba(26,68,124,0.08)]">
-                    <div class="icon-wrapper h-24 w-24 rounded-full overflow-hidden border-2 border-slate-100 group-hover:border-steelAzure/50 transition-all duration-300">
+                   class="category-btn w-full group bg-white border border-slate-100 rounded-xl p-4 text-center flex flex-col items-center justify-center gap-4 hover:shadow-[0_25px_50px_rgba(26,68,124,0.08)]">
+                    <div class="icon-wrapper h-28 w-28 rounded-2xl overflow-hidden border-2 border-slate-100 group-hover:border-steelAzure/50 transition-all duration-300">
                         <img src="{{ $cat['image'] }}" alt="{{ $cat['name'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     </div>
                     <span class="text-xs font-extrabold text-slate-800 tracking-wider uppercase transition group-hover:text-steelAzure">{{ $cat['name'] }}</span>
@@ -636,7 +714,124 @@
                 }, (error) => {
                     console.log('Location access denied:', error);
                 });
-            }
+                
+                // Hero Carousel Logic
+                const carousel = document.getElementById('hero-carousel');
+                if (carousel && carousel.children.length > 1) {
+                    const firstClone = carousel.children[0].cloneNode(true);
+                    const lastClone = carousel.children[carousel.children.length - 1].cloneNode(true);
+                    
+                    carousel.appendChild(firstClone);
+                    carousel.insertBefore(lastClone, carousel.children[0]);
+                    
+                    const slides = carousel.children;
+                    const dots = document.querySelectorAll('.carousel-dot');
+                    const prevBtn = document.getElementById('carousel-prev');
+                    const nextBtn = document.getElementById('carousel-next');
+                    
+                    let currentSlide = 1; // Start at Slide 1 (index 1 because index 0 is lastClone)
+                    const totalSlides = slides.length;
+                    let autoPlayInterval;
+                    let isTransitioning = false;
+
+                    // Set initial position without animation
+                    carousel.style.transition = 'none';
+                    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                    function updateCarousel(animate = true) {
+                        if (isTransitioning) return;
+                        if (animate) {
+                            isTransitioning = true;
+                            carousel.style.transition = 'transform 700ms ease-out';
+                        } else {
+                            carousel.style.transition = 'none';
+                        }
+                        carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                        // Update dots
+                        let dotIndex = currentSlide - 1;
+                        if (currentSlide === totalSlides - 1) dotIndex = 0;
+                        if (currentSlide === 0) dotIndex = dots.length - 1;
+
+                        dots.forEach((dot, index) => {
+                            if (index === dotIndex) {
+                                dot.classList.add('bg-white', 'w-6');
+                                dot.classList.remove('bg-white/40');
+                            } else {
+                                dot.classList.remove('bg-white', 'w-6');
+                                dot.classList.add('bg-white/40');
+                            }
+                        });
+                    }
+
+                    carousel.addEventListener('transitionend', () => {
+                        isTransitioning = false;
+                        if (currentSlide === totalSlides - 1) {
+                            currentSlide = 1;
+                            updateCarousel(false);
+                        }
+                        if (currentSlide === 0) {
+                            currentSlide = totalSlides - 2;
+                            updateCarousel(false);
+                        }
+                    });
+
+                    function nextSlide() {
+                        if (isTransitioning) return;
+                        currentSlide++;
+                        updateCarousel();
+                    }
+
+                    function prevSlide() {
+                        if (isTransitioning) return;
+                        currentSlide--;
+                        updateCarousel();
+                    }
+
+                    function startAutoPlay() {
+                        stopAutoPlay();
+                        autoPlayInterval = setInterval(nextSlide, 5000);
+                    }
+
+                    function stopAutoPlay() {
+                        if (autoPlayInterval) {
+                            clearInterval(autoPlayInterval);
+                        }
+                    }
+
+                    updateCarousel(false);
+                    startAutoPlay();
+
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', () => {
+                            nextSlide();
+                            startAutoPlay();
+                        });
+                    }
+                    if (prevBtn) {
+                        prevBtn.addEventListener('click', () => {
+                            prevSlide();
+                            startAutoPlay();
+                        });
+                    }
+
+                    dots.forEach(dot => {
+                        dot.addEventListener('click', (e) => {
+                            if (isTransitioning) return;
+                            currentSlide = parseInt(e.target.getAttribute('data-slide')) + 1;
+                            updateCarousel();
+                            startAutoPlay();
+                        });
+                    });
+
+                    // Pause on hover
+                    const carouselContainer = carousel.parentElement;
+                    if (carouselContainer) {
+                        carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+                        carouselContainer.addEventListener('mouseleave', startAutoPlay);
+                    }
+                }
+            });
         }
     });
 </script>

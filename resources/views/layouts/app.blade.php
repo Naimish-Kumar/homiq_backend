@@ -56,31 +56,31 @@
 
     <!-- Header Navbar -->
     <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <!-- Brand -->
-            <a href="/" class="flex items-center gap-3">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center gap-3 flex-shrink-0">
                 <img src="/logo.png" alt="HomiQ Logo" class="h-14 w-auto object-contain">
             </a>
             
-            <!-- Navigation Links -->
-            <div class="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-slate-500">
-                <a href="/" class="hover:text-steelAzure transition {{ Request::is('/') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">Explore Feed</a>
-                <a href="/dashboard" class="hover:text-steelAzure transition {{ Request::is('dashboard') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">List Property</a>
-                <a href="/about" class="hover:text-steelAzure transition {{ Request::is('about') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">About Us</a>
-                <a href="/contact" class="hover:text-steelAzure transition {{ Request::is('contact') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">Contact Us</a>
-                <a href="/privacy" class="hover:text-steelAzure transition {{ Request::is('privacy') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">Privacy Policy</a>
-                <a href="/terms" class="hover:text-steelAzure transition {{ Request::is('terms') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">Terms & Conditions</a>
-                @auth
-                    @if (Auth::user()->is_admin)
-                        <a href="/admin" class="hover:text-steelAzure transition">Admin Panel</a>
-                    @else
-                        <a href="/dashboard" class="hover:text-steelAzure transition {{ Request::is('dashboard') ? 'text-steelAzure font-bold border-b-2 border-steelAzure pb-1' : '' }}">My Dashboard</a>
-                    @endif
-                @endauth
+            <!-- Centered Search bar (Mockup layout) -->
+            <div class="flex-1 max-w-md mx-4 hidden md:block">
+                <form action="/" method="GET" class="relative">
+                    <input type="text" name="search" placeholder="Search address, city, space title..." value="{{ request('search') }}"
+                        class="w-full pl-4 pr-10 py-3 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-steelAzure transition-all">
+                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-steelAzure">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </form>
             </div>
 
-            <!-- Profile / Actions -->
-            <div class="flex items-center gap-4">
+            <!-- Profile & Actions (Right side of mockup navbar) -->
+            <div class="flex items-center gap-6 flex-shrink-0">
+                <!-- Secondary Quick Links -->
+                <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="hidden lg:inline text-xs font-semibold text-slate-500 hover:text-steelAzure transition">Download App</a>
+                <a href="/dashboard" class="hidden lg:inline text-xs font-semibold text-slate-500 hover:text-steelAzure transition">Become a Landlord</a>
+                
                 @auth
                     <div class="flex items-center gap-4 relative">
                         <!-- Chat Icon Link -->
@@ -158,12 +158,25 @@
                         </form>
                     </div>
                 @else
-                    <a href="/login" class="px-4 py-2 border border-slate-200 hover:border-steelAzure/30 rounded-lg text-xs font-bold text-slate-600 hover:text-steelAzure transition">Login</a>
-                    <a href="/register" class="px-5 py-2 bg-gradient-to-r from-steelAzure to-blue-700 hover:from-steelAzure/90 hover:to-blue-600 text-white rounded-lg text-xs font-extrabold shadow-md shadow-steelAzure/10 hover:shadow-lg transition-all duration-300">Register</a>
+                    <a href="/login" class="px-5 py-2 border border-slate-300 hover:border-steelAzure hover:text-steelAzure text-slate-600 font-bold rounded-full text-xs transition-all duration-200 whitespace-nowrap">
+                        Login / Sign Up
+                    </a>
                 @endauth
             </div>
         </div>
     </nav>
+
+    <!-- Sub Menu Bar (Shop menu style) -->
+    <div class="bg-slate-50 border-b border-slate-100 py-3">
+        <div class="max-w-7xl mx-auto px-6 flex justify-center gap-8 text-[12px] font-semibold tracking-wide text-slate-600">
+            <a href="/" class="hover:text-steelAzure transition {{ Request::is('/') ? 'text-steelAzure font-bold' : '' }}">Explore Feed</a>
+            <a href="/dashboard" class="hover:text-steelAzure transition {{ Request::is('dashboard') ? 'text-steelAzure font-bold' : '' }}">List Property</a>
+            <a href="/about" class="hover:text-steelAzure transition {{ Request::is('about') ? 'text-steelAzure font-bold' : '' }}">About Us</a>
+            <a href="/contact" class="hover:text-steelAzure transition {{ Request::is('contact') ? 'text-steelAzure font-bold' : '' }}">Contact Us</a>
+            <a href="/privacy" class="hover:text-steelAzure transition {{ Request::is('privacy') ? 'text-steelAzure font-bold' : '' }}">Privacy Policy</a>
+            <a href="/terms" class="hover:text-steelAzure transition {{ Request::is('terms') ? 'text-steelAzure font-bold' : '' }}">Terms & Conditions</a>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="flex-1">
