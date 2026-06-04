@@ -40,9 +40,9 @@ class CustomerDashboardController extends Controller
 
         // 4. Calculate subscription limits
         $currentListingsCount = $myListings->count();
-        $limit = 1;
+        $limit = 10;
         if ($user->subscription_plan === 'standard') {
-            $limit = 5;
+            $limit = 50;
         } elseif ($user->subscription_plan === 'unlimited') {
             $limit = 999999;
         }
@@ -62,9 +62,9 @@ class CustomerDashboardController extends Controller
         
         // Count listings
         $currentCount = Property::where('owner_id', $user->id)->count();
-        $limit = 1;
+        $limit = 10;
         if ($user->subscription_plan === 'standard') {
-            $limit = 5;
+            $limit = 50;
         } elseif ($user->subscription_plan === 'unlimited') {
             $limit = 999999;
         }

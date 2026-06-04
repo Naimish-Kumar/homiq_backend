@@ -93,9 +93,9 @@ class PropertyController extends Controller
 
         // Enforce subscription listing limits
         $currentCount = Property::where('owner_id', $user->id)->count();
-        $limit = 1; // default free
+        $limit = 10; // default free
         if ($user->subscription_plan === 'standard') {
-            $limit = 5;
+            $limit = 50;
         } elseif ($user->subscription_plan === 'unlimited') {
             $limit = 999999;
         }
