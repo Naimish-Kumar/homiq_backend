@@ -78,8 +78,8 @@
                         </p>
                     </div>
                     <div class="text-right flex-shrink-0">
-                        <span class="text-3xl font-extrabold text-steelAzure block">₹{{ number_format($property->price, 0) }}</span>
-                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Per Month</span>
+                        <span class="text-3xl font-extrabold text-steelAzure block">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{{ $property->billing_frequency_label }}</span>
                     </div>
                 </div>
 
@@ -187,8 +187,8 @@
             <div class="sidebar-card bg-white p-7 rounded-2xl border border-slate-100 shadow-sm sticky top-24 space-y-6">
                 <!-- Price Summary -->
                 <div class="text-center pb-5 border-b border-slate-100">
-                    <span class="text-3xl font-extrabold text-steelAzure">₹{{ number_format($property->price, 0) }}</span>
-                    <span class="text-xs text-slate-400 font-bold block mt-1">Per Month</span>
+                    <span class="text-3xl font-extrabold text-steelAzure">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                    <span class="text-xs text-slate-400 font-bold block mt-1">{{ $property->billing_frequency_label }}</span>
                 </div>
 
                 <h3 class="text-base font-bold text-slate-800">Inquire About This Space</h3>

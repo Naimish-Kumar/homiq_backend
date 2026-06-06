@@ -179,7 +179,7 @@
                                             <span class="text-xs font-bold text-slate-800 block truncate max-w-[200px]">{{ $l->title }}</span>
                                             <span class="text-[9px] text-slate-400">{{ $l->address }}</span>
                                         </div>
-                                        <span class="text-xs font-bold text-steelAzure">₹{{ number_format($l->price, 0) }}/mo</span>
+                                        <span class="text-xs font-bold text-steelAzure">{{ $l->formatted_price }}</span>
                                     </div>
                                 @endforeach
                             </div>
@@ -300,12 +300,34 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Monthly Price (₹)</label>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Price Amount</label>
                                 <input type="number" name="price" required min="0" placeholder="100"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                             </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Currency</label>
+                                <select name="currency" required
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="INR" selected>INR (₹)</option>
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="GBP">GBP (£)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Pricing Frequency</label>
+                                <select name="billing_frequency" required
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="monthly" selected>Monthly</option>
+                                    <option value="per_day">Per Day</option>
+                                    <option value="hourly">Hourly</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Category</label>
                                 <select name="category" required
@@ -315,9 +337,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bedrooms</label>
                                 <input type="number" name="bedrooms" required min="0" value="1"
@@ -363,10 +382,29 @@
                         </div>
 
                         <!-- Upload Space Photos (Multiple Files) -->
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Upload Photos (Select Multiple, Max 5)</label>
-                            <input type="file" name="images[]" multiple required accept="image/*" onchange="validateImagesCount(this)"
-                                class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Upload Photos (Select Multiple, Max 5)</label>
+                            
+                            <!-- Hidden File Input for browser selection -->
+                            <input type="file" id="property-images-picker" multiple accept="image/*" class="hidden">
+                            
+                            <!-- Real Hidden Input submitted to backend -->
+                            <input type="file" name="images[]" id="property-images-submit" multiple class="hidden" required>
+                            
+                            <!-- Custom Drag & Drop Area -->
+                            <div id="image-upload-zone" class="border-2 border-dashed border-slate-200 hover:border-steelAzure rounded-xl p-5 text-center cursor-pointer transition bg-white/50 hover:bg-slate-50/50 flex flex-col items-center justify-center space-y-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span class="text-xs font-bold text-slate-600">Drag & drop photos here or click to browse</span>
+                                <span class="text-[9px] text-slate-400 font-bold">Select files multiple times if needed (Max 5 total, up to 4MB each)</span>
+                            </div>
+
+                            <!-- Image Preview Grid -->
+                            <div id="image-previews-container" class="grid grid-cols-2 sm:grid-cols-5 gap-3 hidden">
+                                <!-- Previews will be dynamically appended here -->
+                            </div>
+
                             <p id="image-error" class="text-rose-600 text-[10px] font-bold mt-1.5 hidden">You can upload a maximum of 5 images.</p>
                         </div>
 
@@ -396,7 +434,7 @@
                                 </div>
                                 <div class="bg-slate-50/50 p-3 rounded-xl flex justify-between items-center text-xs">
                                     <span class="text-slate-400 font-semibold">Listed Price</span>
-                                    <span class="font-extrabold text-slate-800">₹{{ number_format($listing->price, 0) }}/mo</span>
+                                    <span class="font-extrabold text-slate-800">{{ $listing->formatted_price }}</span>
                                 </div>
                                 <div class="flex justify-end">
                                     <a href="/properties/{{ $listing->id }}" class="text-[10px] font-bold text-steelAzure hover:underline">View Page &rarr;</a>
@@ -428,7 +466,7 @@
                                     <p class="text-[10px] text-slate-500 mt-1.5 font-medium">Dates: {{ $req->check_in->format('Y-m-d') }} to {{ $req->check_out->format('Y-m-d') }}</p>
                                 </div>
                                 <div class="text-left md:text-right space-y-2 w-full md:w-auto flex flex-col items-start md:items-end">
-                                    <span class="font-extrabold text-slate-800 text-sm block">₹{{ number_format($req->total_price, 2) }}</span>
+                                    <span class="font-extrabold text-slate-800 text-sm block">{{ $req->property->currency_symbol }}{{ number_format($req->total_price, 2) }}</span>
                                     
                                     @if ($req->status === 'pending')
                                         <div class="flex gap-2 mt-1 justify-end">
@@ -575,15 +613,141 @@
         if (el) el.classList.toggle('hidden');
     }
 
-    // Validate maximum 5 images selection
-    function validateImagesCount(input) {
-        const errorEl = document.getElementById('image-error');
-        if (input.files.length > 5) {
-            if (errorEl) errorEl.classList.remove('hidden');
-            input.value = ''; // Reset selection
-        } else {
-            if (errorEl) errorEl.classList.add('hidden');
+    // Multiple Images Uploader Logic
+    let selectedImageFiles = [];
+
+    const uploadZone = document.getElementById('image-upload-zone');
+    const imagePicker = document.getElementById('property-images-picker');
+    const imageSubmitInput = document.getElementById('property-images-submit');
+    const previewsContainer = document.getElementById('image-previews-container');
+    const imageError = document.getElementById('image-error');
+
+    if (uploadZone && imagePicker) {
+        // Trigger file input click when clicking the zone
+        uploadZone.addEventListener('click', () => imagePicker.click());
+
+        // Drag and drop handlers
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('border-steelAzure', 'bg-slate-50/50');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('border-steelAzure', 'bg-slate-50/50');
+            }, false);
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleImageFilesSelection(files);
+        });
+
+        imagePicker.addEventListener('change', (e) => {
+            handleImageFilesSelection(e.target.files);
+        });
+    }
+
+    function handleImageFilesSelection(files) {
+        imageError.classList.add('hidden');
+        
+        if (selectedImageFiles.length + files.length > 5) {
+            imageError.innerText = 'You can upload a maximum of 5 images.';
+            imageError.classList.remove('hidden');
+            return;
         }
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            // Check type
+            if (!file.type.match('image.*')) {
+                imageError.innerText = 'Only image files are allowed.';
+                imageError.classList.remove('hidden');
+                continue;
+            }
+
+            // Check size (max 4MB)
+            if (file.size > 4 * 1024 * 1024) {
+                imageError.innerText = 'Each image must be smaller than 4MB.';
+                imageError.classList.remove('hidden');
+                continue;
+            }
+
+            selectedImageFiles.push(file);
+        }
+
+        updateImagePreviews();
+        updateHiddenSubmitInput();
+        
+        // Reset picker so the same file can be chosen again
+        imagePicker.value = '';
+    }
+
+    function updateImagePreviews() {
+        if (!previewsContainer) return;
+
+        previewsContainer.innerHTML = '';
+        
+        if (selectedImageFiles.length === 0) {
+            previewsContainer.classList.add('hidden');
+            return;
+        }
+
+        previewsContainer.classList.remove('hidden');
+
+        selectedImageFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            
+            // Create a preview item wrapper
+            const itemWrapper = document.createElement('div');
+            itemWrapper.className = 'relative aspect-square bg-slate-100 rounded-xl overflow-hidden border border-slate-200 group';
+            
+            // Image element
+            const imgEl = document.createElement('img');
+            imgEl.className = 'w-full h-full object-cover';
+            itemWrapper.appendChild(imgEl);
+
+            // Delete badge / overlay
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'absolute top-1 right-1 bg-rose-600 text-white rounded-full p-1 opacity-90 hover:opacity-100 transition shadow-md cursor-pointer border-0';
+            deleteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2050/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>`;
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeSelectedImage(index);
+            };
+            itemWrapper.appendChild(deleteBtn);
+
+            reader.onload = (e) => {
+                imgEl.src = e.target.result;
+            };
+            
+            reader.readAsDataURL(file);
+            previewsContainer.appendChild(itemWrapper);
+        });
+    }
+
+    function removeSelectedImage(index) {
+        selectedImageFiles.splice(index, 1);
+        updateImagePreviews();
+        updateHiddenSubmitInput();
+    }
+
+    function updateHiddenSubmitInput() {
+        if (!imageSubmitInput) return;
+
+        // Use DataTransfer API to assign Javascript File objects back to hidden input
+        const dataTransfer = new DataTransfer();
+        selectedImageFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        
+        imageSubmitInput.files = dataTransfer.files;
     }
 
     // Fetch browser location and reverse geocode

@@ -79,8 +79,8 @@
             <div class="flex items-center gap-6 flex-shrink-0">
                 <!-- Secondary Quick Links -->
                 <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="hidden lg:inline text-xs font-semibold text-slate-500 hover:text-steelAzure transition">Download App</a>
-                <a href="/dashboard" class="hidden lg:inline text-xs font-semibold text-slate-500 hover:text-steelAzure transition">Become a Landlord</a>
                 
+
                 @auth
                     <div class="flex items-center gap-4 relative">
                         <!-- Chat Icon Link -->
@@ -150,9 +150,9 @@
 
                         <span class="text-xs font-semibold text-slate-600 ml-2">Hello, {{ Auth::user()->name }}</span>
                         <!-- Logout form -->
-                        <form action="/logout" method="POST" class="m-0" onsubmit="return confirm('Are you sure you want to sign out?');">
+                        <form id="logout-form" action="/logout" method="POST" class="m-0">
                             @csrf
-                            <button type="submit" class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
+                            <button type="button" onclick="showLogoutModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
                                 Sign Out
                             </button>
                         </form>
@@ -407,6 +407,82 @@
             }
         }, 5000);
         @endauth
+
+        function showLogoutModal() {
+            const modal = document.getElementById('logout-confirm-modal');
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            const card = document.getElementById('logout-modal-card');
+            if (modal && backdrop && card) {
+                modal.classList.remove('hidden');
+                void modal.offsetWidth;
+                backdrop.classList.add('opacity-100');
+                backdrop.classList.remove('opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+                card.classList.remove('scale-95', 'opacity-0');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logout-confirm-modal');
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            const card = document.getElementById('logout-modal-card');
+            if (modal && backdrop && card) {
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0');
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+        }
+
+        function confirmLogout() {
+            const form = document.getElementById('logout-form');
+            if (form) {
+                form.submit();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
     </script>
+
+    <!-- Beautiful Custom Logout Confirmation Modal -->
+    <div id="logout-confirm-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="logout-modal-backdrop" onclick="hideLogoutModal()"></div>
+        
+        <!-- Modal Dialog Box -->
+        <div class="relative bg-white border border-slate-100 rounded-[24px] p-6 w-full max-w-sm shadow-2xl z-10 transform scale-95 opacity-0 transition-all duration-300" id="logout-modal-card">
+            <div class="text-center space-y-4">
+                <!-- Icon -->
+                <div class="mx-auto h-12 w-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </div>
+                <!-- Text Content -->
+                <div class="space-y-1">
+                    <h3 class="text-base font-extrabold text-slate-900">Sign Out Confirmation</h3>
+                    <p class="text-xs text-slate-405 font-medium leading-relaxed">Are you sure you want to log out of your session? You will need to enter your details again to sign back in.</p>
+                </div>
+                <!-- Buttons -->
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="hideLogoutModal()" class="flex-1 py-3 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-xs uppercase tracking-wider rounded-xl transition">
+                        Cancel
+                    </button>
+                    <button type="button" onclick="confirmLogout()" class="flex-1 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-rose-500/20 transition">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

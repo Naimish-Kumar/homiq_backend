@@ -87,6 +87,8 @@ class CustomerDashboardController extends Controller
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
             'amenities' => 'nullable|array',
+            'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
+            'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
             'images' => 'required|array|max:5',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
@@ -106,6 +108,8 @@ class CustomerDashboardController extends Controller
             'title' => $fields['title'],
             'description' => $fields['description'],
             'price' => $fields['price'],
+            'currency' => $request->input('currency') ?: 'INR',
+            'billing_frequency' => $request->input('billing_frequency') ?: 'monthly',
             'address' => $fields['address'],
             'latitude' => $fields['latitude'],
             'longitude' => $fields['longitude'],

@@ -128,7 +128,7 @@
 
                         <div>
                             <div class="flex items-center justify-between border-t border-slate-50 pt-4">
-                                <span class="text-base font-bold text-steelAzure">₹{{ number_format($prop->price, 0) }}<span class="text-[10px] text-slate-400 font-normal">/mo</span></span>
+                                <span class="text-base font-bold text-steelAzure">{{ $prop->currency_symbol }}{{ number_format($prop->price, 0) }}<span class="text-[10px] text-slate-400 font-normal">{{ $prop->billing_frequency_suffix }}</span></span>
                                 <span class="text-xs text-slate-400 font-medium">{{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba</span>
                             </div>
                         </div>

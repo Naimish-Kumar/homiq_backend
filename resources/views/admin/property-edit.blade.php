@@ -43,24 +43,47 @@
                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-3 gap-4">
             <!-- Price field -->
             <div class="space-y-1.5">
-                <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Monthly Rent Rate (₹)</label>
+                <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Price Rate</label>
                 <input type="number" step="0.01" name="price" value="{{ old('price', $property->price) }}" required
                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
             </div>
 
-            <!-- Category dropdown -->
+            <!-- Currency field -->
             <div class="space-y-1.5">
-                <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Property Category</label>
-                <select name="category" required
+                <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Currency</label>
+                <select name="currency" required
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
-                    @foreach ($categoriesList as $cat)
-                        <option value="{{ $cat }}" {{ old('category', $property->category) === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                    @endforeach
+                    <option value="INR" {{ old('currency', $property->currency) === 'INR' ? 'selected' : '' }}>INR (₹)</option>
+                    <option value="USD" {{ old('currency', $property->currency) === 'USD' ? 'selected' : '' }}>USD ($)</option>
+                    <option value="EUR" {{ old('currency', $property->currency) === 'EUR' ? 'selected' : '' }}>EUR (€)</option>
+                    <option value="GBP" {{ old('currency', $property->currency) === 'GBP' ? 'selected' : '' }}>GBP (£)</option>
                 </select>
             </div>
+
+            <!-- Frequency field -->
+            <div class="space-y-1.5">
+                <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Pricing Frequency</label>
+                <select name="billing_frequency" required
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
+                    <option value="monthly" {{ old('billing_frequency', $property->billing_frequency) === 'monthly' ? 'selected' : '' }}>Monthly</option>
+                    <option value="per_day" {{ old('billing_frequency', $property->billing_frequency) === 'per_day' ? 'selected' : '' }}>Per Day</option>
+                    <option value="hourly" {{ old('billing_frequency', $property->billing_frequency) === 'hourly' ? 'selected' : '' }}>Hourly</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Category dropdown -->
+        <div class="space-y-1.5">
+            <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Property Category</label>
+            <select name="category" required
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
+                @foreach ($categoriesList as $cat)
+                    <option value="{{ $cat }}" {{ old('category', $property->category) === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="grid grid-cols-2 gap-4">

@@ -47,7 +47,7 @@
                         <th class="p-4 pl-6">Property Details</th>
                         <th class="p-4">Category</th>
                         <th class="p-4">Owner / Host</th>
-                        <th class="p-4">Monthly Rate</th>
+                        <th class="p-4">Rate</th>
                         <th class="p-4">Current Status</th>
                         <th class="p-4 pr-6 text-right">Actions & Moderation</th>
                     </tr>
@@ -80,8 +80,8 @@
                                 <div class="font-bold text-slate-800">{{ $property->owner->name }}</div>
                                 <span class="text-[9px] text-slate-400 block mt-0.5">{{ $property->owner->email }}</span>
                             </td>
-                            <td class="p-4 font-extrabold text-slate-800 text-sm">
-                                ₹{{ number_format($property->price, 2) }}
+                            <td class="p-4 font-extrabold text-slate-800 text-sm whitespace-nowrap">
+                                {{ $property->currency_symbol }}{{ number_format($property->price, 2) }}{{ $property->billing_frequency_suffix }}
                             </td>
                             <td class="p-4">
                                 @if ($property->status == 'approved')

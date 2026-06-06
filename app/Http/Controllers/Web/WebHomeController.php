@@ -20,15 +20,50 @@ class WebHomeController extends Controller
     public function index(Request $request)
     {
         $search = $request->query('search');
+        $searchType = $request->query('search_type');
+        $maxPrice = $request->query('max_price');
         $lat = $request->query('latitude');
         $lng = $request->query('longitude');
 
         $query = Property::with('owner')->where('status', 'approved');
 
+        // Filter by tab/search_type if specified and not 'all'
+        if ($searchType && $searchType !== 'all') {
+            $query->where('category', $searchType);
+        }
+
+        // Filter by budget if specified
+        if ($maxPrice) {
+            $query->where('price', '<=', $maxPrice);
+        }
+
+        // Text search
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%");
+                  ->orWhere('address', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+                
+                // Synonym mapping
+                $lowerSearch = strtolower($search);
+                if (str_contains($lowerSearch, 'flat') || str_contains($lowerSearch, 'apartment')) {
+                    $q->orWhere('category', 'Apartment');
+                }
+                if (str_contains($lowerSearch, 'villa') || str_contains($lowerSearch, 'bungalow') || str_contains($lowerSearch, 'mansion')) {
+                    $q->orWhere('category', 'Villa');
+                }
+                if (str_contains($lowerSearch, 'room') || str_contains($lowerSearch, 'pg') || str_contains($lowerSearch, 'hostel') || str_contains($lowerSearch, 'studio') || str_contains($lowerSearch, 'sharing')) {
+                    $q->orWhere('category', 'Studio');
+                }
+                if (str_contains($lowerSearch, 'hall') || str_contains($lowerSearch, 'event') || str_contains($lowerSearch, 'wedding') || str_contains($lowerSearch, 'banquet')) {
+                    $q->orWhere('category', 'Hall');
+                }
+                if (str_contains($lowerSearch, 'shop') || str_contains($lowerSearch, 'office') || str_contains($lowerSearch, 'commercial') || str_contains($lowerSearch, 'store')) {
+                    $q->orWhere('category', 'Shop');
+                }
+                if (str_contains($lowerSearch, 'house') || str_contains($lowerSearch, 'cottage') || str_contains($lowerSearch, 'home')) {
+                    $q->orWhere('category', 'House');
+                }
             });
         }
 

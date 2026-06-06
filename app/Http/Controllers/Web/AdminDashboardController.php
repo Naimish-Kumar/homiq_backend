@@ -632,7 +632,12 @@ class AdminDashboardController extends Controller
             'is_furnished' => 'required|boolean',
             'has_parking' => 'required|boolean',
             'is_pet_friendly' => 'required|boolean',
+            'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
+            'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
         ]);
+
+        $fields['currency'] = $request->input('currency') ?: 'INR';
+        $fields['billing_frequency'] = $request->input('billing_frequency') ?: 'monthly';
 
         $property->update($fields);
 

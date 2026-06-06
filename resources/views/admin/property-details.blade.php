@@ -39,8 +39,8 @@
             </div>
             
             <div class="text-right bg-slate-900/60 backdrop-blur-md border border-slate-800/50 p-4 rounded-xl">
-                <span class="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest block mb-0.5">Monthly Rate</span>
-                <span class="text-lg font-black text-emerald-400">₹{{ number_format($property->price, 2) }}</span>
+                <span class="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest block mb-0.5">{{ $property->billing_frequency_label }}</span>
+                <span class="text-lg font-black text-emerald-400">{{ $property->currency_symbol }}{{ number_format($property->price, 2) }}</span>
             </div>
         </div>
     </div>

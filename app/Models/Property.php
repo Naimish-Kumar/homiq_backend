@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'is_furnished',
     'has_parking',
     'is_pet_friendly',
+    'currency',
+    'billing_frequency',
     'status'
 ])]
 class Property extends Model
@@ -59,6 +61,51 @@ class Property extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'property_id');
+    }
+
+    /**
+     * Accessor for currency symbol.
+     */
+    public function getCurrencySymbolAttribute(): string
+    {
+        return match ($this->currency) {
+            'USD' => '$',
+            'EUR' => '€',
+            'GBP' => '£',
+            default => '₹',
+        };
+    }
+
+    /**
+     * Accessor for billing frequency suffix.
+     */
+    public function getBillingFrequencySuffixAttribute(): string
+    {
+        return match ($this->billing_frequency) {
+            'per_day' => '/day',
+            'hourly' => '/hr',
+            default => '/mo',
+        };
+    }
+
+    /**
+     * Accessor for fully formatted price.
+     */
+    public function getFormattedPriceAttribute(): string
+    {
+        return $this->currency_symbol . number_format($this->price, 0) . $this->billing_frequency_suffix;
+    }
+
+    /**
+     * Accessor for human-readable billing frequency label.
+     */
+    public function getBillingFrequencyLabelAttribute(): string
+    {
+        return match ($this->billing_frequency) {
+            'per_day' => 'Per Day',
+            'hourly' => 'Per Hour',
+            default => 'Per Month',
+        };
     }
 }
 

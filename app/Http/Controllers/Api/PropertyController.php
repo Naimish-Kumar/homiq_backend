@@ -87,7 +87,12 @@ class PropertyController extends Controller
             'is_furnished' => 'boolean',
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
+            'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
+            'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
         ]);
+
+        $fields['currency'] = $request->input('currency') ?: 'INR';
+        $fields['billing_frequency'] = $request->input('billing_frequency') ?: 'monthly';
 
         $user = $request->user();
 
@@ -231,6 +236,8 @@ class PropertyController extends Controller
             'is_furnished' => 'boolean',
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
+            'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
+            'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
             'status' => 'string|in:pending,approved,rejected'
         ]);
 
