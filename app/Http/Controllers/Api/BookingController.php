@@ -70,7 +70,7 @@ class BookingController extends Controller
             'booking',
             true, // send email
             \App\Mail\BookingStatusMail::class,
-            [$property->owner->name, $property->title, 'pending', $booking->check_in, $booking->check_out, (string) $booking->total_price]
+            [$property->owner->name, $property->title, 'pending', $booking->check_in, $booking->check_out, (string) $booking->total_price, $property->currency]
         );
 
         return response($booking->load(['property', 'renter']), 201);
@@ -131,7 +131,7 @@ class BookingController extends Controller
                     'booking',
                     true,
                     \App\Mail\BookingStatusMail::class,
-                    [$recipient->name, $booking->property->title, 'cancelled', $booking->check_in, $booking->check_out, (string) $booking->total_price]
+                    [$recipient->name, $booking->property->title, 'cancelled', $booking->check_in, $booking->check_out, (string) $booking->total_price, $booking->property->currency]
                 );
             } else {
                 // Approved, rejected, or completed -> notify renter
@@ -148,7 +148,7 @@ class BookingController extends Controller
                     'booking',
                     $sendEmail,
                     $sendEmail ? \App\Mail\BookingStatusMail::class : null,
-                    $sendEmail ? [$booking->renter->name, $booking->property->title, $newStatus, $booking->check_in, $booking->check_out, (string) $booking->total_price] : []
+                    $sendEmail ? [$booking->renter->name, $booking->property->title, $newStatus, $booking->check_in, $booking->check_out, (string) $booking->total_price, $booking->property->currency] : []
                 );
             }
         }

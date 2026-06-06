@@ -18,6 +18,7 @@ class BookingStatusMail extends Mailable
     public string $checkIn;
     public string $checkOut;
     public string $totalPrice;
+    public string $currency;
 
     /**
      * Create a new message instance.
@@ -28,7 +29,8 @@ class BookingStatusMail extends Mailable
         string $status,
         string $checkIn,
         string $checkOut,
-        string $totalPrice
+        string $totalPrice,
+        string $currency = 'INR'
     ) {
         $this->userName = $userName;
         $this->propertyTitle = $propertyTitle;
@@ -36,6 +38,7 @@ class BookingStatusMail extends Mailable
         $this->checkIn = $checkIn;
         $this->checkOut = $checkOut;
         $this->totalPrice = $totalPrice;
+        $this->currency = $currency;
     }
 
     /**
