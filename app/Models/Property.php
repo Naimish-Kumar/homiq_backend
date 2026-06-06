@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'is_pet_friendly',
     'currency',
     'billing_frequency',
+    'country',
     'status'
 ])]
 class Property extends Model

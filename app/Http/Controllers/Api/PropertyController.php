@@ -64,6 +64,22 @@ class PropertyController extends Controller
             $query->where('status', 'approved');
         }
 
+        // Filter by country
+        if ($request->has('country') && $request->country !== 'All') {
+            $query->where('country', $request->country);
+        } elseif (!$request->has('owner_id')) {
+            // Auto-detect country based on user IP address
+            $userIp = $request->ip();
+            $detectedCountry = \App\Helpers\LocationHelper::detectCountryFromIp($userIp);
+            if ($detectedCountry) {
+                // Check if any listings exist in this country before filtering (fallback strategy)
+                $exists = (clone $query)->where('country', $detectedCountry)->exists();
+                if ($exists) {
+                    $query->where('country', $detectedCountry);
+                }
+            }
+        }
+
         $properties = $query->latest()->get();
 
         return response($properties, 200);
@@ -89,10 +105,12 @@ class PropertyController extends Controller
             'is_pet_friendly' => 'boolean',
             'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
             'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
+            'country' => 'nullable|string|max:255',
         ]);
 
         $fields['currency'] = $request->input('currency') ?: 'INR';
         $fields['billing_frequency'] = $request->input('billing_frequency') ?: 'monthly';
+        $fields['country'] = $request->input('country') ?: 'India';
 
         $user = $request->user();
 
@@ -238,6 +256,7 @@ class PropertyController extends Controller
             'is_pet_friendly' => 'boolean',
             'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
             'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
+            'country' => 'nullable|string|max:255',
             'status' => 'string|in:pending,approved,rejected'
         ]);
 

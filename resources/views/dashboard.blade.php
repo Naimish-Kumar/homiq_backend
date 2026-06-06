@@ -300,6 +300,9 @@
                             </div>
                         </div>
 
+                        <!-- Hidden Country Input -->
+                        <input type="hidden" name="country" id="listing-country" value="India">
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Price Amount</label>
@@ -772,6 +775,12 @@
                         loadingSpan.classList.add('hidden');
                         if (data && data.display_name) {
                             addressInput.value = data.display_name;
+                        }
+                        if (data && data.address && data.address.country) {
+                            const countryInput = document.getElementById('listing-country');
+                            if (countryInput) {
+                                countryInput.value = data.address.country;
+                            }
                         }
                     })
                     .catch(err => {

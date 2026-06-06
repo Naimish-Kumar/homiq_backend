@@ -67,6 +67,22 @@ class WebHomeController extends Controller
             });
         }
 
+        // Filter by country
+        if ($request->has('country') && $request->query('country') !== 'All') {
+            $query->where('country', $request->query('country'));
+        } else {
+            // Auto-detect country based on user IP address
+            $userIp = $request->ip();
+            $detectedCountry = \App\Helpers\LocationHelper::detectCountryFromIp($userIp);
+            if ($detectedCountry) {
+                // Check if any listings exist in this country before filtering (fallback strategy)
+                $exists = (clone $query)->where('country', $detectedCountry)->exists();
+                if ($exists) {
+                    $query->where('country', $detectedCountry);
+                }
+            }
+        }
+
         if ($lat && $lng) {
             $query->selectRaw("*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance", [$lat, $lng, $lat])
                   ->orderBy('distance');
