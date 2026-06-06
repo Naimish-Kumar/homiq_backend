@@ -63,6 +63,8 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index']);
     Route::get('/properties', [AdminDashboardController::class, 'properties']);
     Route::get('/properties/{id}', [AdminDashboardController::class, 'showProperty']);
+    Route::get('/properties/{id}/edit', [AdminDashboardController::class, 'editProperty']);
+    Route::post('/properties/{id}', [AdminDashboardController::class, 'updateProperty']);
     Route::post('/properties/{id}/status', [AdminDashboardController::class, 'updatePropertyStatus']);
     Route::delete('/properties/{id}', [AdminDashboardController::class, 'deleteProperty']);
 

@@ -22,6 +22,15 @@ Route::post('/subscription/revenuecat-webhook', [\App\Http\Controllers\Api\Reven
 // Public Property browse routes
 Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/properties/{id}', [PropertyController::class, 'show']);
+Route::get('/app-version', function() {
+    $configs = \App\Models\Configuration::where('group', 'app')->pluck('value', 'key');
+    return response()->json([
+        'min_version' => $configs->get('app_min_version', '1.0.0'),
+        'latest_version' => $configs->get('app_latest_version', '1.0.0'),
+        'force_update' => $configs->get('app_force_update', '0') === '1',
+        'update_url' => $configs->get('app_update_url', 'https://play.google.com/store/apps/details?id=com.homiq.acrocoder'),
+    ]);
+});
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

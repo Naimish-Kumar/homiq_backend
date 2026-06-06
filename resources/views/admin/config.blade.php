@@ -48,6 +48,14 @@
                 </svg>
                 Listing Settings
             </button>
+
+            <button onclick="switchTab('app')" id="tab-btn-app" 
+                    class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-bold transition text-left text-slate-500 hover:bg-slate-100 hover:text-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                App Updates
+            </button>
         </div>
 
         <!-- Form Area -->
@@ -163,6 +171,34 @@
                                     <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">{{ $config->label }}</label>
                                     <input type="text" name="{{ $config->key }}" value="{{ $config->value }}" 
                                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
+                                    <p class="text-[10px] text-slate-400 leading-normal">{{ $config->description }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Tab Content: App Updates -->
+                <div id="tab-content-app" class="tab-pane hidden space-y-6">
+                    <div>
+                        <h2 class="text-sm font-extrabold text-[#187053] uppercase tracking-widest">App Updates</h2>
+                        <p class="text-[11px] font-semibold text-slate-400 mt-1">Configure live app version update prompts and store redirect links.</p>
+                    </div>
+
+                    @if(isset($groups['app']))
+                        <div class="space-y-6 max-w-xl">
+                            @foreach($groups['app'] as $config)
+                                <div class="space-y-1.5">
+                                    <label class="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">{{ $config->label }}</label>
+                                    @if($config->type === 'boolean')
+                                        <select name="{{ $config->key }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
+                                            <option value="0" {{ $config->value == '0' ? 'selected' : '' }}>No (Disable Forced Update)</option>
+                                            <option value="1" {{ $config->value == '1' ? 'selected' : '' }}>Yes (Enable Forced Update)</option>
+                                        </select>
+                                    @else
+                                        <input type="text" name="{{ $config->key }}" value="{{ $config->value }}" 
+                                               class="w-full px-4 py-3 bg-slate-50 border border-slate-200/60 rounded-md text-slate-850 text-xs font-semibold focus:outline-none focus:border-[#187053] transition-colors">
+                                    @endif
                                     <p class="text-[10px] text-slate-400 leading-normal">{{ $config->description }}</p>
                                 </div>
                             @endforeach

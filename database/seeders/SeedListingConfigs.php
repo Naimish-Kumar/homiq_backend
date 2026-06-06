@@ -50,6 +50,38 @@ class SeedListingConfigs extends Seeder
                 'label' => 'Amenities Tags',
                 'description' => 'Comma-separated multi-select amenity tag choices.',
             ],
+            [
+                'key' => 'app_min_version',
+                'value' => '1.0.0',
+                'type' => 'text',
+                'group' => 'app',
+                'label' => 'Minimum Required App Version',
+                'description' => 'The oldest allowed app version. Any users below this version will be forced to update to use the app (e.g. 1.0.0).',
+            ],
+            [
+                'key' => 'app_latest_version',
+                'value' => '1.0.0',
+                'type' => 'text',
+                'group' => 'app',
+                'label' => 'Latest App Version',
+                'description' => 'The latest published version. Users on older versions will receive a suggestion to update (e.g. 1.0.0).',
+            ],
+            [
+                'key' => 'app_force_update',
+                'value' => '0',
+                'type' => 'boolean',
+                'group' => 'app',
+                'label' => 'Force App Update',
+                'description' => 'Force all users to update if their app version is below the latest version.',
+            ],
+            [
+                'key' => 'app_update_url',
+                'value' => 'https://play.google.com/store/apps/details?id=com.homiq.acrocoder',
+                'type' => 'text',
+                'group' => 'app',
+                'label' => 'App Store / Play Store Update Link',
+                'description' => 'Direct link to redirect users when they tap the update button.',
+            ],
         ];
 
         foreach ($configs as $config) {

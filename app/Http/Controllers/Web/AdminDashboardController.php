@@ -598,5 +598,45 @@ class AdminDashboardController extends Controller
 
         return redirect('/admin/properties')->with('success', 'Property listing deleted successfully.');
     }
+
+    /**
+     * Show edit property form.
+     */
+    public function editProperty($id)
+    {
+        $property = Property::findOrFail($id);
+        
+        // Fetch categories dynamically from database configurations
+        $configs = Configuration::where('group', 'listing')->pluck('value', 'key');
+        
+        $categoriesList = array_map('trim', explode(',', $configs->get('listing_categories', 'Apartment,House,Villa,Studio,PG,Room,Shop,Hall')));
+        
+        return view('admin.property-edit', compact('property', 'categoriesList'));
+    }
+
+    /**
+     * Update property details.
+     */
+    public function updateProperty(Request $request, $id)
+    {
+        $property = Property::findOrFail($id);
+
+        $fields = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'address' => 'required|string|max:255',
+            'bedrooms' => 'required|integer|min:0',
+            'bathrooms' => 'required|integer|min:0',
+            'category' => 'required|string',
+            'is_furnished' => 'required|boolean',
+            'has_parking' => 'required|boolean',
+            'is_pet_friendly' => 'required|boolean',
+        ]);
+
+        $property->update($fields);
+
+        return redirect('/admin/properties/' . $id)->with('success', 'Property details updated successfully.');
+    }
 }
 

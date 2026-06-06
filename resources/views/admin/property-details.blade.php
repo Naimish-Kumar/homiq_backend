@@ -93,6 +93,9 @@
 
         <!-- Moderation Actions -->
         <div class="border-t border-slate-100 pt-6 flex justify-end gap-3">
+            <a href="/admin/properties/{{ $property->id }}/edit" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-250 text-xs font-extrabold rounded-lg shadow-sm transition inline-flex items-center justify-center">
+                Edit Details
+            </a>
             <!-- Delete Property Form -->
             <form action="/admin/properties/{{ $property->id }}" method="POST" class="m-0" onsubmit="return confirm('Are you sure you want to permanently delete this property listing? This will also cancel all associated bookings.')">
                 @csrf
