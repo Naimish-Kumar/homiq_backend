@@ -439,7 +439,19 @@
                                     <span class="text-slate-400 font-semibold">Listed Price</span>
                                     <span class="font-extrabold text-slate-800">{{ $listing->formatted_price }}</span>
                                 </div>
-                                <div class="flex justify-end">
+                                <div class="flex justify-between items-center border-t border-slate-50 pt-3">
+                                    <form action="/dashboard/listings/{{ $listing->id }}/toggle-featured" method="POST" class="m-0">
+                                        @csrf
+                                        @if($listing->is_featured)
+                                            <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-[9px] uppercase shadow-sm transition flex items-center gap-1">
+                                                ★ Featured
+                                            </button>
+                                        @else
+                                            <button type="submit" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-650 rounded-lg font-bold text-[9px] uppercase transition flex items-center gap-1">
+                                                ☆ Make Featured
+                                            </button>
+                                        @endif
+                                    </form>
                                     <a href="/properties/{{ $listing->id }}" class="text-[10px] font-bold text-steelAzure hover:underline">View Page &rarr;</a>
                                 </div>
                             </div>

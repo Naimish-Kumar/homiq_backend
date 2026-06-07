@@ -39,7 +39,7 @@ class AdminDashboardController extends Controller
 
         // Send actual email OTP
         try {
-            \Illuminate\Support\Facades\Mail::raw("Your HomiQ email verification code is: {$code}. This code is valid for 15 minutes.", function ($message) use ($email) {
+            \Illuminate\Support\Facades\Mail::send('emails.email-otp', ['code' => $code], function ($message) use ($email) {
                 $message->to($email)->subject("HomiQ - Email Verification OTP");
             });
         } catch (\Exception $e) {
@@ -645,5 +645,18 @@ class AdminDashboardController extends Controller
 
         return redirect('/admin/properties/' . $id)->with('success', 'Property details updated successfully.');
     }
-}
 
+    /**
+     * Toggle the featured status of a property listing by Admin.
+     */
+    public function toggleFeatured(Request $request, $id)
+    {
+        $property = Property::findOrFail($id);
+        $property->update([
+            'is_featured' => !$property->is_featured,
+        ]);
+
+        $statusMessage = $property->is_featured ? 'marked as Featured!' : 'removed from Featured!';
+        return back()->with('success', "Property '{$property->title}' has been successfully {$statusMessage}");
+    }
+}

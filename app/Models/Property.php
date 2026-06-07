@@ -25,7 +25,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'currency',
     'billing_frequency',
     'country',
-    'status'
+    'status',
+    'is_featured'
 ])]
 class Property extends Model
 {
@@ -45,6 +46,7 @@ class Property extends Model
             'is_furnished' => 'boolean',
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
+            'is_featured' => 'boolean',
         ];
     }
 

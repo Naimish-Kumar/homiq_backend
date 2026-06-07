@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['verified_otp'])->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index']);
         Route::post('/dashboard/listings', [CustomerDashboardController::class, 'storeListing']);
+        Route::post('/dashboard/listings/{id}/toggle-featured', [CustomerDashboardController::class, 'toggleFeatured']);
         Route::post('/dashboard/reservations', [CustomerDashboardController::class, 'makeReservation']);
         Route::post('/upgrade-subscription', [WebHomeController::class, 'upgradeSubscription']);
         Route::post('/pricing/razorpay/create-order', [\App\Http\Controllers\Api\RazorpayController::class, 'createOrder']);
@@ -66,6 +67,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/properties/{id}/edit', [AdminDashboardController::class, 'editProperty']);
     Route::post('/properties/{id}', [AdminDashboardController::class, 'updateProperty']);
     Route::post('/properties/{id}/status', [AdminDashboardController::class, 'updatePropertyStatus']);
+    Route::post('/properties/{id}/toggle-featured', [AdminDashboardController::class, 'toggleFeatured']);
     Route::delete('/properties/{id}', [AdminDashboardController::class, 'deleteProperty']);
 
     Route::get('/users', [AdminDashboardController::class, 'users']);

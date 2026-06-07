@@ -222,7 +222,15 @@
                         </div>
                         <div>
                             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Property Owner</span>
-                            <p class="text-sm font-bold text-slate-800">{{ $property->owner->name }}</p>
+                            <p class="text-sm font-bold text-slate-800 mb-0.5">{{ $property->owner->name }}</p>
+                            @if ($property->owner->phone)
+                                <a href="tel:{{ $property->owner->phone }}" class="text-[11px] text-slate-550 font-semibold hover:text-steelAzure transition flex items-center gap-1.5 mt-0.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-steelAzure flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    {{ $property->owner->phone }}
+                                </a>
+                            @endif
                         </div>
                     </div>
                     @auth

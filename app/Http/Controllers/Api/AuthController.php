@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         // Send actual email OTP
         try {
-            \Illuminate\Support\Facades\Mail::raw("Your HomiQ email verification code is: {$code}. This code is valid for 15 minutes.", function ($message) use ($email) {
+            \Illuminate\Support\Facades\Mail::send('emails.email-otp', ['code' => $code], function ($message) use ($email) {
                 $message->to($email)->subject("HomiQ - Email Verification OTP");
             });
         } catch (\Exception $e) {
@@ -289,16 +289,21 @@ class AuthController extends Controller
 
         // Send OTP via mail
         try {
-            \Illuminate\Support\Facades\Mail::raw("Your HomiQ password reset verification code is: {$code}. This code is valid for 15 minutes.", function ($message) use ($fields) {
+            \Illuminate\Support\Facades\Mail::send('emails.password-reset-otp', ['code' => $code], function ($message) use ($fields) {
                 $message->to($fields['email'])->subject("HomiQ - Password Reset OTP");
             });
         } catch (\Exception $e) {
             Log::error("Failed to send password reset OTP email to {$fields['email']}: " . $e->getMessage());
         }
 
-        return response([
+        $responseData = [
             'message' => 'Password reset code has been sent to your email.',
-        ], 200);
+        ];
+        if (app()->environment('testing', 'local')) {
+            $responseData['code'] = $code;
+        }
+
+        return response($responseData, 200);
     }
 
     /**

@@ -94,6 +94,20 @@
                             </td>
                             <td class="p-4 pr-6 text-right">
                                 <div class="flex gap-2 justify-end items-center">
+                                    <!-- Toggle Featured -->
+                                    <form action="/admin/properties/{{ $property->id }}/toggle-featured" method="POST" class="m-0">
+                                        @csrf
+                                        @if ($property->is_featured)
+                                            <button type="submit" class="p-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition block shadow-sm" title="Remove from Featured">
+                                                ★
+                                            </button>
+                                        @else
+                                            <button type="submit" class="p-2 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-lg border border-slate-200 transition block shadow-sm" title="Make Featured">
+                                                ☆
+                                            </button>
+                                        @endif
+                                    </form>
+
                                     <!-- View Details Page -->
                                     <a href="/admin/properties/{{ $property->id }}" 
                                        class="p-2 bg-slate-50 hover:bg-slate-100 text-slate-650 rounded-lg border border-slate-200 transition block shadow-sm" title="View Details">

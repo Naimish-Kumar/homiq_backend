@@ -245,4 +245,20 @@ class CustomerDashboardController extends Controller
 
         return back()->with('success', 'Stay reservation has been successfully ' . $request->status . '!');
     }
+
+    /**
+     * Toggle the featured status of a property listing.
+     */
+    public function toggleFeatured(Request $request, $id)
+    {
+        $user = Auth::user();
+        $property = Property::where('owner_id', $user->id)->findOrFail($id);
+
+        $property->update([
+            'is_featured' => !$property->is_featured,
+        ]);
+
+        $statusMessage = $property->is_featured ? 'marked as Featured!' : 'removed from Featured!';
+        return back()->with('success', "Listing '{$property->title}' has been successfully {$statusMessage}");
+    }
 }

@@ -319,6 +319,83 @@
     </div>
 </section>
 
+<!-- SECTION 4.5: FEATURED DIRECTORY -->
+@php
+    $featuredListings = $properties->where('is_featured', true);
+    if ($featuredListings->isEmpty()) {
+        $featuredListings = $properties->take(4);
+    }
+@endphp
+
+@if (!$featuredListings->isEmpty())
+<section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal">
+    <div class="mb-10 pb-6 border-b border-slate-100">
+        <span class="text-xs font-black text-amber-500 uppercase tracking-widest block mb-2">★ PREMIUM SELECTION</span>
+        <h2 class="text-3xl font-black text-slate-800 tracking-tight">Featured Listings</h2>
+        <p class="text-sm text-slate-450 mt-1">Explore our most premium and highly recommended verified spaces.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        @foreach ($featuredListings as $prop)
+            <div class="listing-premium-card group bg-white rounded-[20px] overflow-hidden flex flex-col h-full relative border border-amber-200/80 shadow-md">
+                <!-- Image Area -->
+                <div class="h-56 bg-slate-100 overflow-hidden relative shimmer-hover">
+                    <img src="{{ !empty($prop->images) && is_array($prop->images) ? $prop->images[0] : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&q=80' }}" 
+                         alt="{{ $prop->title }}" class="h-full w-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out">
+                    
+                    <!-- Featured Glass Tag Overlay -->
+                    <span class="absolute top-4 left-4 px-2.5 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-[9px] font-black text-white rounded-lg uppercase tracking-wider shadow-sm flex items-center gap-1">
+                        ★ FEATURED
+                    </span>
+
+                    <!-- Overlay Category Glass Tag -->
+                    <span class="absolute top-4 right-4 px-2.5 py-1 bg-white/90 backdrop-blur-md text-[9px] font-black text-steelAzure rounded-lg uppercase tracking-wider border border-white/20">
+                        {{ $prop->category }}
+                    </span>
+
+                    <!-- Host Avatar Badge Overlay -->
+                    @if($prop->owner)
+                        <div class="absolute bottom-4 left-4 flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/10" title="Listed by {{ $prop->owner->name }}">
+                            <div class="h-5 w-5 rounded-full overflow-hidden border border-white bg-slate-100 flex-shrink-0">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($prop->owner->name) }}&background=1A447C&color=fff" alt="owner" class="h-full w-full object-cover">
+                            </div>
+                            <span class="text-[9px] font-bold text-white max-w-[70px] truncate">{{ $prop->owner->name }}</span>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Details Area -->
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <h3 class="font-extrabold text-slate-800 text-base leading-snug truncate group-hover:text-amber-500 transition-colors duration-200">
+                            <a href="/properties/{{ $prop->id }}">{{ $prop->title }}</a>
+                        </h3>
+                        <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="truncate">{{ $prop->address }}</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-50 pt-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">RENT PRICE</span>
+                            <span class="text-lg font-black text-amber-500">{{ $prop->formatted_price }}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">AMENITIES</span>
+                            <span class="text-xs font-black text-slate-700">{{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+@endif
+
 <!-- SECTION 5: RECOMMENDED DIRECTORY -->
 <section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-slate-100 gap-4">
