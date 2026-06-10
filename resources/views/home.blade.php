@@ -353,6 +353,12 @@
                         {{ $prop->category }}
                     </span>
 
+                    @if(in_array($prop->listing_type, ['rent', 'sale']))
+                        <span class="absolute bottom-4 right-4 px-2.5 py-1 bg-amber-500 text-white text-[9px] font-black rounded-lg uppercase tracking-wider shadow-sm">
+                            FOR {{ strtoupper($prop->listing_type) }}
+                        </span>
+                    @endif
+
                     <!-- Host Avatar Badge Overlay -->
                     @if($prop->owner)
                         <div class="absolute bottom-4 left-4 flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/10" title="Listed by {{ $prop->owner->name }}">
@@ -381,12 +387,20 @@
 
                     <div class="border-t border-slate-50 pt-4 flex items-center justify-between">
                         <div>
-                            <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">RENT PRICE</span>
+                            <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">{{ strtoupper($prop->listing_type) }} PRICE</span>
                             <span class="text-lg font-black text-amber-500">{{ $prop->formatted_price }}</span>
                         </div>
                         <div class="text-right">
-                            <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">AMENITIES</span>
-                            <span class="text-xs font-black text-slate-700">{{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba</span>
+                            <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">
+                                @if($prop->listing_type === 'sale') SPACE @else AMENITIES @endif
+                            </span>
+                            <span class="text-xs font-black text-slate-700">
+                                @if($prop->listing_type === 'sale')
+                                    {{ $prop->built_up_area ?? 0 }} sq ft
+                                @else
+                                    {{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -444,9 +458,15 @@
                              alt="{{ $prop->title }}" class="h-full w-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out">
                         
                         <!-- Overlay Category Glass Tag -->
-                        <span class="absolute top-4 left-4 px-2.5 py-1 bg-white/90 backdrop-blur-md text-[9px] font-black text-steelAzure rounded-lg uppercase tracking-wider border border-white/20">
+                        <span class="absolute top-4 right-4 px-2.5 py-1 bg-white/90 backdrop-blur-md text-[9px] font-black text-steelAzure rounded-lg uppercase tracking-wider border border-white/20">
                             {{ $prop->category }}
                         </span>
+
+                        @if(in_array($prop->listing_type, ['rent', 'sale']))
+                            <span class="absolute top-4 left-4 px-2.5 py-1 bg-amber-500 text-white text-[9px] font-black rounded-lg uppercase tracking-wider shadow-sm">
+                                FOR {{ strtoupper($prop->listing_type) }}
+                            </span>
+                        @endif
 
                         <!-- Host Avatar Badge Overlay -->
                         @if($prop->owner)
@@ -483,12 +503,20 @@
 
                         <div class="border-t border-slate-50 pt-4 flex items-center justify-between">
                             <div>
-                                <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">RENT PRICE</span>
+                                <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">{{ strtoupper($prop->listing_type) }} PRICE</span>
                                 <span class="text-lg font-black text-steelAzure">{{ $prop->formatted_price }}</span>
                             </div>
                             <div class="text-right">
-                                <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">AMENITIES</span>
-                                <span class="text-xs font-black text-slate-700">{{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba</span>
+                                <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">
+                                    @if($prop->listing_type === 'sale') SPACE @else AMENITIES @endif
+                                </span>
+                                <span class="text-xs font-black text-slate-700">
+                                    @if($prop->listing_type === 'sale')
+                                        {{ $prop->built_up_area ?? 0 }} sq ft
+                                    @else
+                                        {{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba
+                                    @endif
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -533,8 +561,17 @@
                             <span>{{ $villa->address }}</span>
                         </p>
                         <div class="flex items-center justify-between border-t border-slate-50 pt-4">
-                            <span class="text-base font-black text-steelAzure">{{ $villa->formatted_price }}</span>
-                            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{{ $villa->bedrooms }} Bedrooms</span>
+                            <div>
+                                <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">{{ strtoupper($villa->listing_type) }} PRICE</span>
+                                <span class="text-base font-black text-steelAzure">{{ $villa->formatted_price }}</span>
+                            </div>
+                            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                                @if($villa->listing_type === 'sale')
+                                    {{ $villa->built_up_area ?? 0 }} sq ft
+                                @else
+                                    {{ $villa->bedrooms }} Bedrooms
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -578,8 +615,17 @@
                         <span>{{ $flat->address }}</span>
                     </p>
                     <div class="flex items-center justify-between border-t border-slate-50 pt-4">
-                        <span class="text-base font-black text-slate-800">{{ $flat->formatted_price }}</span>
-                        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{{ $flat->bedrooms }} Bedrooms</span>
+                            <div>
+                                <span class="text-[9px] font-extrabold text-slate-400 block uppercase tracking-wider">{{ strtoupper($flat->listing_type) }} PRICE</span>
+                                <span class="text-base font-black text-slate-800">{{ $flat->formatted_price }}</span>
+                            </div>
+                        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                            @if($flat->listing_type === 'sale')
+                                {{ $flat->built_up_area ?? 0 }} sq ft
+                            @else
+                                {{ $flat->bedrooms }} Bedrooms
+                            @endif
+                        </span>
                     </div>
                 </div>
             </div>

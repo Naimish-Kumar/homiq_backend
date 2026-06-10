@@ -303,7 +303,15 @@
                         <!-- Hidden Country Input -->
                         <input type="hidden" name="country" id="listing-country" value="India">
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Listing Type</label>
+                                <select name="listing_type" id="listing_type_select" required
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="rent" selected>For Rent</option>
+                                    <option value="sale">For Sale</option>
+                                </select>
+                            </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Price Amount</label>
                                 <input type="number" name="price" required min="0" placeholder="100"
@@ -319,9 +327,9 @@
                                     <option value="GBP">GBP (£)</option>
                                 </select>
                             </div>
-                            <div>
+                            <div id="billing_freq_container">
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Pricing Frequency</label>
-                                <select name="billing_frequency" required
+                                <select name="billing_frequency" id="billing_frequency_select" required
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                                     <option value="monthly" selected>Monthly</option>
                                     <option value="per_day">Per Day</option>
@@ -329,6 +337,34 @@
                                 </select>
                             </div>
                         </div>
+
+                        <script>
+                            document.getElementById('listing_type_select').addEventListener('change', function() {
+                                const freqContainer = document.getElementById('billing_freq_container');
+                                const rentFields = document.querySelectorAll('.rent-only-field');
+                                const saleFields = document.querySelectorAll('.sale-only-field');
+                                
+                                if (this.value === 'sale') {
+                                    freqContainer.style.display = 'none';
+                                    document.getElementById('billing_frequency_select').removeAttribute('required');
+                                    
+                                    rentFields.forEach(el => el.style.display = 'none');
+                                    
+                                    saleFields.forEach(el => el.style.display = 'block');
+                                    document.getElementById('built_up_area_input').setAttribute('required', 'required');
+                                    document.getElementById('property_age_input').setAttribute('required', 'required');
+                                } else {
+                                    freqContainer.style.display = 'block';
+                                    document.getElementById('billing_frequency_select').setAttribute('required', 'required');
+                                    
+                                    rentFields.forEach(el => el.style.display = 'block');
+                                    
+                                    saleFields.forEach(el => el.style.display = 'none');
+                                    document.getElementById('built_up_area_input').removeAttribute('required');
+                                    document.getElementById('property_age_input').removeAttribute('required');
+                                }
+                            });
+                        </script>
 
                         <div class="grid grid-cols-3 gap-4">
                             <div>
@@ -340,20 +376,31 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div>
+                            <div class="rent-only-field">
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bedrooms</label>
-                                <input type="number" name="bedrooms" required min="0" value="1"
+                                <input type="number" name="bedrooms" min="0" value="1"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                             </div>
-                            <div>
+                            <div class="rent-only-field">
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bathrooms</label>
-                                <input type="number" name="bathrooms" required min="0" value="1"
+                                <input type="number" name="bathrooms" min="0" value="1"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <!-- SALE ONLY -->
+                            <div class="sale-only-field" style="display: none;">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Built-up Area (sq ft)</label>
+                                <input type="number" name="built_up_area" id="built_up_area_input" min="0"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div class="sale-only-field" style="display: none;">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Property Age (years)</label>
+                                <input type="number" name="property_age" id="property_age_input" min="0"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                             </div>
                         </div>
 
                         <!-- Key Options -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2 rent-only-field">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Key Specifications</label>
                             <div class="grid grid-cols-3 gap-4">
                                 <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
@@ -372,7 +419,7 @@
                         </div>
 
                         <!-- Dynamic Amenities checkboxes -->
-                        <div>
+                        <div class="rent-only-field">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Included Amenities</label>
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-xl border border-slate-100">
                                 @foreach ($amenities as $am)

@@ -20,6 +20,10 @@ class PropertyController extends Controller
             $query->where('category', $request->category);
         }
 
+        if ($request->has('listing_type') && $request->listing_type !== 'All') {
+            $query->where('listing_type', $request->listing_type);
+        }
+
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -106,7 +110,15 @@ class PropertyController extends Controller
             'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
             'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
             'country' => 'nullable|string|max:255',
+            'listing_type' => 'nullable|string|in:rent,sale',
+            'property_age' => 'nullable|string|max:255',
+            'ownership_type' => 'nullable|string|max:255',
+            'built_up_area' => 'nullable|integer|min:0',
+            'is_negotiable' => 'boolean',
+            'is_rera_approved' => 'boolean',
         ]);
+
+        $fields['listing_type'] = $request->input('listing_type') ?: 'rent';
 
         $fields['currency'] = $request->input('currency') ?: 'INR';
         $fields['billing_frequency'] = $request->input('billing_frequency') ?: 'monthly';
@@ -257,7 +269,13 @@ class PropertyController extends Controller
             'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
             'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
             'country' => 'nullable|string|max:255',
-            'status' => 'string|in:pending,approved,rejected'
+            'status' => 'string|in:pending,approved,rejected',
+            'listing_type' => 'nullable|string|in:rent,sale',
+            'property_age' => 'nullable|string|max:255',
+            'ownership_type' => 'nullable|string|max:255',
+            'built_up_area' => 'nullable|integer|min:0',
+            'is_negotiable' => 'boolean',
+            'is_rera_approved' => 'boolean',
         ]);
 
         $imageUrls = [];

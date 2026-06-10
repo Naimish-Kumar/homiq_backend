@@ -26,7 +26,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'billing_frequency',
     'country',
     'status',
-    'is_featured'
+    'is_featured',
+    'listing_type',
+    'property_age',
+    'ownership_type',
+    'built_up_area',
+    'is_negotiable',
+    'is_rera_approved'
 ])]
 class Property extends Model
 {
@@ -47,6 +53,8 @@ class Property extends Model
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
             'is_featured' => 'boolean',
+            'is_negotiable' => 'boolean',
+            'is_rera_approved' => 'boolean',
         ];
     }
 
@@ -96,6 +104,9 @@ class Property extends Model
      */
     public function getFormattedPriceAttribute(): string
     {
+        if ($this->listing_type === 'sale') {
+            return $this->currency_symbol . number_format($this->price, 0);
+        }
         return $this->currency_symbol . number_format($this->price, 0) . $this->billing_frequency_suffix;
     }
 

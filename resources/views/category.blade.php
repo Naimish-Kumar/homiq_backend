@@ -111,6 +111,12 @@
                         <span class="absolute top-4 right-4 px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[10px] font-extrabold text-steelAzure rounded-lg uppercase tracking-wide">
                             {{ $prop->category }}
                         </span>
+                        
+                        @if(in_array($prop->listing_type, ['rent', 'sale']))
+                            <span class="absolute top-4 left-4 px-2.5 py-1 bg-amber-500 text-white text-[9px] font-black rounded-lg uppercase tracking-wider shadow-sm">
+                                FOR {{ strtoupper($prop->listing_type) }}
+                            </span>
+                        @endif
                     </div>
 
                     <!-- Details -->
@@ -129,7 +135,13 @@
                         <div>
                             <div class="flex items-center justify-between border-t border-slate-50 pt-4">
                                 <span class="text-base font-bold text-steelAzure">{{ $prop->currency_symbol }}{{ number_format($prop->price, 0) }}<span class="text-[10px] text-slate-400 font-normal">{{ $prop->billing_frequency_suffix }}</span></span>
-                                <span class="text-xs text-slate-400 font-medium">{{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba</span>
+                                <span class="text-xs text-slate-400 font-medium">
+                                    @if($prop->listing_type === 'sale')
+                                        {{ $prop->built_up_area ?? 0 }} sq ft
+                                    @else
+                                        {{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba
+                                    @endif
+                                </span>
                             </div>
                         </div>
                     </div>

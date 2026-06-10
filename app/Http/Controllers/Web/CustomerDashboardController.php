@@ -81,8 +81,8 @@ class CustomerDashboardController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'category' => 'required|string',
-            'bedrooms' => 'required|integer|min:0',
-            'bathrooms' => 'required|integer|min:0',
+            'bedrooms' => 'nullable|integer|min:0',
+            'bathrooms' => 'nullable|integer|min:0',
             'is_furnished' => 'boolean',
             'has_parking' => 'boolean',
             'is_pet_friendly' => 'boolean',
@@ -90,8 +90,14 @@ class CustomerDashboardController extends Controller
             'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
             'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
             'country' => 'nullable|string|max:255',
+            'listing_type' => 'nullable|string|in:rent,sale',
             'images' => 'required|array|max:5',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'property_age' => 'nullable|string|max:255',
+            'ownership_type' => 'nullable|string|max:255',
+            'built_up_area' => 'nullable|integer|min:0',
+            'is_negotiable' => 'boolean',
+            'is_rera_approved' => 'boolean',
         ]);
 
         $imageUrls = [];
@@ -123,6 +129,12 @@ class CustomerDashboardController extends Controller
             'is_pet_friendly' => $request->boolean('is_pet_friendly'),
             'amenities' => $fields['amenities'] ?? [],
             'images' => $imageUrls,
+            'listing_type' => $request->input('listing_type') ?: 'rent',
+            'property_age' => $request->input('property_age'),
+            'ownership_type' => $request->input('ownership_type'),
+            'built_up_area' => $request->input('built_up_area'),
+            'is_negotiable' => $request->boolean('is_negotiable'),
+            'is_rera_approved' => $request->boolean('is_rera_approved'),
             'status' => 'approved', // Auto-approve for demo convenience
         ]);
 

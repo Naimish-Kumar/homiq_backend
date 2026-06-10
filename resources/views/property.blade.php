@@ -56,6 +56,10 @@
                 <span class="absolute top-5 left-5 px-3 py-1.5 bg-steelAzure text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">
                     {{ $property->category }}
                 </span>
+                <!-- Listing Type Badge -->
+                <span class="absolute top-5 left-28 px-3 py-1.5 bg-amber-500 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">
+                    For {{ ucfirst($property->listing_type) }}
+                </span>
                 <!-- Furnished Badge -->
                 @if($property->is_furnished)
                 <span class="absolute top-5 right-5 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-seaGreen text-[10px] font-bold rounded-lg uppercase tracking-wider">
@@ -79,7 +83,11 @@
                     </div>
                     <div class="text-right flex-shrink-0">
                         <span class="text-3xl font-extrabold text-steelAzure block">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                        @if ($property->listing_type === 'rent')
                         <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{{ $property->billing_frequency_label }}</span>
+                        @else
+                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Total Price</span>
+                        @endif
                     </div>
                 </div>
 
@@ -89,16 +97,33 @@
                         <div class="flex items-center justify-center gap-1.5 mb-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-steelAzure" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                         </div>
-                        <span class="text-lg font-extrabold text-slate-800 block">{{ $property->bedrooms }}</span>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bedrooms</span>
+                        <span class="text-lg font-extrabold text-slate-800 block">
+                            @if($property->listing_type === 'sale')
+                                {{ $property->built_up_area ?? 0 }}
+                            @else
+                                {{ $property->bedrooms }}
+                            @endif
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                            @if($property->listing_type === 'sale') Area (sq ft) @else Bedrooms @endif
+                        </span>
                     </div>
                     <div class="info-chip bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
                         <div class="flex items-center justify-center gap-1.5 mb-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-seaGreen" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
                         </div>
-                        <span class="text-lg font-extrabold text-slate-800 block">{{ $property->bathrooms }}</span>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bathrooms</span>
+                        <span class="text-lg font-extrabold text-slate-800 block">
+                            @if($property->listing_type === 'sale')
+                                {{ $property->property_age ?? 0 }}
+                            @else
+                                {{ $property->bathrooms }}
+                            @endif
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                            @if($property->listing_type === 'sale') Age (Years) @else Bathrooms @endif
+                        </span>
                     </div>
+                    @if($property->listing_type === 'rent')
                     <div class="info-chip bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
                         <div class="flex items-center justify-center gap-1.5 mb-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-turfGreen" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
@@ -113,6 +138,7 @@
                         <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_pet_friendly ? 'Yes' : 'No' }}</span>
                         <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pet Friendly</span>
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -188,7 +214,11 @@
                 <!-- Price Summary -->
                 <div class="text-center pb-5 border-b border-slate-100">
                     <span class="text-3xl font-extrabold text-steelAzure">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                    @if ($property->listing_type === 'rent')
                     <span class="text-xs text-slate-400 font-bold block mt-1">{{ $property->billing_frequency_label }}</span>
+                    @else
+                    <span class="text-xs text-slate-400 font-bold block mt-1">Total Price</span>
+                    @endif
                 </div>
 
                 <h3 class="text-base font-bold text-slate-800">Inquire About This Space</h3>
