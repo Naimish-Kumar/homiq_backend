@@ -339,49 +339,61 @@
                         </div>
 
                         <script>
-                            document.getElementById('listing_type_select').addEventListener('change', function() {
+                            function updateFields() {
+                                const type = document.getElementById('listing_type_select').value;
+                                const categorySelect = document.getElementById('category_select');
+                                const category = categorySelect ? categorySelect.value.toLowerCase() : '';
+                                const isLand = category.includes('land') || category.includes('plot');
+
                                 const freqContainer = document.getElementById('billing_freq_container');
-                                const rentFields = document.querySelectorAll('.rent-only-field');
                                 const saleFields = document.querySelectorAll('.sale-only-field');
+                                const nonLandFields = document.querySelectorAll('.non-land-field');
                                 
-                                if (this.value === 'sale') {
+                                if (type === 'sale') {
                                     freqContainer.style.display = 'none';
                                     document.getElementById('billing_frequency_select').removeAttribute('required');
                                     
-                                    rentFields.forEach(el => el.style.display = 'none');
-                                    
                                     saleFields.forEach(el => el.style.display = 'block');
-                                    document.getElementById('built_up_area_input').setAttribute('required', 'required');
-                                    document.getElementById('property_age_input').setAttribute('required', 'required');
+                                    if(document.getElementById('built_up_area_input')) document.getElementById('built_up_area_input').setAttribute('required', 'required');
+                                    if(document.getElementById('property_age_input')) document.getElementById('property_age_input').setAttribute('required', 'required');
                                 } else {
                                     freqContainer.style.display = 'block';
                                     document.getElementById('billing_frequency_select').setAttribute('required', 'required');
                                     
-                                    rentFields.forEach(el => el.style.display = 'block');
-                                    
                                     saleFields.forEach(el => el.style.display = 'none');
-                                    document.getElementById('built_up_area_input').removeAttribute('required');
-                                    document.getElementById('property_age_input').removeAttribute('required');
+                                    if(document.getElementById('built_up_area_input')) document.getElementById('built_up_area_input').removeAttribute('required');
+                                    if(document.getElementById('property_age_input')) document.getElementById('property_age_input').removeAttribute('required');
                                 }
+
+                                nonLandFields.forEach(el => {
+                                    el.style.display = isLand ? 'none' : 'block';
+                                });
+                            }
+
+                            document.getElementById('listing_type_select').addEventListener('change', updateFields);
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const catSelect = document.getElementById('category_select');
+                                if (catSelect) catSelect.addEventListener('change', updateFields);
+                                updateFields();
                             });
                         </script>
 
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Category</label>
-                                <select name="category" required
+                                <select name="category" id="category_select" required
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                                     @foreach ($categories as $cat)
                                         <option value="{{ $cat->name }}">{{ $cat->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="rent-only-field">
+                            <div class="non-land-field">
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bedrooms</label>
                                 <input type="number" name="bedrooms" min="0" value="1"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                             </div>
-                            <div class="rent-only-field">
+                            <div class="non-land-field">
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bathrooms</label>
                                 <input type="number" name="bathrooms" min="0" value="1"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
@@ -400,7 +412,7 @@
                         </div>
 
                         <!-- Key Options -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2 rent-only-field">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2 non-land-field">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Key Specifications</label>
                             <div class="grid grid-cols-3 gap-4">
                                 <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
@@ -419,7 +431,7 @@
                         </div>
 
                         <!-- Dynamic Amenities checkboxes -->
-                        <div class="rent-only-field">
+                        <div class="non-land-field">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Included Amenities</label>
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-xl border border-slate-100">
                                 @foreach ($amenities as $am)

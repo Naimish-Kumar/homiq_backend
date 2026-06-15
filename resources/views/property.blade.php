@@ -83,7 +83,9 @@
                     </div>
                     <div class="text-right flex-shrink-0">
                         <span class="text-3xl font-extrabold text-steelAzure block">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
-                        @if ($property->listing_type === 'rent')
+                        @if ($property->price_unit)
+                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{{ $property->price_unit }}</span>
+                        @elseif ($property->listing_type === 'rent')
                         <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{{ $property->billing_frequency_label }}</span>
                         @else
                         <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Total Price</span>
@@ -92,52 +94,63 @@
                 </div>
 
                 <!-- Property Quick Info -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="info-chip bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                        <div class="flex items-center justify-center gap-1.5 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-steelAzure" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                @php
+                    $cat = strtolower($property->category);
+                    $isLand = str_contains($cat, 'land') || str_contains($cat, 'plot');
+                @endphp
+                <div class="flex flex-wrap gap-3">
+                    @if($isLand)
+                        <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                            <span class="text-lg font-extrabold text-slate-800 block">{{ $property->plot_area ?? $property->built_up_area ?? 'N/A' }}</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Plot Area</span>
                         </div>
-                        <span class="text-lg font-extrabold text-slate-800 block">
-                            @if($property->listing_type === 'sale')
-                                {{ $property->built_up_area ?? 0 }}
-                            @else
-                                {{ $property->bedrooms }}
+                        <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                            <span class="text-lg font-extrabold text-slate-800 block">{{ $property->boundary_wall ? 'Yes' : 'No' }}</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Boundary Wall</span>
+                        </div>
+                        <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                            <span class="text-lg font-extrabold text-slate-800 block">{{ $property->ownership_type ?? 'N/A' }}</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ownership</span>
+                        </div>
+                    @else
+                        @if($property->bedrooms > 0)
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->bedrooms }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bedrooms</span>
+                            </div>
+                        @endif
+                        @if($property->bathrooms > 0)
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->bathrooms }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bathrooms</span>
+                            </div>
+                        @endif
+                        @if($property->listing_type === 'sale')
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->built_up_area ?? 'N/A' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Built-up Area</span>
+                            </div>
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->property_age ?? 'N/A' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Age (Years)</span>
+                            </div>
+                        @endif
+                        @if($property->listing_type === 'rent')
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_furnished ? 'Yes' : 'No' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Furnished</span>
+                            </div>
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_pet_friendly ? 'Yes' : 'No' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pet Friendly</span>
+                            </div>
+                            @if($property->preferred_tenant)
+                                <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                    <span class="text-lg font-extrabold text-slate-800 block">{{ $property->preferred_tenant }}</span>
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Preferred Tenant</span>
+                                </div>
                             @endif
-                        </span>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                            @if($property->listing_type === 'sale') Area (sq ft) @else Bedrooms @endif
-                        </span>
-                    </div>
-                    <div class="info-chip bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                        <div class="flex items-center justify-center gap-1.5 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-seaGreen" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
-                        </div>
-                        <span class="text-lg font-extrabold text-slate-800 block">
-                            @if($property->listing_type === 'sale')
-                                {{ $property->property_age ?? 0 }}
-                            @else
-                                {{ $property->bathrooms }}
-                            @endif
-                        </span>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                            @if($property->listing_type === 'sale') Age (Years) @else Bathrooms @endif
-                        </span>
-                    </div>
-                    @if($property->listing_type === 'rent')
-                    <div class="info-chip bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                        <div class="flex items-center justify-center gap-1.5 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-turfGreen" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                        </div>
-                        <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_furnished ? 'Yes' : 'No' }}</span>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Furnished</span>
-                    </div>
-                    <div class="info-chip bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                        <div class="flex items-center justify-center gap-1.5 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </div>
-                        <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_pet_friendly ? 'Yes' : 'No' }}</span>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pet Friendly</span>
-                    </div>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -150,7 +163,7 @@
             </div>
 
             <!-- Amenities -->
-            @if (!empty($property->amenities) && is_array($property->amenities))
+            @if (!$isLand && !empty($property->amenities) && is_array($property->amenities))
                 <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm">
                     <h3 class="text-lg font-bold text-slate-800 mb-1">Amenities & Features</h3>
                     <p class="text-xs text-slate-400 mb-4">What this property offers</p>
@@ -214,7 +227,9 @@
                 <!-- Price Summary -->
                 <div class="text-center pb-5 border-b border-slate-100">
                     <span class="text-3xl font-extrabold text-steelAzure">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
-                    @if ($property->listing_type === 'rent')
+                    @if ($property->price_unit)
+                    <span class="text-xs text-slate-400 font-bold block mt-1">{{ $property->price_unit }}</span>
+                    @elseif ($property->listing_type === 'rent')
                     <span class="text-xs text-slate-400 font-bold block mt-1">{{ $property->billing_frequency_label }}</span>
                     @else
                     <span class="text-xs text-slate-400 font-bold block mt-1">Total Price</span>
@@ -275,5 +290,24 @@
             </div>
         </div>
     </div>
+
+    <!-- Related Properties -->
+    @if(isset($relatedProperties) && $relatedProperties->count() > 0)
+    <div class="mt-16">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Similar Spaces You Might Like</h2>
+            <a href="/category/{{ $property->category }}" class="hidden sm:inline-flex px-4 py-2.5 bg-white hover:bg-steelAzure hover:text-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition items-center gap-2 shadow-sm group">
+                View More {{ $property->category }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @foreach ($relatedProperties as $related)
+                <x-property-card :property="$related" />
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

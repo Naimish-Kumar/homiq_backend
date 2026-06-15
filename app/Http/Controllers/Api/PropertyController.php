@@ -116,6 +116,10 @@ class PropertyController extends Controller
             'built_up_area' => 'nullable|integer|min:0',
             'is_negotiable' => 'boolean',
             'is_rera_approved' => 'boolean',
+            'price_unit' => 'nullable|string|max:255',
+            'plot_area' => 'nullable|numeric|min:0',
+            'boundary_wall' => 'boolean',
+            'preferred_tenant' => 'nullable|string|max:255',
         ]);
 
         $fields['listing_type'] = $request->input('listing_type') ?: 'rent';
@@ -276,6 +280,10 @@ class PropertyController extends Controller
             'built_up_area' => 'nullable|integer|min:0',
             'is_negotiable' => 'boolean',
             'is_rera_approved' => 'boolean',
+            'price_unit' => 'nullable|string|max:255',
+            'plot_area' => 'nullable|numeric|min:0',
+            'boundary_wall' => 'boolean',
+            'preferred_tenant' => 'nullable|string|max:255',
         ]);
 
         $imageUrls = [];

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomiQ - Rent Spaces, List Properties</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steelAzure: '#1A447C',
+                        seaGreen: '#328B60',
+                        radioactiveGrass: '#00E200',
+                        turfGreen: '#187053',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Scroll Reveal Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            filter: blur(3px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+        .delay-75 { transition-delay: 75ms; }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-150 { transition-delay: 150ms; }
+        .delay-200 { transition-delay: 200ms; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header Navbar -->
+    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center gap-3 flex-shrink-0">
+                <img src="/logo.png" alt="HomiQ Logo" class="h-14 w-auto object-contain">
+            </a>
+            
+            <!-- Centered Search bar (Mockup layout) -->
+            <div class="flex-1 max-w-md mx-4 hidden md:block">
+                <form action="/" method="GET" class="relative">
+                    <input type="text" name="search" placeholder="Search address, city, space title..." value="villa"
+                        class="w-full pl-4 pr-10 py-3 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-steelAzure transition-all">
+                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-steelAzure">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Profile & Actions (Right side of mockup navbar) -->
+            <div class="flex items-center gap-6 flex-shrink-0">
+                <!-- Secondary Quick Links -->
+                <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="hidden lg:inline text-xs font-semibold text-slate-500 hover:text-steelAzure transition">Download App</a>
+                
+
+                                    <a href="/login" class="px-5 py-2 border border-slate-300 hover:border-steelAzure hover:text-steelAzure text-slate-600 font-bold rounded-full text-xs transition-all duration-200 whitespace-nowrap">
+                        Login / Sign Up
+                    </a>
+                            </div>
+        </div>
+    </nav>
+
+    <!-- Sub Menu Bar (Shop menu style) -->
+    <div class="bg-slate-50 border-b border-slate-100 py-3">
+        <div class="max-w-7xl mx-auto px-6 flex justify-center gap-8 text-[12px] font-semibold tracking-wide text-slate-600">
+            <a href="/" class="hover:text-steelAzure transition text-steelAzure font-bold">Explore Feed</a>
+            <a href="/dashboard" class="hover:text-steelAzure transition ">List Property</a>
+            <a href="/about" class="hover:text-steelAzure transition ">About Us</a>
+            <a href="/contact" class="hover:text-steelAzure transition ">Contact Us</a>
+            <a href="/privacy" class="hover:text-steelAzure transition ">Privacy Policy</a>
+            <a href="/terms" class="hover:text-steelAzure transition ">Terms & Conditions</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+        
+        
+        <style>
+    /* Premium Visual Design Tokens & Keyframe Animations */
+    :root {
+        --primary-glow: radial-gradient(rgba(26, 68, 124, 0.12), rgba(50, 139, 96, 0.03));
+        --accent-glow: radial-gradient(rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0));
+    }
+
+    /* Soft Animated Background Blobs */
+    .glow-blob-1 {
+        filter: blur(80px);
+        background: radial-gradient(circle, rgba(26,68,124,0.15) 0%, rgba(99,102,241,0.05) 50%, rgba(255,255,255,0) 100%);
+        animation: blobFloat 12s ease-in-out infinite alternate;
+    }
+    .glow-blob-2 {
+        filter: blur(80px);
+        background: radial-gradient(circle, rgba(50,139,96,0.12) 0%, rgba(52,211,153,0.04) 60%, rgba(255,255,255,0) 100%);
+        animation: blobFloat2 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes blobFloat {
+        0% { transform: translate(0px, 0px) scale(1); }
+        50% { transform: translate(30px, -40px) scale(1.1); }
+        100% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+    @keyframes blobFloat2 {
+        0% { transform: translate(0px, 0px) scale(1); }
+        50% { transform: translate(-40px, 30px) scale(1.05); }
+        100% { transform: translate(30px, -20px) scale(0.9); }
+    }
+
+    /* Hero Glass Search Card */
+    .search-glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Premium Listing Card Styling */
+    .listing-premium-card {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(241, 245, 249, 0.8);
+    }
+    .listing-premium-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.08), 0 10px 22px -10px rgba(0, 0, 0, 0.04);
+        border-color: rgba(26, 68, 124, 0.15);
+    }
+
+    /* Category Buttons spring zoom */
+    .premium-category-btn {
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2),
+                    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                    background-color 0.3s ease;
+    }
+    .premium-category-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 32px -8px rgba(26, 68, 124, 0.08);
+    }
+
+    /* Floating Hero Visual Animations */
+    @keyframes floatCard {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-12px) rotate(0.5deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes floatBadge {
+        0% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-6px) scale(1.03); }
+        100% { transform: translateY(0px) scale(1); }
+    }
+    .hero-float-card {
+        animation: floatCard 6s ease-in-out infinite;
+    }
+    .hero-float-badge {
+        animation: floatBadge 4s ease-in-out infinite;
+    }
+
+    /* Custom scroll indicator reveal style */
+    .scroll-indicator {
+        animation: bounceIndicator 2s infinite;
+    }
+    @keyframes bounceIndicator {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-6px); }
+        60% { transform: translateY(-3px); }
+    }
+
+    /* Horizontal categories limit helper */
+    .category-btn-wrapper:nth-child(n+7) {
+        display: none;
+    }
+    .categories-expanded .category-btn-wrapper:nth-child(n+7) {
+        display: flex;
+    }
+
+    /* Shimmer Effect on Images */
+    @keyframes shimmerSweep {
+        0% { left: -150%; }
+        50% { left: 150%; }
+        100% { left: 150%; }
+    }
+    .shimmer-hover::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        transform: skewX(-20deg);
+        z-index: 10;
+        pointer-events: none;
+    }
+    .shimmer-hover:hover::after {
+        animation: shimmerSweep 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+</style>
+
+<!-- Background Ambient Glow Blobs -->
+<div class="absolute top-20 left-10 w-96 h-96 glow-blob-1 rounded-full pointer-events-none z-0"></div>
+<div class="absolute top-80 right-20 w-[450px] h-[450px] glow-blob-2 rounded-full pointer-events-none z-0"></div>
+
+<!-- SECTION 1: HERO CONTAINER -->
+<section class="relative max-w-7xl mx-auto px-6 pt-10 pb-14 z-10">
+    <div class="w-full">
+        
+        <!-- Search widget & text introduction -->
+        <div class="space-y-8">
+            <div class="space-y-4 text-center">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-steelAzure/10 border border-steelAzure/20 text-steelAzure text-xs font-bold tracking-wide uppercase">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    Real-time space verification active
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+                    Find Your Next
+                    <span class="bg-gradient-to-r from-steelAzure via-indigo-600 to-emerald-600 bg-clip-text text-transparent"> Perfect Space</span>,
+                    <br>Seamlessly.
+                </h1>
+                <p class="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+                    Verify, book, and chat directly with premium landlords. HomiQ connects thousands of studios, flats, villas, and commercial spaces.
+                </p>
+            </div>
+
+            <!-- Custom Interactive Tabbed Search Widget -->
+            <div class="search-glass-card rounded-[24px] p-6 shadow-2xl relative">
+                <!-- Tabs -->
+                <div class="flex gap-2 border-b border-slate-200/60 pb-4 mb-4 justify-center">
+                    <button type="button" id="tab-all" onclick="selectSearchTab('all')" 
+                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn bg-steelAzure text-white shadow-sm">
+                        All Spaces
+                    </button>
+                    <button type="button" id="tab-villa" onclick="selectSearchTab('Villa')" 
+                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn text-slate-500 hover:text-slate-800 hover:bg-slate-100">
+                        Villas
+                    </button>
+                    <button type="button" id="tab-apartment" onclick="selectSearchTab('Apartment')" 
+                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn text-slate-500 hover:text-slate-800 hover:bg-slate-100">
+                        Apartments
+                    </button>
+                    <button type="button" id="tab-studio" onclick="selectSearchTab('Studio')" 
+                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn text-slate-500 hover:text-slate-800 hover:bg-slate-100">
+                        PG / Rooms
+                    </button>
+                </div>
+
+                <!-- Form -->
+                <form action="/" method="GET" id="hero-search-form" class="grid grid-cols-1 md:grid-cols-12 gap-4 md:items-end items-stretch">
+                    <input type="hidden" name="search_type" id="hidden-search-type" value="all">
+                    
+                    <div class="md:col-span-5 relative">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Where to?</label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                </svg>
+                            </span>
+                            <input type="text" name="search" placeholder="Search cities, areas, titles..." value="villa"
+                                   class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-steelAzure focus:bg-white transition-all">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-4 relative border-t md:border-t-0 md:border-l border-slate-200/60 pt-3 md:pt-0 md:pl-4">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Budget Target</label>
+                        <select name="max_price" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-xl px-3 py-3 text-sm font-semibold text-slate-800 focus:outline-none focus:border-steelAzure focus:bg-white transition-all">
+                            <option value="" selected>Any Budget</option>
+                            <option value="5000" >Under ₹5,000</option>
+                            <option value="10000" >Under ₹10,000</option>
+                            <option value="25000" >Under ₹25,000</option>
+                            <option value="50000" >Under ₹50,000</option>
+                            <option value="100000" >Under ₹100,000</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-3 pt-2 md:pt-0 flex flex-col">
+                        <label class="block text-[10px] font-extrabold text-transparent uppercase tracking-wider mb-1 select-none hidden md:block" aria-hidden="true">&nbsp;</label>
+                        <button type="submit" class="w-full py-3 bg-steelAzure hover:bg-steelAzure/95 text-white font-extrabold text-xs tracking-wider uppercase rounded-xl shadow-lg shadow-steelAzure/20 transition-all flex items-center justify-center gap-2 group">
+                            Search
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Inline Trust badges -->
+            <div class="flex items-center justify-center gap-8 text-slate-400 font-bold text-xs pt-2">
+                <div class="flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-steelAzure" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <span>100% Secured Leases</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span>Realtime Landlord Chat</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+<!-- SECTION 4.5: FEATURED DIRECTORY -->
+
+
+<!-- SECTION 5: RECOMMENDED DIRECTORY -->
+<section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-slate-100 gap-4">
+        <div>
+            <h2 class="text-3xl font-black text-slate-800 tracking-tight">
+                                    Search Results
+                     for "villa"                             </h2>
+            <p class="text-sm text-slate-450 mt-1">Hand-picked verified spots with updated pricing schedules.</p>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-steelAzure text-slate-700 hover:text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all duration-300">
+                View All Listings
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <a href="/properties/14" class="group block bg-white rounded-3xl border border-slate-100 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-12px_rgba(26,68,124,0.15)] hover:border-slate-200 transition-all duration-300 overflow-hidden transform hover:-translate-y-1 h-full flex flex-col">
+    <!-- Image Container -->
+    <div class="relative h-60 overflow-hidden flex-shrink-0">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Luxury Oceanview Villa for Sale" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        <div class="absolute top-4 left-4 flex gap-2">
+            <span class="px-3 py-1 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">
+                Villa
+            </span>
+            <span class="px-3 py-1 bg-amber-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">
+                For Sale
+            </span>
+                    </div>
+
+                <div class="absolute top-4 right-4 h-8 w-8 rounded-full overflow-hidden border-2 border-white bg-slate-100 shadow-md z-10" title="Listed by System Admin">
+            <img src="https://ui-avatars.com/api/?name=System+Admin&background=1A447C&color=fff" alt="owner" class="h-full w-full object-cover">
+        </div>
+                
+        <div class="absolute bottom-5 left-5 right-5">
+            <span class="text-white font-extrabold text-2xl shadow-sm tracking-tight">$1,250,000<span class="text-[10px] font-bold text-white/80 ml-1 uppercase tracking-wider"></span></span>
+        </div>
+    </div>
+    
+    <!-- Content Container -->
+    <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+            <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 line-clamp-1 group-hover:text-steelAzure transition-colors">Luxury Oceanview Villa for Sale</h3>
+            <p class="text-xs text-slate-500 flex items-center gap-1.5 mb-5 truncate font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                Palm Jumeirah, Dubai
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-3 text-xs font-bold text-slate-600 border-t border-slate-50 pt-5">
+                        
+                            <div class="flex-1 flex items-center justify-center gap-2 bg-slate-50/80 hover:bg-slate-100 py-2.5 rounded-xl transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-steelAzure" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                    5 Beds
+                </div>
+                <div class="flex-1 flex items-center justify-center gap-2 bg-slate-50/80 hover:bg-slate-100 py-2.5 rounded-xl transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-seaGreen" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
+                    6 Baths
+                </div>
+                    </div>
+    </div>
+</a>
+                            <a href="/properties/1" class="group block bg-white rounded-3xl border border-slate-100 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_-12px_rgba(26,68,124,0.15)] hover:border-slate-200 transition-all duration-300 overflow-hidden transform hover:-translate-y-1 h-full flex flex-col">
+    <!-- Image Container -->
+    <div class="relative h-60 overflow-hidden flex-shrink-0">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Luxury Beachfront Villa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        <div class="absolute top-4 left-4 flex gap-2">
+            <span class="px-3 py-1 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">
+                Villa
+            </span>
+            <span class="px-3 py-1 bg-amber-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">
+                For Rent
+            </span>
+                    </div>
+
+                <div class="absolute top-4 right-4 h-8 w-8 rounded-full overflow-hidden border-2 border-white bg-slate-100 shadow-md z-10" title="Listed by John Lister">
+            <img src="https://ui-avatars.com/api/?name=John+Lister&background=1A447C&color=fff" alt="owner" class="h-full w-full object-cover">
+        </div>
+                
+        <div class="absolute bottom-5 left-5 right-5">
+            <span class="text-white font-extrabold text-2xl shadow-sm tracking-tight">$350<span class="text-[10px] font-bold text-white/80 ml-1 uppercase tracking-wider">/day</span></span>
+        </div>
+    </div>
+    
+    <!-- Content Container -->
+    <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+            <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 line-clamp-1 group-hover:text-steelAzure transition-colors">Luxury Beachfront Villa</h3>
+            <p class="text-xs text-slate-500 flex items-center gap-1.5 mb-5 truncate font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                102 Ocean Drive, Miami, FL
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-3 text-xs font-bold text-slate-600 border-t border-slate-50 pt-5">
+                        
+                            <div class="flex-1 flex items-center justify-center gap-2 bg-slate-50/80 hover:bg-slate-100 py-2.5 rounded-xl transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-steelAzure" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                    4 Beds
+                </div>
+                <div class="flex-1 flex items-center justify-center gap-2 bg-slate-50/80 hover:bg-slate-100 py-2.5 rounded-xl transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-seaGreen" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
+                    3 Baths
+                </div>
+                    </div>
+    </div>
+</a>
+                    </div>
+    </section>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize active search tab styling based on request parameter
+        const activeSearchType = "all";
+        selectSearchTab(activeSearchType);
+
+        // Automatically request geo location if missing to sort properties
+        const urlParams = new URLSearchParams(window.location.search);
+        const storedLat = localStorage.getItem('user_latitude');
+        const storedLng = localStorage.getItem('user_longitude');
+
+        if (!urlParams.has('latitude') && !urlParams.has('longitude')) {
+            if (storedLat && storedLng) {
+                urlParams.set('latitude', storedLat);
+                urlParams.set('longitude', storedLng);
+                window.location.search = urlParams.toString();
+            } else if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    localStorage.setItem('user_latitude', lat);
+                    localStorage.setItem('user_longitude', lng);
+                    urlParams.set('latitude', lat);
+                    urlParams.set('longitude', lng);
+                    window.location.search = urlParams.toString();
+                }, (error) => {
+                    console.log('Location access denied:', error);
+                });
+            }
+        }
+    });
+
+    /**
+     * Change search parameters based on active hero tab category
+     */
+    function selectSearchTab(type) {
+        // Update hidden input
+        document.getElementById('hidden-search-type').value = type;
+
+        // Toggle button states
+        document.querySelectorAll('.search-tab-btn').forEach(btn => {
+            btn.classList.remove('bg-steelAzure', 'text-white', 'shadow-sm');
+            btn.classList.add('text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-100');
+        });
+
+        const activeId = 'tab-' + (type === 'all' ? 'all' : type.toLowerCase());
+        const activeBtn = document.getElementById(activeId);
+        if (activeBtn) {
+            activeBtn.classList.remove('text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-100');
+            activeBtn.classList.add('bg-steelAzure', 'text-white', 'shadow-sm');
+        }
+
+        // Alter search action parameter dynamically
+        const searchInput = document.querySelector('input[name="search"]');
+        if (type !== 'all') {
+            searchInput.placeholder = `Search for ${type}s, cities...`;
+        } else {
+            searchInput.placeholder = "Search cities, areas, titles...";
+        }
+    }
+</script>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-slate-900 to-slate-800 border-t border-slate-800 pt-16 pb-12 mt-24 relative overflow-hidden text-slate-400">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(26,68,124,0.12),transparent_50%)] pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm relative z-10 mb-12">
+            <!-- Col 1: Bio -->
+            <div class="space-y-4">
+                <img src="/logo.png" alt="HomiQ Logo" class="h-14 w-auto object-contain">
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Connecting property customer listings and flexible rental requests through modern verification pipelines.
+                </p>
+                <!-- Play Store Link -->
+                <div class="pt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="inline-block transition hover:opacity-80">
+                        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" class="h-12 w-auto -ml-2.5">
+                    </a>
+                </div>
+                <!-- Social Icons -->
+                <div class="flex gap-4">
+                    <a href="#" class="text-slate-400 hover:text-emerald-400 transition">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1V12h3l-.5 3h-2.5v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
+                    </a>
+                    <a href="#" class="text-slate-400 hover:text-emerald-400 transition">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                    </a>
+                    <a href="#" class="text-slate-400 hover:text-emerald-400 transition">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Col 2: Discover -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Discover Spaces</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="/?category=Apartment" class="hover:text-emerald-400 transition">Apartments</a></li>
+                    <li><a href="/?category=House" class="hover:text-emerald-400 transition">Family Houses</a></li>
+                    <li><a href="/?category=Villa" class="hover:text-emerald-400 transition">Beachfront Villas</a></li>
+                    <li><a href="/?category=Shop" class="hover:text-emerald-400 transition">Commercial Shops</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Quick Links -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Platform Links</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="/about" class="hover:text-emerald-400 transition">About Us</a></li>
+                    <li><a href="/contact" class="hover:text-emerald-400 transition">Contact Us</a></li>
+                    <li><a href="/login" class="hover:text-emerald-400 transition">Sign In Portal</a></li>
+                    <li><a href="/register" class="hover:text-emerald-400 transition">Create Account</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Contact -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Contact Info</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        <span class="hover:text-emerald-400 transition">support@homiq.com</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                        <span>+91 1800-HOMIQ-01</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium relative z-10">
+            <p>&copy; 2026 HomiQ Space Rentals. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="/contact" class="hover:text-emerald-400 transition">Contact Us</a>
+                <a href="/privacy" class="hover:text-emerald-400 transition">Privacy Policy</a>
+                <a href="/terms" class="hover:text-emerald-400 transition">Terms & Conditions</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Reveal Observer Script & Notification Toggles -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.05
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notification-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('notification-dropdown-wrapper');
+            const dropdown = document.getElementById('notification-dropdown');
+            if (wrapper && !wrapper.contains(e.target) && dropdown) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        
+        function showLogoutModal() {
+            const modal = document.getElementById('logout-confirm-modal');
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            const card = document.getElementById('logout-modal-card');
+            if (modal && backdrop && card) {
+                modal.classList.remove('hidden');
+                void modal.offsetWidth;
+                backdrop.classList.add('opacity-100');
+                backdrop.classList.remove('opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+                card.classList.remove('scale-95', 'opacity-0');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logout-confirm-modal');
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            const card = document.getElementById('logout-modal-card');
+            if (modal && backdrop && card) {
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0');
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+        }
+
+        function confirmLogout() {
+            const form = document.getElementById('logout-form');
+            if (form) {
+                form.submit();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideLogoutModal();
+            }
+        });
+    </script>
+
+    <!-- Beautiful Custom Logout Confirmation Modal -->
+    <div id="logout-confirm-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="logout-modal-backdrop" onclick="hideLogoutModal()"></div>
+        
+        <!-- Modal Dialog Box -->
+        <div class="relative bg-white border border-slate-100 rounded-[24px] p-6 w-full max-w-sm shadow-2xl z-10 transform scale-95 opacity-0 transition-all duration-300" id="logout-modal-card">
+            <div class="text-center space-y-4">
+                <!-- Icon -->
+                <div class="mx-auto h-12 w-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </div>
+                <!-- Text Content -->
+                <div class="space-y-1">
+                    <h3 class="text-base font-extrabold text-slate-900">Sign Out Confirmation</h3>
+                    <p class="text-xs text-slate-405 font-medium leading-relaxed">Are you sure you want to log out of your session? You will need to enter your details again to sign back in.</p>
+                </div>
+                <!-- Buttons -->
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="hideLogoutModal()" class="flex-1 py-3 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-xs uppercase tracking-wider rounded-xl transition">
+                        Cancel
+                    </button>
+                    <button type="button" onclick="confirmLogout()" class="flex-1 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-rose-500/20 transition">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

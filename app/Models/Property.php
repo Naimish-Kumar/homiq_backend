@@ -32,7 +32,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'ownership_type',
     'built_up_area',
     'is_negotiable',
-    'is_rera_approved'
+    'is_rera_approved',
+    'price_unit',
+    'plot_area',
+    'boundary_wall',
+    'preferred_tenant'
 ])]
 class Property extends Model
 {
@@ -55,6 +59,8 @@ class Property extends Model
             'is_featured' => 'boolean',
             'is_negotiable' => 'boolean',
             'is_rera_approved' => 'boolean',
+            'boundary_wall' => 'boolean',
+            'plot_area' => 'double',
         ];
     }
 

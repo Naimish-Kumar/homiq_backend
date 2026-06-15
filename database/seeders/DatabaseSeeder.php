@@ -256,7 +256,7 @@ class DatabaseSeeder extends Seeder
                 'is_pet_friendly' => false,
                 'amenities' => ['WiFi', 'Spotlights', 'AC', 'Storage Room'],
                 'images' => [
-                    'https://images.unsplash.com/photo-1531058020387-3be344559be6?auto=format&fit=crop&w=800&q=80'
+                    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
                 ],
                 'status' => 'approved',
             ],

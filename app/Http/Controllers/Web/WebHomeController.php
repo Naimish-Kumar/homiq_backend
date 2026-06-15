@@ -136,7 +136,17 @@ class WebHomeController extends Controller
     public function property($id)
     {
         $property = Property::with('owner')->findOrFail($id);
-        return view('property', compact('property'));
+        $relatedProperties = Property::where('status', 'approved')
+            ->where('id', '!=', $property->id)
+            ->where(function ($query) use ($property) {
+                $query->where('category', $property->category)
+                      ->orWhere('listing_type', $property->listing_type);
+            })
+            ->latest()
+            ->take(3)
+            ->get();
+            
+        return view('property', compact('property', 'relatedProperties'));
     }
 
     /**

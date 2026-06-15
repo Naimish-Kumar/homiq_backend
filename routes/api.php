@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\MetadataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,7 @@ Route::post('/subscription/revenuecat-webhook', [\App\Http\Controllers\Api\Reven
 // Public Property browse routes
 Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/properties/{id}', [PropertyController::class, 'show']);
+Route::get('/metadata', [MetadataController::class, 'index']);
 Route::get('/app-version', function() {
     $configs = \App\Models\Configuration::where('group', 'app')->pluck('value', 'key');
     return response()->json([

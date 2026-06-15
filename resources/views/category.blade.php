@@ -1,66 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    /* Advanced Card and Icon Animations */
-    .premium-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 12px;
-        border: 1px solid #f1f5f9;
-        background-color: #ffffff;
-        transform-style: preserve-3d;
-        perspective: 1000px;
-        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                    box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                    border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    /* Shimmer Sweep Animation on Hover */
-    .premium-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -150%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.35),
-            transparent
-        );
-        transform: skewX(-20deg);
-        z-index: 10;
-        pointer-events: none;
-    }
-    
-    .premium-card:hover::after {
-        left: 150%;
-        transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    .premium-card:hover {
-        transform: translateY(-8px) scale(1.02) rotateX(1deg) rotateY(-1deg);
-        box-shadow: 0 30px 60px -15px rgba(26, 68, 124, 0.16), 0 10px 22px -10px rgba(0, 0, 0, 0.08);
-        border-color: rgba(26, 68, 124, 0.35);
-    }
-    
-    .category-btn {
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                    background-color 0.4s ease;
-    }
-    .category-btn:hover {
-        transform: translateY(-6px);
-    }
-    .category-btn:hover .icon-wrapper {
-        transform: scale(1.08);
-    }
-    .icon-wrapper {
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-</style>
 
 <!-- Page Header / Breadcrumbs -->
 <section class="max-w-7xl mx-auto px-6 pt-10 pb-6">
@@ -103,49 +43,7 @@
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             @foreach ($properties as $prop)
-                <a href="/properties/{{ $prop->id }}" class="premium-card group flex flex-col h-full">
-                    <!-- Image -->
-                    <div class="h-52 bg-slate-100 overflow-hidden relative">
-                        <img src="{{ !empty($prop->images) && is_array($prop->images) ? $prop->images[0] : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80' }}" 
-                             alt="space" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-750 ease-in-out">
-                        <span class="absolute top-4 right-4 px-2.5 py-1 bg-white/95 backdrop-blur-sm text-[10px] font-extrabold text-steelAzure rounded-lg uppercase tracking-wide">
-                            {{ $prop->category }}
-                        </span>
-                        
-                        @if(in_array($prop->listing_type, ['rent', 'sale']))
-                            <span class="absolute top-4 left-4 px-2.5 py-1 bg-amber-500 text-white text-[9px] font-black rounded-lg uppercase tracking-wider shadow-sm">
-                                FOR {{ strtoupper($prop->listing_type) }}
-                            </span>
-                        @endif
-                    </div>
-
-                    <!-- Details -->
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-base mb-1 truncate group-hover:text-steelAzure transition-colors duration-155">{{ $prop->title }}</h3>
-                            <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span class="truncate">{{ $prop->address }}</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex items-center justify-between border-t border-slate-50 pt-4">
-                                <span class="text-base font-bold text-steelAzure">{{ $prop->currency_symbol }}{{ number_format($prop->price, 0) }}<span class="text-[10px] text-slate-400 font-normal">{{ $prop->billing_frequency_suffix }}</span></span>
-                                <span class="text-xs text-slate-400 font-medium">
-                                    @if($prop->listing_type === 'sale')
-                                        {{ $prop->built_up_area ?? 0 }} sq ft
-                                    @else
-                                        {{ $prop->bedrooms }} bd • {{ $prop->bathrooms }} ba
-                                    @endif
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                <x-property-card :property="$prop" />
             @endforeach
         </div>
     @endif
