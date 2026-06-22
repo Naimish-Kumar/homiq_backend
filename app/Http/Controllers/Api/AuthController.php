@@ -52,14 +52,35 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:6',
+            'referral_code' => 'nullable|string|exists:users,referral_code',
         ]);
+
+        $referrer = null;
+        if (!empty($fields['referral_code'])) {
+            $referrer = User::where('referral_code', $fields['referral_code'])->first();
+        }
 
         $user = User::create([
             'name' => $fields['name'],
             'email' => $fields['email'],
             'phone' => $fields['phone'] ?? null,
             'password' => Hash::make($fields['password']),
+            'referred_by_id' => $referrer?->id,
         ]);
+
+        if ($referrer) {
+            try {
+                $notificationService = app(\App\Services\NotificationService::class);
+                $notificationService->notify(
+                    $referrer,
+                    'New Referral Registered!',
+                    $user->name . ' signed up using your referral code. You have earned 2 extra listing slots!',
+                    'info'
+                );
+            } catch (\Exception $e) {
+                Log::error("Failed to notify referrer: " . $e->getMessage());
+            }
+        }
 
         $token = $user->createToken('homiq_auth_token')->plainTextToken;
 
@@ -413,6 +434,52 @@ class AuthController extends Controller
 
         return response([
             'message' => 'FCM token updated successfully',
+        ], 200);
+    }
+
+    /**
+     * Apply a referral code to the authenticated user post-registration/login.
+     */
+    public function applyReferralCode(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->referred_by_id) {
+            return response([
+                'message' => 'You have already been referred by someone else.',
+            ], 400);
+        }
+
+        $fields = $request->validate([
+            'referral_code' => 'required|string|exists:users,referral_code',
+        ]);
+
+        $referrer = User::where('referral_code', $fields['referral_code'])->first();
+
+        if ($referrer->id === $user->id) {
+            return response([
+                'message' => 'You cannot use your own referral code.',
+            ], 400);
+        }
+
+        $user->referred_by_id = $referrer->id;
+        $user->save();
+
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->notify(
+                $referrer,
+                'Referral Reward Claimed!',
+                $user->name . ' applied your referral code. You have earned 2 extra listing slots!',
+                'info'
+            );
+        } catch (\Exception $e) {
+            Log::error("Failed to notify referrer: " . $e->getMessage());
+        }
+
+        return response([
+            'message' => 'Referral code applied successfully!',
+            'user' => $user->fresh(),
         ], 200);
     }
 }

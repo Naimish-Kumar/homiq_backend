@@ -75,7 +75,10 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::post('/users/{id}', [AdminDashboardController::class, 'updateUser']);
     Route::post('/users/{id}/toggle-admin', [AdminDashboardController::class, 'toggleAdmin']);
     Route::post('/users/{id}/change-plan', [AdminDashboardController::class, 'changeUserPlan']);
+    Route::post('/users/{id}/verify-kyc', [AdminDashboardController::class, 'verifyKyc']);
+    Route::post('/users/{id}/reject-kyc', [AdminDashboardController::class, 'rejectKyc']);
     Route::delete('/users/{id}', [AdminDashboardController::class, 'deleteUser']);
+    Route::get('/feedbacks', [AdminDashboardController::class, 'feedbacks']);
     Route::get('/settings', [AdminDashboardController::class, 'settings']);
     Route::get('/settings/{slug}', [AdminDashboardController::class, 'editPage']);
     Route::post('/settings/{slug}', [AdminDashboardController::class, 'updatePage']);

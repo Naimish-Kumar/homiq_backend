@@ -149,6 +149,17 @@
                         </svg>
                         <span class="text-xs">Listing Attributes</span>
                     </a>
+
+                    <!-- User Feedback -->
+                    <a href="/admin/feedbacks" class="relative group flex items-center gap-3.5 px-4 py-3 rounded-md transition {{ Request::is('admin/feedbacks*') ? 'text-donezoGreen font-bold bg-donezoLightGreen/50' : 'text-slate-400 hover:bg-slate-50 hover:text-slate-700' }}">
+                        @if (Request::is('admin/feedbacks*'))
+                            <div class="absolute left-0 top-1/4 bottom-1/4 w-1 bg-donezoGreen rounded-r-sm"></div>
+                        @endif
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {{ Request::is('admin/feedbacks*') ? 'text-donezoGreen' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                        <span class="text-xs">User Feedback</span>
+                    </a>
                 </nav>
             </div>
 

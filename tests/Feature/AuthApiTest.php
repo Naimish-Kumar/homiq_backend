@@ -168,4 +168,66 @@ class AuthApiTest extends TestCase
         ]);
         $loginResponse->assertStatus(200);
     }
+
+    /**
+     * Test referral system registration.
+     */
+    public function test_user_can_register_with_referral_code()
+    {
+        // 1. Create a user who will be the referrer
+        $referrer = User::create([
+            'name' => 'Referrer User',
+            'email' => 'referrer@example.com',
+            'password' => Hash::make('password123'),
+        ]);
+
+        $this->assertNotEmpty($referrer->referral_code);
+
+        // 2. Register a new user using referrer's code
+        $response = $this->postJson('/api/register', [
+            'name' => 'Referred User',
+            'email' => 'referred@example.com',
+            'password' => 'password123',
+            'referral_code' => $referrer->referral_code,
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', [
+            'email' => 'referred@example.com',
+            'referred_by_id' => $referrer->id,
+        ]);
+    }
+
+    /**
+     * Test post-registration referral application.
+     */
+    public function test_user_can_apply_referral_code_after_registration()
+    {
+        $referrer = User::create([
+            'name' => 'Referrer User',
+            'email' => 'referrer@example.com',
+            'password' => Hash::make('password123'),
+        ]);
+
+        $referred = User::create([
+            'name' => 'Referred User',
+            'email' => 'referred@example.com',
+            'password' => Hash::make('password123'),
+        ]);
+
+        $token = $referred->createToken('test_token')->plainTextToken;
+
+        $response = $this->postJson('/api/referral/apply', [
+            'referral_code' => $referrer->referral_code,
+        ], [
+            'Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'message' => 'Referral code applied successfully!',
+        ]);
+
+        $this->assertEquals($referrer->id, $referred->fresh()->referred_by_id);
+    }
 }

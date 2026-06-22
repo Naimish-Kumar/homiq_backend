@@ -137,9 +137,15 @@
             <span class="text-[9px] text-slate-400 font-bold tracking-widest block mt-1 uppercase">Pending Alerts</span>
         </div>
 
-        <div class="space-y-2">
-            <h4 class="font-extrabold text-donezoGreen text-sm leading-snug">Review Pending Listings</h4>
-            <p class="text-[11px] text-slate-500 leading-normal">There are currently <strong class="text-slate-800 font-bold">{{ $pendingProperties }}</strong> properties pending review.</p>
+        <div class="space-y-3.5">
+            <div class="border-b border-slate-50 pb-2">
+                <h4 class="font-extrabold text-donezoGreen text-xs leading-snug">Review Pending Listings</h4>
+                <p class="text-[10px] text-slate-500 mt-1 leading-normal">There are <strong class="text-slate-800 font-bold">{{ $pendingProperties }}</strong> properties pending review.</p>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-amber-600 text-xs leading-snug">Pending KYC Verifications</h4>
+                <p class="text-[10px] text-slate-500 mt-1 leading-normal">There are <strong class="text-slate-800 font-bold">{{ $pendingKycCount }}</strong> KYC uploads awaiting moderation.</p>
+            </div>
         </div>
 
         <a href="/admin/properties?status=pending" class="block w-full py-3 bg-donezoGreen hover:bg-emerald-800 text-white text-center rounded-xl text-[10px] font-extrabold transition shadow-sm flex items-center justify-center gap-1.5">
@@ -266,6 +272,121 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H10a1 1 0 01-1-1v-4z" />
                 </svg>
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Widgets Grid (Feedback & KYC) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 relative z-10">
+    <!-- Feedback Section -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between min-h-[300px]">
+        <div>
+            <div class="flex items-center justify-between border-b border-slate-50 pb-3 mb-4">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Recent User Feedback</h3>
+                    <p class="text-[10px] text-slate-400 mt-1 font-semibold">User feedback and bug submissions from mobile app</p>
+                </div>
+                <a href="/admin/feedbacks" class="text-[10px] font-bold text-donezoGreen hover:underline">View All Feedback</a>
+            </div>
+
+            @if ($recentFeedbacks->isEmpty())
+                <p class="text-xs text-slate-400 py-12 text-center font-bold">No feedback received yet.</p>
+            @else
+                <div class="space-y-4">
+                    @foreach ($recentFeedbacks as $feedback)
+                        <div class="flex flex-col md:flex-row md:items-center justify-between p-3.5 bg-slate-50/50 border border-slate-100 rounded-xl gap-3">
+                            <div class="flex items-start gap-3">
+                                <div class="h-8 w-8 rounded-full bg-slate-100 border border-slate-200/60 flex items-center justify-center font-bold text-xs text-slate-500 flex-shrink-0">
+                                    {{ substr($feedback->user->name ?? 'G', 0, 1) }}
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-black text-slate-800">{{ $feedback->user->name ?? 'Guest' }}</span>
+                                        <span class="text-[9px] text-slate-400 font-semibold">({{ $feedback->user->email ?? 'N/A' }})</span>
+                                        @if($feedback->type === 'issue')
+                                            <span class="px-1.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-100 rounded text-[8px] font-extrabold uppercase tracking-wider">Bug: {{ $feedback->area ?? 'General' }}</span>
+                                        @else
+                                            <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[8px] font-extrabold uppercase tracking-wider">Suggestion</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-xs text-slate-650 mt-1 font-semibold leading-relaxed">{{ Str::limit($feedback->feedback, 160) }}</p>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 text-right flex flex-col items-end gap-1">
+                                @if($feedback->type === 'suggestion')
+                                    <div class="flex items-center gap-0.5">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 {{ $i <= $feedback->stars ? 'text-amber-400 fill-amber-400' : 'text-slate-200' }}" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        @endfor
+                                    </div>
+                                @endif
+                                <span class="text-[9px] text-slate-400 font-semibold">{{ $feedback->created_at->diffForHumans() }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Pending KYC Approvals Section -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between min-h-[300px]">
+        <div>
+            <div class="flex items-center justify-between border-b border-slate-50 pb-3 mb-4">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Pending KYC Approvals</h3>
+                    <p class="text-[10px] text-slate-400 mt-1 font-semibold">Verify identity documents uploaded by hosts and users</p>
+                </div>
+                <span class="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200/60 rounded-md text-[8px] font-extrabold uppercase tracking-wider">{{ $pendingKycCount }} Pending</span>
+            </div>
+
+            @if ($pendingKycUsers->isEmpty())
+                <p class="text-xs text-slate-400 py-12 text-center font-bold">No pending KYC verifications.</p>
+            @else
+                <div class="space-y-4">
+                    @foreach ($pendingKycUsers as $user)
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50/50 border border-slate-100 rounded-xl gap-3">
+                            <div class="flex items-center gap-3">
+                                @if($user->profile_photo)
+                                    <img src="{{ $user->profile_photo }}" class="h-8.5 w-8.5 rounded-lg object-cover border border-slate-200" alt="avatar">
+                                @else
+                                    <div class="h-8.5 w-8.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-500 uppercase">
+                                        {{ substr($user->name, 0, 1) }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">{{ $user->name }}</h4>
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">{{ $user->email }}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 self-end sm:self-auto">
+                                @if ($user->kyc_document)
+                                    <a href="{{ $user->kyc_document }}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[10px] font-extrabold border border-slate-200 transition">
+                                        View ID
+                                    </a>
+                                @endif
+                                <form action="/admin/users/{{ $user->id }}/verify-kyc" method="POST" class="inline m-0">
+                                    @csrf
+                                    <button type="submit" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-[10px] font-extrabold transition">
+                                        Approve
+                                    </button>
+                                </form>
+                                <form action="/admin/users/{{ $user->id }}/reject-kyc" method="POST" class="inline m-0">
+                                    @csrf
+                                    <button type="submit" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[10px] font-extrabold transition">
+                                        Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-50 flex justify-end">
+            <a href="/admin/users" class="text-[10px] font-bold text-donezoGreen hover:underline">Manage All Users</a>
         </div>
     </div>
 </div>

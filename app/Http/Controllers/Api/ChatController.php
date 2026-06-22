@@ -105,9 +105,18 @@ class ChatController extends Controller
         }
 
         // Mark incoming messages as read
-        Message::where('chat_id', $chat->id)
+        $updatedCount = Message::where('chat_id', $chat->id)
             ->where('sender_id', '!=', $user->id)
+            ->where('is_read', false)
             ->update(['is_read' => true]);
+
+        if ($updatedCount > 0) {
+            try {
+                broadcast(new \App\Events\MessageRead($chat->id, $user->id));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+            }
+        }
 
         // Broadcast presence safely
         try {
@@ -125,6 +134,37 @@ class ChatController extends Controller
             'chat' => $chat,
             'messages' => $messages
         ], 200);
+    }
+
+    /**
+     * Mark unread messages as read while in chat.
+     */
+    public function markAsRead(Request $request, $id)
+    {
+        $chat = Chat::find($id);
+        if (!$chat) {
+            return response(['message' => 'Chat room not found'], 404);
+        }
+
+        $user = $request->user();
+        if ($chat->user_one_id !== $user->id && $chat->user_two_id !== $user->id) {
+            return response(['message' => 'Unauthorized'], 403);
+        }
+
+        $updatedCount = Message::where('chat_id', $chat->id)
+            ->where('sender_id', '!=', $user->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        if ($updatedCount > 0) {
+            try {
+                broadcast(new \App\Events\MessageRead($chat->id, $user->id));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Pusher Broadcast Error: ' . $e->getMessage());
+            }
+        }
+
+        return response(['success' => true], 200);
     }
 
     /**

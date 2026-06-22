@@ -15,10 +15,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'taxes',
     'platform_fee',
     'total_price',
-    'status'
+    'status',
+    'roommate_group_id'
 ])]
 class Booking extends Model
 {
+    /**
+     * Get the roommate group that is booked.
+     */
+    public function roommateGroup(): BelongsTo
+    {
+        return $this->belongsTo(RoommateGroup::class, 'roommate_group_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

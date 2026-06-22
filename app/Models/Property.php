@@ -36,7 +36,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'price_unit',
     'plot_area',
     'boundary_wall',
-    'preferred_tenant'
+    'preferred_tenant',
+    'supports_group_renting',
+    'group_max_size'
 ])]
 class Property extends Model
 {
@@ -61,6 +63,8 @@ class Property extends Model
             'is_rera_approved' => 'boolean',
             'boundary_wall' => 'boolean',
             'plot_area' => 'double',
+            'supports_group_renting' => 'boolean',
+            'group_max_size' => 'integer',
         ];
     }
 
@@ -70,6 +74,14 @@ class Property extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get the roommate groups for the property.
+     */
+    public function roommateGroups()
+    {
+        return $this->hasMany(RoommateGroup::class, 'property_id');
     }
 
     /**

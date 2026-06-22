@@ -34,6 +34,7 @@
                     <th class="p-4">Platform Stats</th>
                     <th class="p-4">Subscription Plan</th>
                     <th class="p-4">Access Level</th>
+                    <th class="p-4">KYC Status</th>
                     <th class="p-4 pr-6 text-right">Moderator Actions</th>
                 </tr>
             </thead>
@@ -95,6 +96,34 @@
                                 <span class="px-2.5 py-1 bg-violet-50 text-violet-700 rounded-full font-extrabold text-[9px] uppercase border border-violet-200/60">Administrator</span>
                             @else
                                 <span class="px-2.5 py-1 bg-slate-50 text-slate-500 rounded-full font-extrabold text-[9px] uppercase border border-slate-200">Customer</span>
+                            @endif
+                        </td>
+                        <td class="p-4">
+                            @if ($user->kyc_status === 'verified')
+                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full font-extrabold text-[9px] uppercase border border-emerald-200/60">Verified</span>
+                            @elseif ($user->kyc_status === 'pending')
+                                <div class="flex flex-col gap-1">
+                                    <span class="inline-block self-start px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full font-extrabold text-[9px] uppercase border border-amber-200/60">Pending</span>
+                                    @if ($user->kyc_document)
+                                        <div class="flex gap-1 items-center">
+                                            <a href="{{ $user->kyc_document }}" target="_blank" class="text-[10px] text-blue-600 hover:underline font-extrabold">View ID</a>
+                                            <span class="text-slate-300">•</span>
+                                            <form action="/admin/users/{{ $user->id }}/verify-kyc" method="POST" class="inline m-0">
+                                                @csrf
+                                                <button type="submit" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-extrabold">Approve</button>
+                                            </form>
+                                            <span class="text-slate-300">•</span>
+                                            <form action="/admin/users/{{ $user->id }}/reject-kyc" method="POST" class="inline m-0">
+                                                @csrf
+                                                <button type="submit" class="text-[10px] text-rose-600 hover:text-rose-700 font-extrabold">Reject</button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            @elseif ($user->kyc_status === 'rejected')
+                                <span class="px-2.5 py-1 bg-rose-50 text-rose-700 rounded-full font-extrabold text-[9px] uppercase border border-rose-200/60">Rejected</span>
+                            @else
+                                <span class="text-[10px] text-slate-400 font-bold italic">Not Submitted</span>
                             @endif
                         </td>
                         <td class="p-4 pr-6 text-right">

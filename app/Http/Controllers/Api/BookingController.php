@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Property;
+use App\Models\RoommateGroup;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -21,11 +22,15 @@ class BookingController extends Controller
             // Find bookings for properties owned by this host
             $bookings = Booking::whereHas('property', function ($query) use ($user) {
                 $query->where('owner_id', $user->id);
-            })->with(['property', 'renter'])->latest()->get();
+            })->with(['property', 'renter', 'roommateGroup.members'])->latest()->get();
         } else {
-            // Find bookings made by this renter
-            $bookings = Booking::where('renter_id', $user->id)
-                ->with(['property.owner', 'renter'])->latest()->get();
+            // Find bookings made by this renter OR where they are a roommate in a group lease
+            $bookings = Booking::where(function ($q) use ($user) {
+                $q->where('renter_id', $user->id)
+                  ->orWhereHas('roommateGroup.members', function ($memberQuery) use ($user) {
+                      $memberQuery->where('user_id', $user->id);
+                  });
+            })->with(['property.owner', 'renter', 'roommateGroup.members'])->latest()->get();
         }
 
         return response($bookings, 200);
@@ -44,6 +49,7 @@ class BookingController extends Controller
             'taxes' => 'required|numeric|min:0',
             'platform_fee' => 'required|numeric|min:0',
             'total_price' => 'required|numeric|min:0',
+            'roommate_group_id' => 'nullable|exists:roommate_groups,id',
         ]);
 
         $user = $request->user();
@@ -55,25 +61,71 @@ class BookingController extends Controller
             ], 400);
         }
 
+        $group = null;
+        if (!empty($fields['roommate_group_id'])) {
+            $group = RoommateGroup::find($fields['roommate_group_id']);
+            if (!$group) {
+                return response(['message' => 'Roommate group not found.'], 404);
+            }
+
+            if ($group->status !== 'ready') {
+                return response(['message' => 'This roommate group is not ready or has already been booked.'], 400);
+            }
+
+            if (!$group->members()->where('user_id', $user->id)->exists()) {
+                return response(['message' => 'You are not a member of this roommate group.'], 403);
+            }
+
+            if ($group->property_id !== $property->id) {
+                return response(['message' => 'This roommate group does not match the property.'], 400);
+            }
+        }
+
         $booking = Booking::create(array_merge($fields, [
             'renter_id' => $user->id,
             'status' => 'pending',
         ]));
 
+        if ($group) {
+            // Update roommate group status to booked
+            $group->update(['status' => 'booked']);
+        }
+
         // Notify property owner about the new booking
         $property->load('owner');
         $notificationService = app(\App\Services\NotificationService::class);
+        
+        $renterName = $user->name;
+        if ($group) {
+            $renterName = "Roommate Group (led by " . $user->name . ")";
+        }
+
         $notificationService->notify(
             $property->owner,
             'New Booking Request',
-            'You have received a new booking request for "' . $property->title . '" from ' . $user->name . '.',
+            'You have received a new booking request for "' . $property->title . '" from ' . $renterName . '.',
             'booking',
             true, // send email
             \App\Mail\BookingStatusMail::class,
             [$property->owner->name, $property->title, 'pending', $booking->check_in, $booking->check_out, (string) $booking->total_price, $property->currency]
         );
 
-        return response($booking->load(['property', 'renter']), 201);
+        if ($group) {
+            // Also notify all roommates in the group about the booking request
+            foreach ($group->members as $member) {
+                if ($member->id !== $user->id) {
+                    $notificationService->notify(
+                        $member,
+                        'Group Booking Placed',
+                        'A group booking request for "' . $property->title . '" has been placed by ' . $user->name . '. Split Rent: ' . $property->currency_symbol . number_format($booking->total_price / $group->max_roommates, 2) . '/mo.',
+                        'booking',
+                        false
+                    );
+                }
+            }
+        }
+
+        return response($booking->load(['property', 'renter', 'roommateGroup.members']), 201);
     }
 
     /**

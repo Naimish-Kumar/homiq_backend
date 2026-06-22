@@ -253,6 +253,10 @@ class AdminDashboardController extends Controller
             return $user;
         });
 
+        $recentFeedbacks = \App\Models\Feedback::with('user')->latest()->take(5)->get();
+        $pendingKycCount = User::where('kyc_status', 'pending')->count();
+        $pendingKycUsers = User::where('kyc_status', 'pending')->latest()->take(5)->get();
+
         return view('admin.index', compact(
             'totalUsers',
             'totalBookings',
@@ -263,7 +267,10 @@ class AdminDashboardController extends Controller
             'totalRevenue',
             'recentBookings',
             'listingVolume',
-            'latestUsers'
+            'latestUsers',
+            'recentFeedbacks',
+            'pendingKycCount',
+            'pendingKycUsers'
         ));
     }
 
@@ -322,6 +329,10 @@ class AdminDashboardController extends Controller
                 \App\Mail\PropertyStatusMail::class,
                 [$property->owner->name, $property->title, $request->status]
             );
+
+            if ($request->status === 'approved') {
+                event(new \App\Events\PropertyApproved($property));
+            }
         }
 
         return back()->with('success', 'Property status updated to ' . $request->status);
@@ -370,6 +381,62 @@ class AdminDashboardController extends Controller
         ]);
 
         return back()->with('success', 'User subscription plan updated to ' . ucfirst($request->subscription_plan) . ' successfully.');
+    }
+
+    /**
+     * Approve user KYC document.
+     */
+    public function verifyKyc($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update([
+            'kyc_status' => 'verified',
+            'is_verified' => true,
+        ]);
+
+        // Notify user via app system notification
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->notify(
+                $user,
+                'KYC Status: Verified',
+                'Congratulations! Your KYC documents have been reviewed and approved by our team.',
+                'info',
+                false // don't send email
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning("Failed to notify user $id of KYC approval: " . $e->getMessage());
+        }
+
+        return back()->with('success', 'User KYC has been verified successfully.');
+    }
+
+    /**
+     * Reject user KYC document.
+     */
+    public function rejectKyc($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update([
+            'kyc_status' => 'rejected',
+            'is_verified' => false,
+        ]);
+
+        // Notify user via app system notification
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->notify(
+                $user,
+                'KYC Status: Rejected',
+                'Your KYC documents could not be verified. Please re-upload a clear government-issued ID.',
+                'warning',
+                false
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning("Failed to notify user $id of KYC rejection: " . $e->getMessage());
+        }
+
+        return back()->with('success', 'User KYC has been rejected.');
     }
 
     /**
@@ -658,5 +725,14 @@ class AdminDashboardController extends Controller
 
         $statusMessage = $property->is_featured ? 'marked as Featured!' : 'removed from Featured!';
         return back()->with('success', "Property '{$property->title}' has been successfully {$statusMessage}");
+    }
+
+    /**
+     * Display feedbacks list.
+     */
+    public function feedbacks()
+    {
+        $feedbacks = \App\Models\Feedback::with('user')->latest()->get();
+        return view('admin.feedbacks', compact('feedbacks'));
     }
 }

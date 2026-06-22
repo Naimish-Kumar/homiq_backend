@@ -120,6 +120,8 @@ class PropertyController extends Controller
             'plot_area' => 'nullable|numeric|min:0',
             'boundary_wall' => 'boolean',
             'preferred_tenant' => 'nullable|string|max:255',
+            'supports_group_renting' => 'boolean',
+            'group_max_size' => 'integer|min:2|max:10',
         ]);
 
         $fields['listing_type'] = $request->input('listing_type') ?: 'rent';
@@ -132,16 +134,24 @@ class PropertyController extends Controller
 
         // Enforce subscription listing limits
         $currentCount = Property::where('owner_id', $user->id)->count();
-        $limit = 10; // default free
+        $baseLimit = 10; // default free
         if ($user->subscription_plan === 'standard') {
-            $limit = 50;
+            $baseLimit = 50;
         } elseif ($user->subscription_plan === 'unlimited') {
-            $limit = 999999;
+            $baseLimit = 999999;
         }
+
+        // 2 free listings for being referred
+        $referredBonus = !empty($user->referred_by_id) ? 2 : 0;
+
+        // 2 free listings for each successful referral made
+        $referralBonus = \App\Models\User::where('referred_by_id', $user->id)->count() * 2;
+
+        $limit = $baseLimit + $referredBonus + $referralBonus;
 
         if ($currentCount >= $limit) {
             return response([
-                'message' => "You have reached the maximum listings limit for your plan ($limit properties). Please upgrade your subscription.",
+                'message' => "You have reached the maximum listings limit for your plan ($limit properties, including " . ($referralBonus + $referredBonus) . " from referrals). Please upgrade your subscription or refer more friends.",
             ], 400);
         }
 
@@ -224,6 +234,15 @@ class PropertyController extends Controller
             ], 404);
         }
 
+        // Calculate active viewers
+        $viewers = \Illuminate\Support\Facades\Cache::get("property_{$id}_active_viewers", []);
+        $now = now()->timestamp;
+        $activeCount = count(array_filter($viewers, function($timestamp) use ($now) {
+            return ($now - $timestamp) < 300;
+        }));
+        
+        $property->setAttribute('active_viewers_count', $activeCount);
+
         return response($property, 200);
     }
 
@@ -284,6 +303,8 @@ class PropertyController extends Controller
             'plot_area' => 'nullable|numeric|min:0',
             'boundary_wall' => 'boolean',
             'preferred_tenant' => 'nullable|string|max:255',
+            'supports_group_renting' => 'boolean',
+            'group_max_size' => 'integer|min:2|max:10',
         ]);
 
         $imageUrls = [];
