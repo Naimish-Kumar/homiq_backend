@@ -46,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         view()->composer('*', function ($view) {
+            if (request()->is('admin*') || request()->is('livewire/update') || request()->is('old-admin*')) {
+                return;
+            }
             if (auth()->check()) {
                 $notifications = \App\Models\Notification::where('user_id', auth()->id())
                     ->latest()

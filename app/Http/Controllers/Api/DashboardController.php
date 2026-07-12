@@ -14,7 +14,7 @@ class DashboardController extends Controller
      */
     public function renterDashboard(Request $request)
     {
-        $user = $request->user();
+        $user = $request->user('sanctum');
 
         $categoriesList = \App\Models\Category::select('name', 'image')->get()->map(function ($cat) {
             $image = $cat->image;
@@ -36,9 +36,13 @@ class DashboardController extends Controller
         $amenities = \App\Models\Amenity::pluck('name')->toArray();
 
         // Base query scope for approved properties not owned by user
-        $baseQuery = fn() => Property::where('status', 'approved')
-            ->where('owner_id', '!=', $user->id)
-            ->with('owner');
+        $baseQuery = function() use ($user) {
+            $query = Property::where('status', 'approved')->with('owner');
+            if ($user) {
+                $query->where('owner_id', '!=', $user->id);
+            }
+            return $query;
+        };
 
         // Fetch featured properties (auto-approved in our database)
         $featured = $baseQuery()->latest()->take(5)->get();
@@ -88,9 +92,12 @@ class DashboardController extends Controller
             ->get();
 
         // Count active bookings (pending or approved)
-        $activeBookingsCount = Booking::where('renter_id', $user->id)
-            ->whereIn('status', ['pending', 'approved'])
-            ->count();
+        $activeBookingsCount = 0;
+        if ($user) {
+            $activeBookingsCount = Booking::where('renter_id', $user->id)
+                ->whereIn('status', ['pending', 'approved'])
+                ->count();
+        }
 
         return response([
             'categories' => $categories,

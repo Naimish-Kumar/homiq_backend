@@ -702,11 +702,30 @@ class AdminDashboardController extends Controller
             'currency' => 'nullable|string|in:INR,USD,EUR,GBP',
             'billing_frequency' => 'nullable|string|in:monthly,per_day,hourly',
             'country' => 'nullable|string|max:255',
+            'listing_type' => 'nullable|string|in:rent,sale',
+            'property_age' => 'nullable|string|max:255',
+            'ownership_type' => 'nullable|string|max:255',
+            'built_up_area' => 'nullable|integer|min:0',
+            'is_negotiable' => 'required|boolean',
+            'is_rera_approved' => 'required|boolean',
+            'security_deposit' => 'nullable|numeric|min:0',
+            'lease_duration' => 'nullable|string|max:255',
+            'available_from' => 'nullable|date',
+            'floor_number' => 'nullable|integer',
+            'total_floors' => 'nullable|integer',
+            'facing_direction' => 'nullable|string|max:255',
+            'carpet_area' => 'nullable|integer|min:0',
+            'preferred_tenant' => 'nullable|string|max:255',
+            'supports_group_renting' => 'required|boolean',
+            'group_max_size' => 'nullable|integer|min:2|max:10',
+            'boundary_wall' => 'required|boolean',
+            'plot_area' => 'nullable|numeric|min:0',
         ]);
 
         $fields['currency'] = $request->input('currency') ?: 'INR';
         $fields['billing_frequency'] = $request->input('billing_frequency') ?: 'monthly';
         $fields['country'] = $request->input('country') ?: 'India';
+        $fields['listing_type'] = $request->input('listing_type') ?: 'rent';
 
         $property->update($fields);
 

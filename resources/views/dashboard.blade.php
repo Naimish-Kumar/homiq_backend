@@ -194,7 +194,7 @@
                     </div>
                     <div class="space-y-1">
                         <h4 class="font-bold text-slate-800 text-sm">Need help listing your properties?</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Ensure you input descriptive titles and address lines. Approved spaces will automatically populate the HomiQ global search feed so seekers can contact you immediately.</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Ensure you input descriptive titles and address lines. Approved spaces will automatically populate the {{ isset($siteConfigs) && isset($siteConfigs['site_name']) ? $siteConfigs['site_name'] : 'HomiQ' }} global search feed so seekers can contact you immediately.</p>
                     </div>
                 </div>
             </div>
@@ -338,6 +338,64 @@
                             </div>
                         </div>
 
+                        <!-- Rent-specific additional fields -->
+                        <div class="rent-only-field grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Security Deposit</label>
+                                <input type="number" name="security_deposit" min="0" placeholder="e.g. 500"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Lease Duration</label>
+                                <select name="lease_duration"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="">Flexible</option>
+                                    <option value="1 month">1 Month</option>
+                                    <option value="3 months">3 Months</option>
+                                    <option value="6 months">6 Months</option>
+                                    <option value="1 year">1 Year</option>
+                                    <option value="2 years">2 Years</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Preferred Tenant</label>
+                                <select name="preferred_tenant"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="Any" selected>Any</option>
+                                    <option value="Family">Family</option>
+                                    <option value="Bachelors">Bachelors</option>
+                                    <option value="Company Lease">Company Lease</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Rent-specific roommates group renting -->
+                        <div class="rent-only-field bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700">Enable Group Renting</label>
+                                    <span class="text-[10px] text-slate-400 block mt-0.5">Allow multiple roommates to split rent</span>
+                                </div>
+                                <input type="checkbox" name="supports_group_renting" value="1" id="supports_group_renting_check" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                            </div>
+                            <div id="group_size_container" style="display: none;">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Maximum Group Size Limit</label>
+                                <select name="group_max_size"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="2">2 Roommates</option>
+                                    <option value="3" selected>3 Roommates</option>
+                                    <option value="4">4 Roommates</option>
+                                    <option value="5">5 Roommates</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.getElementById('supports_group_renting_check')?.addEventListener('change', function(e) {
+                                document.getElementById('group_size_container').style.display = e.target.checked ? 'block' : 'none';
+                            });
+                        </script>
+
                         <script>
                             function updateFields() {
                                 const type = document.getElementById('listing_type_select').value;
@@ -347,13 +405,16 @@
 
                                 const freqContainer = document.getElementById('billing_freq_container');
                                 const saleFields = document.querySelectorAll('.sale-only-field');
+                                const rentFields = document.querySelectorAll('.rent-only-field');
                                 const nonLandFields = document.querySelectorAll('.non-land-field');
+                                const landOnlyFields = document.querySelectorAll('.land-only-field');
                                 
                                 if (type === 'sale') {
                                     freqContainer.style.display = 'none';
                                     document.getElementById('billing_frequency_select').removeAttribute('required');
                                     
                                     saleFields.forEach(el => el.style.display = 'block');
+                                    rentFields.forEach(el => el.style.display = 'none');
                                     if(document.getElementById('built_up_area_input')) document.getElementById('built_up_area_input').setAttribute('required', 'required');
                                     if(document.getElementById('property_age_input')) document.getElementById('property_age_input').setAttribute('required', 'required');
                                 } else {
@@ -361,12 +422,17 @@
                                     document.getElementById('billing_frequency_select').setAttribute('required', 'required');
                                     
                                     saleFields.forEach(el => el.style.display = 'none');
+                                    rentFields.forEach(el => el.style.display = 'block');
                                     if(document.getElementById('built_up_area_input')) document.getElementById('built_up_area_input').removeAttribute('required');
                                     if(document.getElementById('property_age_input')) document.getElementById('property_age_input').removeAttribute('required');
                                 }
 
                                 nonLandFields.forEach(el => {
                                     el.style.display = isLand ? 'none' : 'block';
+                                });
+
+                                landOnlyFields.forEach(el => {
+                                    el.style.display = isLand ? 'block' : 'none';
                                 });
                             }
 
@@ -388,16 +454,32 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="non-land-field">
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bedrooms</label>
-                                <input type="number" name="bedrooms" min="0" value="1"
-                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
-                            </div>
-                            <div class="non-land-field">
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bathrooms</label>
-                                <input type="number" name="bathrooms" min="0" value="1"
-                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
-                            </div>
+                            @if(isset($specifications) && count($specifications) > 0)
+                                @foreach($specifications as $spec)
+                                    @php
+                                        $inputName = strtolower($spec->name);
+                                        if (!in_array($inputName, ['bedrooms', 'bathrooms'])) {
+                                            $inputName = 'bedrooms'; // fallback
+                                        }
+                                    @endphp
+                                    <div class="non-land-field">
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">{{ $spec->name }}</label>
+                                        <input type="number" name="{{ $inputName }}" min="0" value="1"
+                                            class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="non-land-field">
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bedrooms</label>
+                                    <input type="number" name="bedrooms" min="0" value="1"
+                                        class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                </div>
+                                <div class="non-land-field">
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Bathrooms</label>
+                                    <input type="number" name="bathrooms" min="0" value="1"
+                                        class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                </div>
+                            @endif
                             <!-- SALE ONLY -->
                             <div class="sale-only-field" style="display: none;">
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Built-up Area (sq ft)</label>
@@ -409,24 +491,118 @@
                                 <input type="number" name="property_age" id="property_age_input" min="0"
                                     class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
                             </div>
+                            <div class="sale-only-field" style="display: none;">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Ownership Type</label>
+                                <select name="ownership_type" id="ownership_type_input"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="Freehold" selected>Freehold</option>
+                                    <option value="Leasehold">Leasehold</option>
+                                    <option value="Cooperative Society">Cooperative Society</option>
+                                    <option value="Power of Attorney">Power of Attorney</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Land/Plot only fields -->
+                        <div class="land-only-field grid grid-cols-2 gap-4" style="display: none;">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Plot Area</label>
+                                <input type="number" name="plot_area" min="0" placeholder="e.g. 1500"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div class="flex items-center gap-2 pt-8">
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                    <input type="checkbox" name="boundary_wall" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                    Has Boundary Wall
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Common Additional Fields -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Carpet Area (sq ft)</label>
+                                <input type="number" name="carpet_area" min="0" placeholder="e.g. 850"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div class="non-land-field">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Floor Number</label>
+                                <input type="number" name="floor_number" placeholder="e.g. 2"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div class="non-land-field">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Total Floors</label>
+                                <input type="number" name="total_floors" placeholder="e.g. 4"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Facing Direction</label>
+                                <select name="facing_direction"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                                    <option value="" selected>Select Direction</option>
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                    <option value="North-East">North-East</option>
+                                    <option value="North-West">North-West</option>
+                                    <option value="South-East">South-East</option>
+                                    <option value="South-West">South-West</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Available From</label>
+                                <input type="date" name="available_from"
+                                    class="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-slate-800 focus:outline-none focus:border-steelAzure transition text-xs">
+                            </div>
+                            <div class="flex items-center gap-4 pt-6">
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                    <input type="checkbox" name="is_negotiable" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                    Price Negotiable
+                                </label>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800 sale-only-field" style="display: none;">
+                                    <input type="checkbox" name="is_rera_approved" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                    RERA Approved
+                                </label>
+                            </div>
                         </div>
 
                         <!-- Key Options -->
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2 non-land-field">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Key Specifications</label>
                             <div class="grid grid-cols-3 gap-4">
-                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
-                                    <input type="checkbox" name="is_furnished" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
-                                    Furnished
-                                </label>
-                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
-                                    <input type="checkbox" name="has_parking" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
-                                    Parking
-                                </label>
-                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
-                                    <input type="checkbox" name="is_pet_friendly" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
-                                    Allows Pets
-                                </label>
+                                @if(isset($features) && count($features) > 0)
+                                    @foreach($features as $feat)
+                                        @php
+                                            $fieldName = 'is_furnished';
+                                            if (str_contains(strtolower($feat->name), 'parking')) {
+                                                $fieldName = 'has_parking';
+                                            } elseif (str_contains(strtolower($feat->name), 'pet')) {
+                                                $fieldName = 'is_pet_friendly';
+                                            }
+                                        @endphp
+                                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                            <input type="checkbox" name="{{ $fieldName }}" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                            {{ $feat->name }}
+                                        </label>
+                                    @endforeach
+                                @else
+                                    <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                        <input type="checkbox" name="is_furnished" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                        Furnished
+                                    </label>
+                                    <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                        <input type="checkbox" name="has_parking" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                        Parking
+                                    </label>
+                                    <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-800">
+                                        <input type="checkbox" name="is_pet_friendly" value="1" class="rounded border-slate-200 text-steelAzure focus:ring-steelAzure">
+                                        Allows Pets
+                                    </label>
+                                @endif
                             </div>
                         </div>
 
@@ -487,16 +663,29 @@
                             <div class="bg-white rounded-2xl border border-slate-100 p-5 space-y-4 hover:shadow-sm transition">
                                 <div class="flex justify-between items-start gap-2">
                                     <div>
-                                        <h4 class="font-bold text-slate-800 text-sm truncate max-w-[200px]">{{ $listing->title }}</h4>
+                                        <div class="flex items-center gap-2">
+                                            <h4 class="font-bold text-slate-800 text-sm truncate max-w-[200px]">{{ $listing->title }}</h4>
+                                            <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase {{ $listing->listing_type === 'sale' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800' }}">
+                                                For {{ ucfirst($listing->listing_type) }}
+                                            </span>
+                                        </div>
                                         <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1">{{ $listing->address }}</span>
                                     </div>
                                     <span class="px-2.5 py-0.5 rounded-full text-[8px] font-extrabold uppercase tracking-wider {{ $listing->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">
                                         {{ $listing->status }}
                                     </span>
                                 </div>
-                                <div class="bg-slate-50/50 p-3 rounded-xl flex justify-between items-center text-xs">
-                                    <span class="text-slate-400 font-semibold">Listed Price</span>
-                                    <span class="font-extrabold text-slate-800">{{ $listing->formatted_price }}</span>
+                                <div class="bg-slate-50/50 p-3 rounded-xl flex flex-col gap-1.5 text-xs">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400 font-semibold">Listed Price</span>
+                                        <span class="font-extrabold text-slate-800">{{ $listing->formatted_price }}</span>
+                                    </div>
+                                    @if($listing->listing_type === 'rent' && $listing->security_deposit)
+                                        <div class="flex justify-between items-center pt-1 border-t border-slate-100/50">
+                                            <span class="text-slate-400 font-semibold">Security Deposit</span>
+                                            <span class="font-bold text-slate-700">{{ $listing->currency_symbol }}{{ number_format($listing->security_deposit, 0) }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="flex justify-between items-center border-t border-slate-50 pt-3">
                                     <form action="/dashboard/listings/{{ $listing->id }}/toggle-featured" method="POST" class="m-0">

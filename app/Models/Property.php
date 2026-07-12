@@ -38,7 +38,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'boundary_wall',
     'preferred_tenant',
     'supports_group_renting',
-    'group_max_size'
+    'group_max_size',
+    'security_deposit',
+    'lease_duration',
+    'available_from',
+    'floor_number',
+    'total_floors',
+    'facing_direction',
+    'carpet_area'
 ])]
 class Property extends Model
 {
@@ -51,6 +58,7 @@ class Property extends Model
     {
         return [
             'price' => 'decimal:2',
+            'security_deposit' => 'decimal:2',
             'latitude' => 'double',
             'longitude' => 'double',
             'amenities' => 'array',
@@ -65,6 +73,10 @@ class Property extends Model
             'plot_area' => 'double',
             'supports_group_renting' => 'boolean',
             'group_max_size' => 'integer',
+            'available_from' => 'date',
+            'floor_number' => 'integer',
+            'total_floors' => 'integer',
+            'carpet_area' => 'integer',
         ];
     }
 

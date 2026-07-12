@@ -123,76 +123,44 @@
     }
 </style>
 
-<!-- Background Ambient Glow Blobs -->
-<div class="absolute top-20 left-10 w-96 h-96 glow-blob-1 rounded-full pointer-events-none z-0"></div>
-<div class="absolute top-80 right-20 w-[450px] h-[450px] glow-blob-2 rounded-full pointer-events-none z-0"></div>
-
 <!-- SECTION 1: HERO CONTAINER -->
-<section class="relative max-w-7xl mx-auto px-6 pt-10 pb-14 z-10">
-    <div class="w-full">
-        
+<section class="relative w-full -mt-20 pt-32 pb-24 lg:pt-48 lg:pb-32 flex items-center justify-center min-h-[75vh]">
+    <!-- Background Image -->
+    <div class="absolute inset-0 w-full h-full z-0">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2075&q=80" alt="Beautiful Home" class="w-full h-full object-cover">
+        <!-- Dark overlay to make text readable -->
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-50 to-transparent absolute bottom-0 h-32 w-full"></div>
+    </div>
+
+    <div class="w-full max-w-[1400px] mx-auto px-6 relative z-10 flex flex-col items-center justify-center">
         <!-- Search widget & text introduction -->
-        <div class="space-y-8">
+        <div class="space-y-8 w-full max-w-4xl">
             <div class="space-y-4 text-center">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-steelAzure/10 border border-steelAzure/20 text-steelAzure text-xs font-bold tracking-wide uppercase">
-                    <span class="flex h-2 w-2 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    Real-time space verification active
-                </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] drop-shadow-lg">
                     Find Your Next
-                    <span class="bg-gradient-to-r from-steelAzure via-indigo-600 to-emerald-600 bg-clip-text text-transparent"> Perfect Space</span>,
-                    <br>Seamlessly.
+                    <br>Perfect Space.
                 </h1>
-                <p class="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+                <p class="text-base sm:text-lg text-white/90 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-md">
                     Verify, book, and chat directly with premium landlords. HomiQ connects thousands of studios, flats, villas, and commercial spaces.
                 </p>
             </div>
 
             <!-- Custom Interactive Tabbed Search Widget -->
-            <div class="search-glass-card rounded-[24px] p-6 shadow-2xl relative">
-                <!-- Tabs -->
-                <div class="flex gap-2 border-b border-slate-200/60 pb-4 mb-4 justify-center">
-                    <button type="button" id="tab-all" onclick="selectSearchTab('all')" 
-                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn bg-steelAzure text-white shadow-sm">
-                        All Spaces
-                    </button>
-                    <button type="button" id="tab-villa" onclick="selectSearchTab('Villa')" 
-                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn text-slate-500 hover:text-slate-800 hover:bg-slate-100">
-                        Villas
-                    </button>
-                    <button type="button" id="tab-apartment" onclick="selectSearchTab('Apartment')" 
-                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn text-slate-500 hover:text-slate-800 hover:bg-slate-100">
-                        Apartments
-                    </button>
-                    <button type="button" id="tab-studio" onclick="selectSearchTab('Studio')" 
-                            class="px-4 py-2 text-xs font-extrabold tracking-wide uppercase rounded-xl transition-all duration-300 search-tab-btn text-slate-500 hover:text-slate-800 hover:bg-slate-100">
-                        PG / Rooms
-                    </button>
-                </div>
-
+            <div class="bg-white rounded-full p-2 shadow-2xl relative max-w-4xl mx-auto flex items-center">
                 <!-- Form -->
-                <form action="/" method="GET" id="hero-search-form" class="grid grid-cols-1 md:grid-cols-12 gap-4 md:items-end items-stretch">
+                <form action="/" method="GET" id="hero-search-form" class="flex-1 flex flex-col md:flex-row items-center divide-y md:divide-y-0 md:divide-x divide-slate-200/60">
                     <input type="hidden" name="search_type" id="hidden-search-type" value="{{ request('search_type', 'all') }}">
                     
-                    <div class="md:col-span-5 relative">
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Where to?</label>
-                        <div class="relative">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                </svg>
-                            </span>
-                            <input type="text" name="search" placeholder="Search cities, areas, titles..." value="{{ request('search') }}"
-                                   class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-steelAzure focus:bg-white transition-all">
-                        </div>
+                    <div class="flex-1 px-6 py-2 hover:bg-slate-100 rounded-full transition cursor-text group w-full text-left">
+                        <label class="block text-[10px] font-extrabold text-slate-800 uppercase tracking-wider mb-0.5">Where to?</label>
+                        <input type="text" name="search" placeholder="Search cities, areas, titles..." value="{{ request('search') }}"
+                               class="w-full bg-transparent text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none truncate">
                     </div>
 
-                    <div class="md:col-span-4 relative border-t md:border-t-0 md:border-l border-slate-200/60 pt-3 md:pt-0 md:pl-4">
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Budget Target</label>
-                        <select name="max_price" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-xl px-3 py-3 text-sm font-semibold text-slate-800 focus:outline-none focus:border-steelAzure focus:bg-white transition-all">
+                    <div class="flex-1 px-6 py-2 hover:bg-slate-100 rounded-full transition cursor-pointer group w-full text-left">
+                        <label class="block text-[10px] font-extrabold text-slate-800 uppercase tracking-wider mb-0.5">Budget</label>
+                        <select name="max_price" class="w-full bg-transparent text-sm font-semibold text-slate-600 focus:outline-none cursor-pointer appearance-none">
                             <option value="" {{ request('max_price') == '' ? 'selected' : '' }}>Any Budget</option>
                             <option value="5000" {{ request('max_price') == '5000' ? 'selected' : '' }}>Under ₹5,000</option>
                             <option value="10000" {{ request('max_price') == '10000' ? 'selected' : '' }}>Under ₹10,000</option>
@@ -202,12 +170,20 @@
                         </select>
                     </div>
 
-                    <div class="md:col-span-3 pt-2 md:pt-0 flex flex-col">
-                        <label class="block text-[10px] font-extrabold text-transparent uppercase tracking-wider mb-1 select-none hidden md:block" aria-hidden="true">&nbsp;</label>
-                        <button type="submit" class="w-full py-3 bg-steelAzure hover:bg-steelAzure/95 text-white font-extrabold text-xs tracking-wider uppercase rounded-xl shadow-lg shadow-steelAzure/20 transition-all flex items-center justify-center gap-2 group">
-                            Search
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    <div class="flex-1 px-6 py-2 hover:bg-slate-100 rounded-full transition cursor-pointer group w-full text-left">
+                        <label class="block text-[10px] font-extrabold text-slate-800 uppercase tracking-wider mb-0.5">Property Type</label>
+                        <select name="search_type_select" onchange="document.getElementById('hidden-search-type').value = this.value;" class="w-full bg-transparent text-sm font-semibold text-slate-600 focus:outline-none cursor-pointer appearance-none">
+                            <option value="all" {{ request('search_type') == 'all' ? 'selected' : '' }}>All Spaces</option>
+                            <option value="Villa" {{ request('search_type') == 'Villa' ? 'selected' : '' }}>Villas</option>
+                            <option value="Apartment" {{ request('search_type') == 'Apartment' ? 'selected' : '' }}>Apartments</option>
+                            <option value="Studio" {{ request('search_type') == 'Studio' ? 'selected' : '' }}>PG / Rooms</option>
+                        </select>
+                    </div>
+
+                    <div class="px-2 py-2">
+                        <button type="submit" class="w-14 h-14 bg-steelAzure hover:bg-steelAzure/95 text-white rounded-full shadow-lg transition-all flex items-center justify-center group flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
                     </div>
@@ -241,7 +217,7 @@
 
 @if (!$isSearchActive)
 <!-- SECTION 3: CORE UTILITIES ROW -->
-<section class="max-w-7xl mx-auto px-6 py-8">
+<section class="max-w-[1400px] mx-auto px-6 py-8">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <!-- Feature 1 -->
         <div class="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm flex gap-4 hover:border-steelAzure/20 transition-all duration-300">
@@ -295,7 +271,7 @@
 </section>
 
 <!-- SECTION 4: EXPLORE CATEGORIES -->
-<section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal categories-container-wrapper">
+<section class="max-w-[1400px] mx-auto px-6 py-10 scroll-reveal categories-container-wrapper">
     <div class="mb-10 text-center max-w-xl mx-auto space-y-2">
         <h2 class="text-3xl font-black text-slate-800 tracking-tight">Explore Spaces by Category</h2>
         <p class="text-sm text-slate-450 leading-relaxed">Browse verified spots tailored to your functional requirements.</p>
@@ -338,14 +314,14 @@
 @endphp
 
 @if (!$isSearchActive && !$featuredListings->isEmpty())
-<section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal">
+<section class="max-w-[1400px] mx-auto px-6 py-10 scroll-reveal">
     <div class="mb-10 pb-6 border-b border-slate-100">
         <span class="text-xs font-black text-amber-500 uppercase tracking-widest block mb-2">★ PREMIUM SELECTION</span>
         <h2 class="text-3xl font-black text-slate-800 tracking-tight">Featured Listings</h2>
         <p class="text-sm text-slate-450 mt-1">Explore our most premium and highly recommended verified spaces.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
         @foreach ($featuredListings as $prop)
                 <x-property-card :property="$prop" />
         @endforeach
@@ -354,7 +330,7 @@
 @endif
 
 <!-- SECTION 5: RECOMMENDED DIRECTORY -->
-<section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal">
+<section class="max-w-[1400px] mx-auto px-6 py-10 scroll-reveal">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-slate-100 gap-4">
         <div>
             <h2 class="text-3xl font-black text-slate-800 tracking-tight">
@@ -393,7 +369,7 @@
             </a>
         </div>
     @else
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
             @foreach ($properties->take(8) as $prop)
                 <x-property-card :property="$prop" />
             @endforeach
@@ -405,7 +381,7 @@
 <!-- SECTION 6: CATEGORY VILLAS CAROUSEL GRID -->
 @if ($properties->where('category', 'Villa')->isNotEmpty())
 <section class="bg-slate-50/50 border-y border-slate-100/80 py-12 px-6 scroll-reveal">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1400px] mx-auto">
         <div class="flex flex-col md:flex-row items-baseline justify-between mb-12 gap-4">
             <div>
                 <span class="text-xs font-black text-steelAzure uppercase tracking-widest block mb-2">Exquisite Escapes</span>
@@ -430,7 +406,7 @@
 
 <!-- SECTION 7: APARTMENTS & FLATS -->
 @if ($properties->where('category', 'Apartment')->isNotEmpty())
-<section class="max-w-7xl mx-auto px-6 py-10 scroll-reveal">
+<section class="max-w-[1400px] mx-auto px-6 py-10 scroll-reveal">
     <div class="flex flex-col md:flex-row items-baseline justify-between mb-12 gap-4">
         <div>
             <span class="text-xs font-black text-indigo-600 uppercase tracking-widest block mb-2">Prime Living</span>
@@ -453,13 +429,13 @@
 @endif
 
 <!-- SECTION 8: POPULAR LOCATIONS -->
-<section class="max-w-7xl mx-auto px-6 pb-12 scroll-reveal">
+<section class="max-w-[1400px] mx-auto px-6 pb-12 scroll-reveal">
     <div class="text-center mb-16 max-w-xl mx-auto space-y-2">
         <h2 class="text-3xl font-black text-slate-800 tracking-tight">Popular Locations</h2>
         <p class="text-sm text-slate-450 leading-relaxed">Discover listing hotspots curated by local demand metrics.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         <!-- Location 1 -->
         <div class="group relative rounded-2xl overflow-hidden h-72 shadow-sm border border-slate-100 shimmer-hover">
             <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Miami" class="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-500">
@@ -500,7 +476,7 @@
 </section>
 
 <!-- SECTION 9: PARTNER LANDLORDS TICKER -->
-<section class="max-w-7xl mx-auto px-6 py-10 overflow-hidden relative scroll-reveal">
+<section class="max-w-[1400px] mx-auto px-6 py-10 overflow-hidden relative scroll-reveal">
     <div class="text-center mb-12 max-w-xl mx-auto space-y-2">
         <span class="text-xs font-black text-steelAzure uppercase tracking-widest block">Space Partners</span>
         <h2 class="text-3xl font-black text-slate-800 tracking-tight">Top Rated Space Lister Partners</h2>

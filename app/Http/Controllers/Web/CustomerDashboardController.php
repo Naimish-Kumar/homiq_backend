@@ -49,8 +49,11 @@ class CustomerDashboardController extends Controller
 
         $categories = \App\Models\Category::all();
         $amenities = \App\Models\Amenity::all();
+        $specifications = \App\Models\Specification::all();
+        $features = \App\Models\KeyFeature::all();
+        $siteConfigs = \App\Models\Configuration::pluck('value', 'key');
 
-        return view('dashboard', compact('bookings', 'myListings', 'bookingRequests', 'currentListingsCount', 'limit', 'categories', 'amenities'));
+        return view('dashboard', compact('bookings', 'myListings', 'bookingRequests', 'currentListingsCount', 'limit', 'categories', 'amenities', 'specifications', 'features', 'siteConfigs'));
     }
 
     /**
@@ -98,6 +101,18 @@ class CustomerDashboardController extends Controller
             'built_up_area' => 'nullable|integer|min:0',
             'is_negotiable' => 'boolean',
             'is_rera_approved' => 'boolean',
+            'security_deposit' => 'nullable|numeric|min:0',
+            'lease_duration' => 'nullable|string|max:255',
+            'available_from' => 'nullable|date',
+            'floor_number' => 'nullable|integer',
+            'total_floors' => 'nullable|integer',
+            'facing_direction' => 'nullable|string|max:255',
+            'carpet_area' => 'nullable|integer|min:0',
+            'preferred_tenant' => 'nullable|string|max:255',
+            'supports_group_renting' => 'boolean',
+            'group_max_size' => 'nullable|integer|min:2|max:10',
+            'boundary_wall' => 'boolean',
+            'plot_area' => 'nullable|numeric|min:0',
         ]);
 
         $imageUrls = [];
@@ -135,6 +150,18 @@ class CustomerDashboardController extends Controller
             'built_up_area' => $request->input('built_up_area'),
             'is_negotiable' => $request->boolean('is_negotiable'),
             'is_rera_approved' => $request->boolean('is_rera_approved'),
+            'security_deposit' => $request->input('security_deposit'),
+            'lease_duration' => $request->input('lease_duration'),
+            'available_from' => $request->input('available_from'),
+            'floor_number' => $request->input('floor_number'),
+            'total_floors' => $request->input('total_floors'),
+            'facing_direction' => $request->input('facing_direction'),
+            'carpet_area' => $request->input('carpet_area'),
+            'preferred_tenant' => $request->input('preferred_tenant'),
+            'supports_group_renting' => $request->boolean('supports_group_renting'),
+            'group_max_size' => $request->input('group_max_size') ?: 3,
+            'boundary_wall' => $request->boolean('boundary_wall'),
+            'plot_area' => $request->input('plot_area'),
             'status' => 'approved', // Auto-approve for demo convenience
         ]);
 

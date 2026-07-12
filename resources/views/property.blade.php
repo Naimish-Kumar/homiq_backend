@@ -44,60 +44,85 @@
         <span class="text-slate-700 truncate max-w-[200px]">{{ $property->title }}</span>
     </nav>
 
+    <!-- Title & Breadcrumb -->
+    <div class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight leading-tight mb-2">{{ $property->title }}</h1>
+        <div class="flex items-center gap-4 text-sm font-semibold text-slate-600">
+            <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-rose-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                </svg>
+                Highly Rated
+            </span>
+            <span class="flex items-center gap-1 underline underline-offset-2">
+                {{ $property->address }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Bento Box Image Gallery -->
+    @php
+        $images = (!empty($property->images) && is_array($property->images)) ? $property->images : ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80'];
+        $img1 = $images[0] ?? $images[0];
+        $img2 = $images[1] ?? $images[0];
+        $img3 = $images[2] ?? $images[0];
+        $img4 = $images[3] ?? $images[0];
+        $img5 = $images[4] ?? $images[0];
+    @endphp
+    <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 h-80 md:h-[480px] rounded-2xl overflow-hidden mb-10">
+        <!-- Main Large Image -->
+        <div class="md:col-span-2 md:row-span-2 relative group bg-slate-100 cursor-pointer overflow-hidden">
+            <img src="{{ $img1 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Main image">
+            
+            <div class="absolute top-4 left-4 flex gap-2">
+                <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-slate-800 text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">{{ $property->category }}</span>
+                <span class="px-3 py-1 bg-amber-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">For {{ ucfirst($property->listing_type) }}</span>
+            </div>
+        </div>
+        
+        <!-- Small Image 1 -->
+        <div class="hidden md:block relative group bg-slate-100 cursor-pointer overflow-hidden">
+            <img src="{{ $img2 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Image 2">
+        </div>
+        <!-- Small Image 2 -->
+        <div class="hidden md:block relative group bg-slate-100 cursor-pointer overflow-hidden">
+            <img src="{{ $img3 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Image 3">
+        </div>
+        <!-- Small Image 3 -->
+        <div class="hidden md:block relative group bg-slate-100 cursor-pointer overflow-hidden">
+            <img src="{{ $img4 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Image 4">
+        </div>
+        <!-- Small Image 4 -->
+        <div class="hidden md:block relative group bg-slate-100 cursor-pointer overflow-hidden">
+            <img src="{{ $img5 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Image 5">
+            <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-white font-bold text-sm bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm">View all photos</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Layout Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <!-- Main Content -->
-        <div class="lg:col-span-2 space-y-6">
-            <!-- Hero Image -->
-            <div class="property-img-card h-80 md:h-[420px] bg-slate-100 rounded-2xl overflow-hidden relative group">
-                <img src="{{ !empty($property->images) && is_array($property->images) ? $property->images[0] : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80' }}" 
-                     alt="{{ $property->title }}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <!-- Category Badge -->
-                <span class="absolute top-5 left-5 px-3 py-1.5 bg-steelAzure text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">
-                    {{ $property->category }}
-                </span>
-                <!-- Listing Type Badge -->
-                <span class="absolute top-5 left-28 px-3 py-1.5 bg-amber-500 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider">
-                    For {{ ucfirst($property->listing_type) }}
-                </span>
-                <!-- Furnished Badge -->
-                @if($property->is_furnished)
-                <span class="absolute top-5 right-5 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-seaGreen text-[10px] font-bold rounded-lg uppercase tracking-wider">
-                    Furnished
-                </span>
+        <div class="lg:col-span-2 space-y-10">
+
+            <div class="flex items-start justify-between pb-6 border-b border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Hosted by {{ $property->owner ? $property->owner->name : 'Verified Host' }}</h2>
+                    <p class="text-sm text-slate-500 mt-1">Superhost · 4 years hosting</p>
+                </div>
+                @if($property->owner)
+                <div class="h-12 w-12 rounded-full overflow-hidden border border-slate-200 bg-slate-100">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($property->owner->name) }}&background=1A447C&color=fff" alt="owner" class="h-full w-full object-cover">
+                </div>
                 @endif
             </div>
 
-            <!-- Title & Price Header -->
-            <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm">
-                <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
-                    <div class="flex-1 min-w-0">
-                        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-tight">{{ $property->title }}</h1>
-                        <p class="text-sm text-slate-400 font-medium mt-2 flex items-center gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-steelAzure flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            {{ $property->address }}
-                        </p>
-                    </div>
-                    <div class="text-right flex-shrink-0">
-                        <span class="text-3xl font-extrabold text-steelAzure block">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
-                        @if ($property->price_unit)
-                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{{ $property->price_unit }}</span>
-                        @elseif ($property->listing_type === 'rent')
-                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{{ $property->billing_frequency_label }}</span>
-                        @else
-                        <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Total Price</span>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Property Quick Info -->
-                @php
-                    $cat = strtolower($property->category);
-                    $isLand = str_contains($cat, 'land') || str_contains($cat, 'plot');
-                @endphp
+            <!-- Property Quick Info -->
+            @php
+                $cat = strtolower($property->category);
+                $isLand = str_contains($cat, 'land') || str_contains($cat, 'plot');
+            @endphp
                 <div class="flex flex-wrap gap-3">
                     @if($isLand)
                         <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
@@ -127,22 +152,30 @@
                         @endif
                         @if($property->listing_type === 'sale')
                             <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->built_up_area ?? 'N/A' }}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Built-up Area</span>
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->built_up_area ? number_format($property->built_up_area) : 'N/A' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Built-up Area (sq ft)</span>
                             </div>
                             <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
                                 <span class="text-lg font-extrabold text-slate-800 block">{{ $property->property_age ?? 'N/A' }}</span>
                                 <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Age (Years)</span>
                             </div>
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_rera_approved ? 'Yes' : 'No' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">RERA Approved</span>
+                            </div>
                         @endif
                         @if($property->listing_type === 'rent')
                             <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_furnished ? 'Yes' : 'No' }}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Furnished</span>
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->security_deposit ? $property->currency_symbol . number_format($property->security_deposit, 0) : 'N/A' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Deposit</span>
                             </div>
                             <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
-                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_pet_friendly ? 'Yes' : 'No' }}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pet Friendly</span>
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->lease_duration ?: 'Flexible' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Lease Duration</span>
+                            </div>
+                            <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
+                                <span class="text-lg font-extrabold text-slate-800 block">{{ $property->is_furnished ? 'Yes' : 'No' }}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Furnished</span>
                             </div>
                             @if($property->preferred_tenant)
                                 <div class="info-chip flex-1 min-w-[120px] bg-slate-50 rounded-xl p-4 text-center border border-slate-100">
@@ -152,6 +185,32 @@
                             @endif
                         @endif
                     @endif
+                </div>
+
+                <!-- Secondary details row for carpet area, floors, facing, available from -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-slate-100/60 text-xs">
+                    @if($property->carpet_area)
+                        <div class="p-2 bg-slate-50/50 rounded-lg">
+                            <span class="text-slate-400 block text-[9px] font-bold uppercase">Carpet Area</span>
+                            <span class="font-extrabold text-slate-800">{{ number_format($property->carpet_area) }} sq ft</span>
+                        </div>
+                    @endif
+                    @if(!$isLand && $property->floor_number !== null)
+                        <div class="p-2 bg-slate-50/50 rounded-lg">
+                            <span class="text-slate-400 block text-[9px] font-bold uppercase">Floor</span>
+                            <span class="font-extrabold text-slate-800">Floor {{ $property->floor_number }} of {{ $property->total_floors ?: 'Any' }}</span>
+                        </div>
+                    @endif
+                    @if($property->facing_direction)
+                        <div class="p-2 bg-slate-50/50 rounded-lg">
+                            <span class="text-slate-400 block text-[9px] font-bold uppercase">Facing</span>
+                            <span class="font-extrabold text-slate-800">{{ $property->facing_direction }}</span>
+                        </div>
+                    @endif
+                    <div class="p-2 bg-slate-50/50 rounded-lg">
+                        <span class="text-slate-400 block text-[9px] font-bold uppercase">Available From</span>
+                        <span class="font-extrabold text-slate-800">{{ $property->available_from ? $property->available_from->format('Y-m-d') : 'Immediate' }}</span>
+                    </div>
                 </div>
             </div>
 
@@ -223,21 +282,38 @@
 
         <!-- Booking Sidebar -->
         <div class="lg:col-span-1">
-            <div class="sidebar-card bg-white p-7 rounded-2xl border border-slate-100 shadow-sm sticky top-24 space-y-6">
+            <div class="bg-white p-7 rounded-[24px] border border-slate-200 shadow-xl shadow-slate-200/50 sticky top-28 space-y-6">
                 <!-- Price Summary -->
-                <div class="text-center pb-5 border-b border-slate-100">
-                    <span class="text-3xl font-extrabold text-steelAzure">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-3xl font-extrabold text-slate-800">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
                     @if ($property->price_unit)
-                    <span class="text-xs text-slate-400 font-bold block mt-1">{{ $property->price_unit }}</span>
+                    <span class="text-sm text-slate-500 font-medium">{{ $property->price_unit }}</span>
                     @elseif ($property->listing_type === 'rent')
-                    <span class="text-xs text-slate-400 font-bold block mt-1">{{ $property->billing_frequency_label }}</span>
+                    <span class="text-sm text-slate-500 font-medium">{{ $property->billing_frequency_label }}</span>
                     @else
-                    <span class="text-xs text-slate-400 font-bold block mt-1">Total Price</span>
+                    <span class="text-sm text-slate-500 font-medium">Total Price</span>
                     @endif
                 </div>
 
-                <h3 class="text-base font-bold text-slate-800">Inquire About This Space</h3>
-                <p class="text-xs text-slate-400 font-medium">To book or ask questions, initiate a direct chat room with the owner of this property.</p>
+                <div class="bg-white border border-slate-300 rounded-xl overflow-hidden shadow-sm">
+                    <div class="grid grid-cols-2 divide-x divide-slate-300 border-b border-slate-300">
+                        <div class="p-3 cursor-pointer hover:bg-slate-50 transition">
+                            <span class="block text-[10px] font-extrabold text-slate-800 uppercase">Check-in</span>
+                            <span class="text-sm text-slate-500">Add date</span>
+                        </div>
+                        <div class="p-3 cursor-pointer hover:bg-slate-50 transition">
+                            <span class="block text-[10px] font-extrabold text-slate-800 uppercase">Checkout</span>
+                            <span class="text-sm text-slate-500">Add date</span>
+                        </div>
+                    </div>
+                    <div class="p-3 cursor-pointer hover:bg-slate-50 transition flex justify-between items-center">
+                        <div>
+                            <span class="block text-[10px] font-extrabold text-slate-800 uppercase">Guests</span>
+                            <span class="text-sm text-slate-500">1 guest</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                </div>
 
                 @auth
                     @if (Auth::id() === $property->owner_id)
@@ -246,16 +322,17 @@
                             You are the owner of this property listing.
                         </div>
                     @else
-                        <a href="/chat?property_id={{ $property->id }}" class="block w-full py-3.5 bg-steelAzure hover:bg-steelAzure/90 text-white font-bold rounded-lg shadow-md shadow-steelAzure/10 transition duration-200 text-sm text-center flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        <a href="/chat?property_id={{ $property->id }}" class="block w-full py-3.5 bg-gradient-to-r from-[#FF385C] to-[#E61E4D] hover:opacity-90 text-white font-bold rounded-lg shadow-md transition duration-200 text-sm text-center">
                             Contact Owner
                         </a>
+                        <p class="text-center text-xs text-slate-500 mt-2">You won't be charged yet</p>
                     @endif
                 @else
-                    <div class="text-center py-2 space-y-4">
-                        <a href="/login" class="block w-full py-3.5 bg-steelAzure hover:bg-steelAzure/90 text-white font-bold rounded-lg shadow-md shadow-steelAzure/10 transition text-sm text-center">
-                            Sign In to Contact Owner
+                    <div class="text-center space-y-3">
+                        <a href="/login" class="block w-full py-3.5 bg-gradient-to-r from-[#FF385C] to-[#E61E4D] hover:opacity-90 text-white font-bold rounded-lg shadow-md transition text-sm text-center">
+                            Sign In to Contact
                         </a>
+                        <p class="text-center text-xs text-slate-500">Log in to view availability and book.</p>
                     </div>
                 @endauth
 

@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -55,11 +57,14 @@
 <body class="flex flex-col min-h-screen">
 
     <!-- Header Navbar -->
-    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+    <nav x-data="{ scrolled: false }"
+         @scroll.window="scrolled = (window.pageYOffset > 20)"
+         :class="{'bg-white shadow-sm border-b border-slate-100': scrolled || !{{ Request::is('/') ? 'true' : 'false' }}, 'bg-transparent border-transparent': !scrolled && {{ Request::is('/') ? 'true' : 'false' }}}"
+         class="sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
             <!-- Brand Logo -->
             <a href="/" class="flex items-center gap-3 flex-shrink-0">
-                <img src="/logo.png" alt="HomiQ Logo" class="h-14 w-auto object-contain">
+                <img src="/logo.png" alt="HomiQ Logo" class="h-10 w-auto object-contain">
             </a>
             
             <!-- Centered Search bar (Mockup layout) -->
@@ -78,6 +83,7 @@
             <!-- Profile & Actions (Right side of mockup navbar) -->
             <div class="flex items-center gap-6 flex-shrink-0">
                 <!-- Secondary Quick Links -->
+                <a href="{{ route('host.add-property') }}" class="hidden lg:inline text-xs font-bold text-slate-800 hover:text-steelAzure transition">List your property</a>
                 <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="hidden lg:inline text-xs font-semibold text-slate-500 hover:text-steelAzure transition">Download App</a>
                 
 
@@ -166,6 +172,7 @@
         </div>
     </nav>
 
+    @if(!Request::is('/'))
     <!-- Sub Menu Bar (Shop menu style) -->
     <div class="bg-slate-50 border-b border-slate-100 py-3">
         <div class="max-w-7xl mx-auto px-6 flex justify-center gap-8 text-[12px] font-semibold tracking-wide text-slate-600">
@@ -177,6 +184,7 @@
             <a href="/terms" class="hover:text-steelAzure transition {{ Request::is('terms') ? 'text-steelAzure font-bold' : '' }}">Terms & Conditions</a>
         </div>
     </div>
+    @endif
 
     <!-- Main Content -->
     <main class="flex-1">

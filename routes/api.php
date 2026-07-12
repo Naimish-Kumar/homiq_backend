@@ -37,6 +37,8 @@ Route::get('/app-version', function() {
         'update_url' => $configs->get('app_update_url', 'https://play.google.com/store/apps/details?id=com.homiq.acrocoder'),
     ]);
 });
+// Dashboards
+Route::get('/dashboard/renter', [DashboardController::class, 'renterDashboard']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -118,7 +120,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/chats/{id}/presence', [ChatController::class, 'updatePresenceStatus']);
 
     // Dashboards
-    Route::get('/dashboard/renter', [DashboardController::class, 'renterDashboard']);
     Route::get('/dashboard/host', [DashboardController::class, 'hostDashboard']);
 
     // Subscriptions

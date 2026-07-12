@@ -122,6 +122,13 @@ class PropertyController extends Controller
             'preferred_tenant' => 'nullable|string|max:255',
             'supports_group_renting' => 'boolean',
             'group_max_size' => 'integer|min:2|max:10',
+            'security_deposit' => 'nullable|numeric|min:0',
+            'lease_duration' => 'nullable|string|max:255',
+            'available_from' => 'nullable|date',
+            'floor_number' => 'nullable|integer',
+            'total_floors' => 'nullable|integer',
+            'facing_direction' => 'nullable|string|max:255',
+            'carpet_area' => 'nullable|integer|min:0',
         ]);
 
         $fields['listing_type'] = $request->input('listing_type') ?: 'rent';
@@ -305,6 +312,13 @@ class PropertyController extends Controller
             'preferred_tenant' => 'nullable|string|max:255',
             'supports_group_renting' => 'boolean',
             'group_max_size' => 'integer|min:2|max:10',
+            'security_deposit' => 'nullable|numeric|min:0',
+            'lease_duration' => 'nullable|string|max:255',
+            'available_from' => 'nullable|date',
+            'floor_number' => 'nullable|integer',
+            'total_floors' => 'nullable|integer',
+            'facing_direction' => 'nullable|string|max:255',
+            'carpet_area' => 'nullable|integer|min:0',
         ]);
 
         $imageUrls = [];

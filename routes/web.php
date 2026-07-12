@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AdminDashboardController;
 use App\Http\Controllers\Web\WebHomeController;
 use App\Http\Controllers\Web\CustomerDashboardController;
 use App\Http\Controllers\Web\AttributeController;
+use App\Http\Controllers\Web\HostPropertyController;
 
 // Public Pages
 Route::get('/', [WebHomeController::class, 'index']);
@@ -56,11 +57,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/notifications/read-all', [WebHomeController::class, 'readAllNotifications']);
         // Landlord Reservation Status Updates
         Route::post('/dashboard/reservations/{id}/status', [CustomerDashboardController::class, 'updateReservationStatus']);
+
+        // Host Portal (Add Property)
+        Route::get('/host/add-property', [HostPropertyController::class, 'create'])->name('host.add-property');
+        Route::post('/host/add-property', [HostPropertyController::class, 'store']);
     });
 });
 
 // Protected Admin Dashboard Routes
-Route::middleware(['admin'])->prefix('admin')->group(function () {
+Route::middleware(['admin'])->prefix('old-admin')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index']);
     Route::get('/properties', [AdminDashboardController::class, 'properties']);
     Route::get('/properties/{id}', [AdminDashboardController::class, 'showProperty']);
