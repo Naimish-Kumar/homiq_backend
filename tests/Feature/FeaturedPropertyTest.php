@@ -150,12 +150,12 @@ class FeaturedPropertyTest extends TestCase
         $this->actingAs($admin);
 
         // First toggle to true
-        $response = $this->post("/admin/properties/{$property->id}/toggle-featured");
+        $response = $this->post("/old-admin/properties/{$property->id}/toggle-featured");
         $response->assertStatus(302); // redirects back
         $this->assertTrue($property->fresh()->is_featured);
 
         // Second toggle to false
-        $response = $this->post("/admin/properties/{$property->id}/toggle-featured");
+        $response = $this->post("/old-admin/properties/{$property->id}/toggle-featured");
         $response->assertStatus(302); // redirects back
         $this->assertFalse($property->fresh()->is_featured);
     }

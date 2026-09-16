@@ -632,7 +632,7 @@
                                     <span class="block text-xs text-slate-400 font-bold uppercase tracking-wider">Direct Asking Price</span>
                                     <span class="text-3xl font-black text-slate-900">{{ $spotlight->formatted_price }}</span>
                                 </div>
-                                <a href="/properties/{{ $spotlight->id }}" class="h-12 px-6 rounded-full bg-brandNavy hover:bg-slate-900 text-white font-bold text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
+                                <a href="/properties/{{ $spotlight->id }}" class="h-12 px-6 rounded-full bg-primary hover:bg-inverse-surface text-on-primary font-bold text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
                                     <span>View Details</span>
                                     <span class="material-symbols-outlined text-base">arrow_forward</span>
                                 </a>

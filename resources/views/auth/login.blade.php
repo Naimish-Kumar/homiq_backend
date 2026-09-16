@@ -181,7 +181,7 @@
         
                 const data = await response.json();
                 if (data.success) {
-                    window.location.href = '/';
+                    window.location.href = data.redirect || (data.is_admin ? '/admin' : '/dashboard');
                 }
             } catch (error) {
                 console.error("Error signing in with Google", error);

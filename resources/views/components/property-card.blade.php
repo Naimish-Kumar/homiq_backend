@@ -33,7 +33,7 @@
                     <span class="px-2.5 py-1 rounded-full bg-slate-950/70 backdrop-blur-md border border-white/10 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
                         {{ $property->category }}
                     </span>
-                    <span class="px-2.5 py-1 rounded-full bg-brandEmerald text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
+                    <span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
                         For {{ ucfirst($property->listing_type) }}
                     </span>
                     @if($property->is_featured)
@@ -96,7 +96,7 @@
         <!-- Card Content Body -->
         <div class="p-5 flex flex-col justify-between">
             <a href="/properties/{{ $property->id }}" class="block">
-                <h3 class="font-black text-slate-900 text-lg line-clamp-1 group-hover:text-brandEmerald transition-colors mb-1 tracking-tight">
+                <h3 class="font-black text-slate-900 text-lg line-clamp-1 group-hover:text-emerald-600 transition-colors mb-1 tracking-tight">
                     {{ $property->title }}
                 </h3>
                 <p class="text-xs text-slate-500 flex items-center gap-1 font-medium truncate mb-4">
@@ -140,7 +140,7 @@
 
     <!-- Card Action Bottom Bar -->
     <div class="px-5 pb-5 pt-0">
-        <a href="/properties/{{ $property->id }}" class="w-full py-2.5 px-4 rounded-xl bg-slate-100/90 group-hover:bg-brandNavy group-hover:text-white text-slate-800 font-bold text-xs flex items-center justify-between transition-all duration-200 shadow-2xs">
+        <a href="/properties/{{ $property->id }}" class="w-full py-2.5 px-4 rounded-xl bg-slate-100/90 group-hover:bg-[#0A2540] group-hover:text-white text-slate-800 font-bold text-xs flex items-center justify-between transition-all duration-200 shadow-2xs">
             <span class="inline-flex items-center gap-1.5 text-slate-600 group-hover:text-white">
                 <span class="material-symbols-outlined text-sm text-emerald-500">verified</span>
                 Verified Inspection

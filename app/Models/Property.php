@@ -105,6 +105,43 @@ class Property extends Model
     }
 
     /**
+     * Accessor for clean human-readable address.
+     * Automatically handles both plain text and JSON-encoded addresses.
+     */
+    public function getAddressAttribute($value): string
+    {
+        if (empty($value)) {
+            return '';
+        }
+
+        if (is_string($value) && (str_starts_with(trim($value), '{') || str_starts_with(trim($value), '['))) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $parts = [];
+                if (!empty($decoded['street'])) $parts[] = trim($decoded['street']);
+                if (!empty($decoded['city'])) $parts[] = trim($decoded['city']);
+                if (!empty($decoded['state'])) $parts[] = trim($decoded['state']);
+                if (!empty($decoded['pincode'])) $parts[] = trim($decoded['pincode']);
+                if (!empty($decoded['country'])) $parts[] = trim($decoded['country']);
+                
+                if (!empty($parts)) {
+                    return implode(', ', $parts);
+                }
+            }
+        }
+
+        return (string) $value;
+    }
+
+    /**
+     * Accessor for formatted address.
+     */
+    public function getFormattedAddressAttribute(): string
+    {
+        return $this->address;
+    }
+
+    /**
      * Accessor for currency symbol.
      */
     public function getCurrencySymbolAttribute(): string

@@ -63,7 +63,7 @@
         </nav>
 
         <div class="flex items-center gap-2">
-            <button type="button" @click="shareProperty()" class="px-3 py-1.5 rounded-full border border-slate-200 hover:border-brandNavy hover:text-brandNavy bg-white text-slate-700 font-semibold flex items-center gap-1.5 shadow-2xs transition">
+            <button type="button" @click="shareProperty()" class="px-3 py-1.5 rounded-full border border-slate-200 hover:border-[#0A2540] hover:text-[#0A2540] bg-white text-slate-700 font-semibold flex items-center gap-1.5 shadow-2xs transition">
                 <span class="material-symbols-outlined text-base">share</span>
                 <span class="hidden sm:inline">Share</span>
             </button>
@@ -80,7 +80,7 @@
             <span class="px-3 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider shadow-xs">
                 {{ $property->category }}
             </span>
-            <span class="px-3 py-1 rounded-full bg-brandNavy text-white text-[11px] font-bold uppercase tracking-wider shadow-xs">
+            <span class="px-3 py-1 rounded-full bg-[#0A2540] text-white text-[11px] font-bold uppercase tracking-wider shadow-xs">
                 For {{ ucfirst($property->listing_type) }}
             </span>
             <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold flex items-center gap-1 shadow-xs">
@@ -399,7 +399,7 @@
             <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
                     <div class="flex items-center gap-4">
-                        <div class="h-16 w-16 rounded-2xl bg-gradient-to-br from-brandNavy to-brandEmerald text-white font-black text-2xl flex items-center justify-center shadow-md flex-shrink-0">
+                        <div class="h-16 w-16 rounded-2xl bg-gradient-to-br from-[#0A2540] to-emerald-600 text-white font-black text-2xl flex items-center justify-center shadow-md flex-shrink-0">
                             {{ strtoupper(substr($property->owner ? $property->owner->name : 'V', 0, 1)) }}
                         </div>
                         <div>
@@ -417,20 +417,20 @@
                     <div class="flex items-center gap-3">
                         @auth
                             @if(Auth::id() !== $property->owner_id)
-                                <a href="/chat?property_id={{ $property->id }}" class="px-5 py-2.5 rounded-full bg-brandNavy hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
+                                <a href="/chat?property_id={{ $property->id }}" class="px-5 py-2.5 rounded-full bg-[#0A2540] hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
                                     <span class="material-symbols-outlined text-base">chat</span>
                                     Send Direct Message
                                 </a>
                             @endif
                         @else
-                            <a href="/login" class="px-5 py-2.5 rounded-full bg-brandNavy hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
+                            <a href="/login" class="px-5 py-2.5 rounded-full bg-[#0A2540] hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
                                 <span class="material-symbols-outlined text-base">chat</span>
                                 Message Host
                             </a>
                         @endauth
 
                         @if ($property->owner && $property->owner->phone)
-                            <a href="tel:{{ $property->owner->phone }}" class="p-2.5 rounded-full border border-slate-200 hover:border-brandNavy hover:text-brandNavy text-slate-700 transition" title="Call Landlord">
+                            <a href="tel:{{ $property->owner->phone }}" class="p-2.5 rounded-full border border-slate-200 hover:border-[#0A2540] hover:text-[#0A2540] text-slate-700 transition" title="Call Landlord">
                                 <span class="material-symbols-outlined text-lg">call</span>
                             </a>
                         @endif
@@ -503,11 +503,11 @@
                 @auth
                     @if (Auth::id() === $property->owner_id)
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-2.5">
-                            <span class="material-symbols-outlined text-brandNavy text-xl">info</span>
+                            <span class="material-symbols-outlined text-[#0A2540] text-xl">info</span>
                             <span>You are the registered owner of this listing.</span>
                         </div>
                     @else
-                        <a href="/chat?property_id={{ $property->id }}" class="w-full py-4 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-brandNavy hover:from-brandNavy hover:to-slate-900 text-white font-bold text-sm text-center flex items-center justify-center gap-2 shadow-soft hover:shadow-brand transition-all duration-300">
+                        <a href="/chat?property_id={{ $property->id }}" class="w-full py-4 rounded-2xl bg-gradient-to-r from-slate-950 via-[#0A2540] to-slate-900 hover:from-[#0A2540] hover:to-slate-950 text-white font-bold text-sm text-center flex items-center justify-center gap-2 shadow-soft hover:shadow-lg transition-all duration-300">
                             <span class="material-symbols-outlined text-lg text-emerald-400">chat</span>
                             <span>Contact Landlord via Direct Chat</span>
                         </a>
@@ -515,7 +515,7 @@
                     @endif
                 @else
                     <div class="space-y-3">
-                        <a href="/login" class="w-full py-4 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-brandNavy hover:from-brandNavy hover:to-slate-900 text-white font-bold text-sm text-center flex items-center justify-center gap-2 shadow-soft hover:shadow-brand transition-all duration-300">
+                        <a href="/login" class="w-full py-4 rounded-2xl bg-gradient-to-r from-slate-950 via-[#0A2540] to-slate-900 hover:from-[#0A2540] hover:to-slate-950 text-white font-bold text-sm text-center flex items-center justify-center gap-2 shadow-soft hover:shadow-lg transition-all duration-300">
                             <span class="material-symbols-outlined text-lg text-emerald-400">chat</span>
                             <span>Sign In to Inquire</span>
                         </a>

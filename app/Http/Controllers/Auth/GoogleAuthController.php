@@ -29,11 +29,18 @@ class GoogleAuthController extends Controller
                 'password' => Hash::make(Str::random(24)),
                 'profile_photo' => $request->photo,
                 'is_verified' => true,
+                'email_verified_at' => now(),
             ]);
         }
 
         Auth::login($user, true);
 
-        return response()->json(['success' => true]);
+        $redirect = $user->is_admin ? '/admin' : '/dashboard';
+
+        return response()->json([
+            'success' => true,
+            'is_admin' => (bool) $user->is_admin,
+            'redirect' => $redirect,
+        ]);
     }
 }
