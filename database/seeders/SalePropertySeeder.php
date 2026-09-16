@@ -94,9 +94,9 @@ class SalePropertySeeder extends Seeder
             Property::create(array_merge($property, [
                 'owner_id' => $ownerId,
                 'status' => 'approved',
-                'currency' => 'USD',
+                'currency' => 'INR',
                 'billing_frequency' => 'monthly', // though not used for sale
-                'country' => 'USA'
+                'country' => 'India'
             ]));
         }
     }

@@ -50,9 +50,10 @@
 
                 properties.forEach(property => {
                     if (property.latitude && property.longitude) {
+                        const symbol = property.currency === 'USD' ? '$' : (property.currency === 'EUR' ? '€' : (property.currency === 'GBP' ? '£' : '₹'));
                         L.marker([property.latitude, property.longitude])
                             .addTo(map)
-                            .bindPopup(`<b>${property.title}</b><br>$${property.price}`);
+                            .bindPopup(`<b>${property.title}</b><br>${symbol}${Number(property.price).toLocaleString()}`);
                     }
                 });
             }

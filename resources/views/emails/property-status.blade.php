@@ -85,11 +85,11 @@
 
                 @if($status === 'approved')
                     <div class="action-box">
-                        <p class="action-text">🎉 <strong>Congratulations!</strong> Your property is now live and can be searched and booked by users on HomiQ worldwide.</p>
+                        <p class="action-text"><strong>Congratulations!</strong> Your property is now live and can be searched and booked by users on HomiQ worldwide.</p>
                     </div>
                 @elseif($status === 'rejected')
                     <div class="action-box" style="background-color: #FEF2F2; border-left-color: #EF4444;">
-                        <p class="action-text" style="color: #991B1B;">⚠️ <strong>Review Required:</strong> Your listing did not meet our community guidelines. Please inspect the property details, images, and descriptions, then update and resubmit.</p>
+                        <p class="action-text" style="color: #991B1B;"><strong>Review Required:</strong> Your listing did not meet our community guidelines. Please inspect the property details, images, and descriptions, then update and resubmit.</p>
                     </div>
                 @endif
 

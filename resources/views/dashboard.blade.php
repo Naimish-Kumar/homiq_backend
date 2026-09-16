@@ -692,11 +692,11 @@
                                         @csrf
                                         @if($listing->is_featured)
                                             <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-[9px] uppercase shadow-sm transition flex items-center gap-1">
-                                                ★ Featured
+                                                <span class="material-symbols-outlined text-xs">star</span> Featured
                                             </button>
                                         @else
                                             <button type="submit" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-650 rounded-lg font-bold text-[9px] uppercase transition flex items-center gap-1">
-                                                ☆ Make Featured
+                                                <span class="material-symbols-outlined text-xs">star_border</span> Make Featured
                                             </button>
                                         @endif
                                     </form>

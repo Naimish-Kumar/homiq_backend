@@ -6,7 +6,7 @@ use App\Http\Controllers\Web\WebHomeController;
 use App\Http\Controllers\Web\CustomerDashboardController;
 use App\Http\Controllers\Web\AttributeController;
 use App\Http\Controllers\Web\HostPropertyController;
-
+use App\Http\Controllers\Auth\GoogleAuthController;
 // Public Pages
 Route::get('/', [WebHomeController::class, 'index']);
 Route::get('/category/{name}', [WebHomeController::class, 'category']);
@@ -27,10 +27,15 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register', [AdminDashboardController::class, 'register']);
 });
 
+// Firebase Auth Callback
+Route::post('/auth/firebase-login', [GoogleAuthController::class, 'handleFirebaseCallback']);
+
 // Authentication (Protected but maybe unverified)
 Route::middleware(['auth'])->group(function () {
-    Route::post('/logout', [AdminDashboardController::class, 'logout'])->name('logout');
-    // OTP Email Verification
+    Route::post('/logout', function () {
+        Auth::logout();
+        return redirect('/');
+    })->name('logout');
     Route::get('/verify-email', [AdminDashboardController::class, 'showVerifyOtp']);
     Route::post('/verify-email', [AdminDashboardController::class, 'verifyOtp']);
     Route::post('/verify-email/resend', [AdminDashboardController::class, 'resendOtpWeb']);

@@ -19,7 +19,7 @@ class WebHomeController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->query('search');
+        $search = $request->query('search') ?: $request->query('city');
         $searchType = $request->query('search_type');
         $maxPrice = $request->query('max_price');
         $lat = $request->query('latitude');
@@ -67,11 +67,37 @@ class WebHomeController extends Controller
             });
         }
 
+        // Filter by bedrooms
+        if ($request->filled('bedrooms') && $request->query('bedrooms') !== 'all') {
+            $bedrooms = (int) $request->query('bedrooms');
+            if ($bedrooms >= 3) {
+                $query->where('bedrooms', '>=', 3);
+            } else {
+                $query->where('bedrooms', $bedrooms);
+            }
+        }
+
+        // Filter by listing_type (rent / sale)
+        if ($request->filled('listing_type') && in_array($request->query('listing_type'), ['rent', 'sale'])) {
+            $query->where('listing_type', $request->query('listing_type'));
+        }
+
+        // Amenities / Features filters
+        if ($request->boolean('is_furnished') || $request->query('is_furnished') == '1') {
+            $query->where('is_furnished', true);
+        }
+        if ($request->boolean('is_pet_friendly') || $request->query('is_pet_friendly') == '1') {
+            $query->where('is_pet_friendly', true);
+        }
+        if ($request->boolean('has_parking') || $request->query('has_parking') == '1') {
+            $query->where('has_parking', true);
+        }
+
         // Filter by country
         if ($request->has('country') && $request->query('country') !== 'All') {
             $query->where('country', $request->query('country'));
-        } else {
-            // Auto-detect country based on user IP address
+        } elseif (!$request->hasAny(['search', 'city', 'search_type', 'bedrooms', 'max_price', 'listing_type', 'is_furnished', 'is_pet_friendly', 'has_parking'])) {
+            // Auto-detect country based on user IP address only for pristine default view
             $userIp = $request->ip();
             $detectedCountry = \App\Helpers\LocationHelper::detectCountryFromIp($userIp);
             if ($detectedCountry) {
@@ -91,6 +117,40 @@ class WebHomeController extends Controller
         }
 
         $properties = $query->get();
+
+        // Featured properties for showcase
+        $featuredProperties = Property::with('owner')
+            ->where('status', 'approved')
+            ->where('is_featured', true)
+            ->latest()
+            ->take(6)
+            ->get();
+        if ($featuredProperties->isEmpty()) {
+            $featuredProperties = Property::with('owner')
+                ->where('status', 'approved')
+                ->latest()
+                ->take(6)
+                ->get();
+        }
+
+        // Popular real cities extracted from approved properties
+        $popularCities = Property::where('status', 'approved')
+            ->whereNotNull('address')
+            ->get()
+            ->map(function ($p) {
+                $parts = array_map('trim', explode(',', $p->address));
+                return count($parts) >= 2 ? $parts[count($parts) - 2] : end($parts);
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->take(6)
+            ->toArray();
+
+        if (empty($popularCities)) {
+            $popularCities = ['New York', 'Miami', 'Austin', 'Seattle', 'Chicago', 'San Francisco'];
+        }
+
         $categories = \App\Models\Category::all()->map(function ($cat) {
             $image = $cat->image;
             if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
@@ -102,7 +162,7 @@ class WebHomeController extends Controller
             ];
         })->toArray();
 
-        return view('home', compact('properties', 'categories', 'search'));
+        return view('home', compact('properties', 'featuredProperties', 'categories', 'popularCities', 'search'));
     }
 
     /**

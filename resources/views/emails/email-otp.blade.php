@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="info-box">
-                    <p class="info-text">💡 <strong>Note:</strong> This verification code is valid for the next <strong>15 minutes</strong>. If this code expires, you can request a new one from the app.</p>
+                    <p class="info-text"><strong>Note:</strong> This verification code is valid for the next <strong>15 minutes</strong>. If this code expires, you can request a new one from the app.</p>
                 </div>
 
                 <p class="text" style="font-size: 13px; color: #94A3B8; margin-top: 32px;">If you did not sign up for a HomiQ account, please disregard this email or contact our support team.</p>

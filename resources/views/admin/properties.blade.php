@@ -99,11 +99,15 @@
                                         @csrf
                                         @if ($property->is_featured)
                                             <button type="submit" class="p-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition block shadow-sm" title="Remove from Featured">
-                                                ★
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                                </svg>
                                             </button>
                                         @else
-                                            <button type="submit" class="p-2 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-lg border border-slate-200 transition block shadow-sm" title="Make Featured">
-                                                ☆
+                                            <button type="submit" class="p-2 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-amber-500 rounded-lg border border-slate-200 transition block shadow-sm" title="Make Featured">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 stroke-current fill-none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                                </svg>
                                             </button>
                                         @endif
                                     </form>

@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="info-box">
-                    <p class="info-text">⚠️ <strong>Security Warning:</strong> This password reset code is valid for <strong>15 minutes</strong>. If you did not request a password reset, please ignore this email or update your security credentials.</p>
+                    <p class="info-text"><strong>Security Warning:</strong> This password reset code is valid for <strong>15 minutes</strong>. If you did not request a password reset, please ignore this email or update your security credentials.</p>
                 </div>
 
                 <p class="text" style="font-size: 13px; color: #94A3B8; margin-top: 32px;">For your account security, never share this verification code with anyone.</p>

@@ -118,15 +118,15 @@
 
                 @if($status === 'approved')
                     <div class="action-box" style="background-color: #ECFDF5; border-left-color: #10B981;">
-                        <p class="action-text" style="color: #065F46;">🎉 <strong>Booking Confirmed!</strong> Your request has been accepted by the host. You are all set for your stay. Enjoy your trip!</p>
+                        <p class="action-text" style="color: #065F46;"><strong>Booking Confirmed!</strong> Your request has been accepted by the host. You are all set for your stay. Enjoy your trip!</p>
                     </div>
                 @elseif($status === 'rejected')
                     <div class="action-box" style="background-color: #FEF2F2; border-left-color: #EF4444;">
-                        <p class="action-text" style="color: #991B1B;">❌ <strong>Booking Declined:</strong> Unfortunately, the host declined your request. Any pre-authorized amount has been released back to your payment method.</p>
+                        <p class="action-text" style="color: #991B1B;"><strong>Booking Declined:</strong> Unfortunately, the host declined your request. Any pre-authorized amount has been released back to your payment method.</p>
                     </div>
                 @elseif($status === 'cancelled')
                     <div class="action-box" style="background-color: #F8FAFC; border-left-color: #64748B;">
-                        <p class="action-text" style="color: #334155;">ℹ️ <strong>Booking Cancelled:</strong> This booking has been successfully cancelled and is no longer active.</p>
+                        <p class="action-text" style="color: #334155;"><strong>Booking Cancelled:</strong> This booking has been successfully cancelled and is no longer active.</p>
                     </div>
                 @endif
 
