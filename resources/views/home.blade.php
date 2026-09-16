@@ -3,14 +3,51 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>HomiQ - Real Estate &amp; Verified Rental Marketplace</title>
-    <meta name="description" content="Discover verified rental homes and apartments with zero brokerage, direct host chat, and transparent pricing on HomiQ.">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>HomiQ - Real Estate Marketplace | Verified Flats, Rooms &amp; PGs Direct from Owners</title>
+    <meta name="title" content="HomiQ - Real Estate Marketplace | Verified Flats, Rooms &amp; PGs Direct from Owners">
+    <meta name="description" content="Discover verified rental homes, flats, rooms, PGs and properties with 0% brokerage and direct owner contact on HomiQ. 100% on-site audited listings.">
+    <meta name="keywords" content="flats for rent, no brokerage homes, PGs near me, verified rentals, apartments for sale, 2 BHK in Noida, rooms for rent, direct owner properties">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="HomiQ - Find Your Next Home Direct from Owners">
+    <meta property="og:description" content="Search flats, rooms, PGs and properties with 0% brokerage and direct landlord chat.">
+    <meta property="og:image" content="{{ asset('logo.png') }}">
+
+    <!-- Twitter / X -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="HomiQ - 0% Brokerage Verified Property Marketplace">
+    <meta property="twitter:description" content="Search flats, rooms, PGs and properties with 0% brokerage and direct landlord chat.">
+    <meta property="twitter:image" content="{{ asset('logo.png') }}">
+
+    <!-- Google Structured Data (JSON-LD) for Search Action & RealEstateAgent -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "RealEstateAgent",
+      "name": "HomiQ",
+      "url": "{{ url('/') }}",
+      "logo": "{{ asset('logo.png') }}",
+      "description": "Verified residential real estate marketplace with 0% brokerage and direct landlord chat.",
+      "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "{{ url('/') }}/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     <!-- Google Fonts & Material Symbols -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
     <style>
@@ -23,6 +60,7 @@
         ::-webkit-scrollbar { display: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        input:focus, select:focus, textarea:focus { outline: none !important; }
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined' !important;
             font-weight: normal;
@@ -50,99 +88,79 @@
             theme: {
                 extend: {
                     colors: {
-                        "surface-container-high": "#e2e8f0",
-                        "tertiary-container": "#002113",
-                        "on-tertiary-container": "#009668",
-                        "surface": "#f8fafc",
-                        "error-container": "#ffdad6",
-                        "on-primary-fixed-variant": "#3f465c",
-                        "secondary-container": "#059669",
-                        "surface-tint": "#0A2540",
-                        "outline-variant": "#cbd5e1",
-                        "outline": "#64748b",
-                        "error": "#ba1a1a",
-                        "surface-container-low": "#f8fafc",
-                        "tertiary-fixed": "#6ffbbe",
-                        "on-surface": "#0A2540",
-                        "background": "#f8fafc",
-                        "primary-fixed-dim": "#bec6e0",
-                        "on-tertiary-fixed": "#002113",
-                        "primary-container": "#0F2942",
-                        "on-tertiary-fixed-variant": "#005236",
-                        "on-secondary-fixed-variant": "#064e3b",
-                        "secondary": "#10B981",
-                        "on-secondary": "#ffffff",
-                        "on-primary": "#ffffff",
-                        "on-background": "#0A2540",
-                        "on-primary-fixed": "#0A2540",
-                        "inverse-on-surface": "#e2e8f0",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-dim": "#e2e8f0",
-                        "surface-bright": "#ffffff",
-                        "tertiary-fixed-dim": "#4edea3",
-                        "surface-container": "#f1f5f9",
-                        "on-secondary-fixed": "#022c22",
-                        "on-error": "#ffffff",
-                        "on-tertiary": "#ffffff",
-                        "on-secondary-container": "#ffffff",
-                        "on-error-container": "#93000a",
-                        "secondary-fixed": "#d1fae5",
-                        "inverse-surface": "#0A2540",
-                        "surface-variant": "#e2e8f0",
-                        "tertiary": "#059669",
-                        "secondary-fixed-dim": "#a7f3d0",
+                        "brandNavy": "#0A2540",
+                        "brandEmerald": "#10B981",
                         "primary": "#0A2540",
-                        "primary-fixed": "#dae2fd",
-                        "on-surface-variant": "#475569",
-                        "inverse-primary": "#bec6e0",
-                        "surface-container-highest": "#cbd5e1",
-                        "on-primary-container": "#94a3b8",
-                        "brand-navy": "#0A2540",
-                        "brand-emerald": "#10B981"
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
+                        "secondary": "#10B981",
+                        "surface": "#ffffff",
                     },
                     fontFamily: {
-                        "headline-xl": ["Plus Jakarta Sans", "sans-serif"],
-                        "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
-                        "headline-md": ["Plus Jakarta Sans", "sans-serif"],
-                        "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
-                        "display-lg": ["Plus Jakarta Sans", "sans-serif"],
-                        "title-md": ["Plus Jakarta Sans", "sans-serif"],
-                        "label-lg": ["Inter", "sans-serif"],
-                        "label-md": ["Inter", "sans-serif"],
-                        "label-sm": ["Inter", "sans-serif"],
-                        "body-lg": ["Inter", "sans-serif"],
-                        "body-md": ["Inter", "sans-serif"],
-                        "body-sm": ["Inter", "sans-serif"]
+                        "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
                     }
                 }
             }
         };
     </script>
 </head>
-<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/85 backdrop-blur-md border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+<body class="bg-white font-body text-slate-900 antialiased" x-data="{ 
+    requestModalOpen: false, 
+    shareModalOpen: false,
+    shareData: { title: '', address: '', price: '', url: '' },
+    toastMessage: '',
+    toastVisible: false,
+    showToast(msg) {
+        this.toastMessage = msg;
+        this.toastVisible = true;
+        setTimeout(() => { this.toastVisible = false; }, 3500);
+    }
+}">
+
+    <!-- Toast Notification -->
+    <div x-show="toastVisible" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+         class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-sm font-bold">
+        <span class="material-symbols-outlined text-emerald-400 text-[20px]">check_circle</span>
+        <span x-text="toastMessage"></span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-white border-b border-slate-200">
         <div class="h-20 max-w-[1440px] mx-auto px-6 sm:px-8 flex items-center justify-between gap-6">
             <div class="flex items-center gap-10">
                 <a class="flex items-center gap-3 focus:outline-none" href="/">
-                    <img alt="HomiQ Brand Logo" class="h-8 w-auto object-contain" src="{{ asset('logo.png') }}">
+                    <img alt="HomiQ Brand Logo" class="h-9 w-auto object-contain" src="{{ asset('logo.png') }}">
                 </a>
                 <nav class="hidden lg:flex items-center gap-8">
-                    <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors duration-200" href="#listings">Verified Homes</a>
-                    <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors duration-200" href="/pricing">Pricing</a>
+                    <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors" href="#listings">Verified Homes</a>
+                    <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors" href="#demand-board">Demand Board</a>
+                    <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors" href="#why-homiq">Why HomiQ</a>
+                    <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors" href="/pricing">Pricing</a>
                 </nav>
             </div>
             <div class="flex items-center gap-3">
-                <a class="hidden sm:inline-flex items-center justify-center h-11 px-5 rounded-full bg-surface-container text-on-surface font-label-lg text-label-lg hover:bg-surface-container-high transition-colors duration-200" href="{{ route('host.add-property') }}">List Your Home</a>
-                <div x-data="{ open: false }" class="relative hidden sm:inline-block text-left" @click.outside="open = false">
-                    <button @click="open = !open" type="button" class="h-11 px-4 rounded-full border border-surface-container hover:bg-surface-container text-on-surface font-label-lg text-label-lg flex items-center gap-1.5 transition-colors">
-                        <span class="material-symbols-outlined text-[18px] text-secondary">phone_iphone</span>
+                <!-- Request Property Button -->
+                <button type="button" @click="requestModalOpen = true" class="hidden sm:inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300 transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-[17px] text-emerald-700">post_add</span>
+                    <span>Post Request</span>
+                </button>
+
+                <!-- List Property Free -->
+                <a class="hidden sm:inline-flex items-center justify-center h-11 px-6 rounded-full bg-brandNavy text-white font-bold text-xs hover:bg-slate-900 transition-all shadow-sm" href="{{ route('host.add-property') }}">
+                    List Property Free
+                </a>
+
+                <!-- App Dropdown -->
+                <div x-data="{ open: false }" class="relative inline-block text-left" @click.outside="open = false">
+                    <button @click="open = !open" type="button" class="h-11 px-4.5 rounded-full border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined text-[18px] text-emerald-600">phone_iphone</span>
                         <span>Get App</span>
                         <span class="material-symbols-outlined text-xs">expand_more</span>
                     </button>
@@ -151,423 +169,241 @@
                          x-transition:enter="transition ease-out duration-150" 
                          x-transition:enter-start="opacity-0 scale-95" 
                          x-transition:enter-end="opacity-100 scale-100" 
-                         class="absolute right-0 mt-2 w-56 bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-container p-2 z-50">
-                        <a href="https://apps.apple.com/in/app/homiq-real-estate-marketplace/id6779412636" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-container-low transition text-on-surface text-xs font-semibold">
-                            <svg class="w-4 h-4 fill-current text-on-surface shrink-0" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.73-.86 2.76 1.01.08 2.04-.51 2.56-1.26z"/></svg>
+                         class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50">
+                        <a href="https://apps.apple.com/in/app/homiq-real-estate-marketplace/id6779412636" target="_blank" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition text-slate-900 text-xs font-bold">
+                            <svg class="w-4 h-4 fill-current text-slate-900 shrink-0" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.73-.86 2.76 1.01.08 2.04-.51 2.56-1.26z"/></svg>
                             <div>
-                                <span class="block leading-tight font-bold">iOS App Store</span>
-                                <span class="text-[10px] text-on-surface-variant font-normal">For iPhone &amp; iPad</span>
+                                <span class="block leading-tight font-black">iOS App Store</span>
+                                <span class="text-[10px] text-slate-500 font-semibold">For iPhone &amp; iPad</span>
                             </div>
                         </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-container-low transition text-on-surface text-xs font-semibold">
-                            <span class="material-symbols-outlined text-[18px] text-secondary shrink-0">android</span>
+                        <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition text-slate-900 text-xs font-bold">
+                            <span class="material-symbols-outlined text-[18px] text-emerald-600 shrink-0">android</span>
                             <div>
-                                <span class="block leading-tight font-bold">Google Play</span>
-                                <span class="text-[10px] text-on-surface-variant font-normal">For Android Devices</span>
+                                <span class="block leading-tight font-black">Google Play</span>
+                                <span class="text-[10px] text-slate-500 font-semibold">For Android Devices</span>
                             </div>
                         </a>
                     </div>
                 </div>
+
                 @auth
-                <a href="/dashboard" class="flex items-center gap-3 pl-2 py-1 pr-3 rounded-full bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
-                    @if(Auth::user()->avatar)
-                        <img alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover" src="{{ asset(Auth::user()->avatar) }}">
+                <a href="/dashboard" class="flex items-center gap-2.5 pl-2 py-1 pr-3 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">
+                    @if(Auth::user()->profile_photo)
+                        <img alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo }}">
                     @else
-                        <div class="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-xs">
+                        <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
                             {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                         </div>
                     @endif
                     <div class="hidden md:flex flex-col text-left">
-                        <span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">{{ Auth::user()->name }}</span>
-                        <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-tertiary-container">
-                            <span class="material-symbols-outlined text-[13px] text-on-tertiary-container">verified</span>
-                            {{ Auth::user()->role === "admin" ? "Admin" : (Auth::user()->role === "landlord" ? "Verified Host" : "Verified Tenant") }}
-                        </span>
+                        <span class="text-xs text-slate-900 leading-tight font-black">{{ Auth::user()->name }}</span>
+                        <span class="text-[10px] text-emerald-700 font-bold">{{ Auth::user()->is_admin ? 'Admin' : (Auth::user()->is_host ? 'Host' : 'Seeker') }}</span>
                     </div>
-                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span>
                 </a>
                 @else
-                <a href="/login" class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface px-2 transition-colors">Sign In</a>
-                <a href="/register" class="inline-flex items-center justify-center h-10 px-5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-inverse-surface transition-all shadow-sm">Get Started</a>
+                <a href="/login" class="text-xs font-bold text-slate-800 hover:text-brandNavy px-2 transition-colors">Sign In</a>
+                <a href="/register" class="inline-flex items-center justify-center h-11 px-5 rounded-full bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition-all shadow-sm">Get Started</a>
                 @endauth
             </div>
         </div>
     </header>
 
-    <main class="w-full pt-20 bg-surface">
+    <main class="w-full pt-20 bg-white">
         <div class="flex flex-col w-full">
-            <!-- Top Ambient Glow Field & Search Hub (EXPANDED TO FULL 1440px CONTAINER WIDTH) -->
-            <div class="relative w-full overflow-hidden bg-gradient-to-b from-surface-container-low via-surface to-surface pb-16 pt-8">
-                <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[1200px] h-[540px] bg-gradient-to-tr from-secondary/15 via-surface-container-high/50 to-emerald-500/10 blur-3xl pointer-events-none rounded-full"></div>
-                <div class="relative max-w-[1440px] mx-auto px-6 sm:px-8">
+
+            <!-- ==========================================
+                 ABOVE THE FOLD: HERO & CLEAN UNIFIED SEARCH BAR
+                 ========================================== -->
+            <section class="w-full bg-slate-50 border-b border-slate-200 py-16 sm:py-20">
+                <div class="max-w-5xl mx-auto px-6 sm:px-8 text-center">
+                    
                     <!-- Trust Pill -->
-                    <div class="flex items-center justify-center mb-6">
-                        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md shadow-sm border border-surface-container">
-                            <span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
-                            <span class="font-label-md text-label-md text-on-surface">100% On-site Verified Listings</span>
-                            <span class="text-outline-variant">•</span>
-                            <span class="font-label-md text-label-md text-on-surface-variant">0 Brokerage</span>
-                            <span class="text-outline-variant">•</span>
-                            <span class="font-label-md text-label-md text-on-tertiary-container font-semibold">Direct Host Chat</span>
-                        </div>
+                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white shadow-xs border border-slate-200 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-xs font-bold text-slate-800">100% On-Site Verified</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-xs font-bold text-emerald-700">0% Brokerage</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-xs font-bold text-slate-700">Direct Owner Contact</span>
                     </div>
 
                     <!-- Main Headline & Subtitle -->
-                    <div class="max-w-4xl mx-auto text-center mb-8">
-                        <h1 class="font-display-lg text-display-lg text-on-surface tracking-tight leading-tight mb-4">
-                            Find the home <br class="hidden sm:inline">
-                            <span class="bg-gradient-to-r from-secondary via-secondary-container to-primary bg-clip-text text-transparent">where your life happens.</span>
-                            <span class="block font-headline-xl text-headline-xl text-on-surface-variant font-normal mt-1">Verified homes, 0 brokerage, direct owner connection.</span>
-                        </h1>
-                        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-                            Discover authentic residences verified on-site. Browse transparent prices, connect directly with approved owners, and reserve your next space seamlessly.
-                        </p>
-                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+                        Find Your Next Home
+                    </h1>
+                    <p class="text-lg sm:text-xl font-semibold text-slate-600 max-w-2xl mx-auto mb-10">
+                        Search flats, rooms, PGs and properties directly from owners.
+                    </p>
 
-                    <!-- Search Dock: EXPANDED TO FULL 1440px CONTAINER WIDTH -->
-                    <div class="w-full max-w-[1440px] mx-auto">
-                        <!-- Top Category Tabs (Real Functional Categories) -->
-                        <div class="flex items-center justify-start gap-2 mb-3 px-1 overflow-x-auto no-scrollbar">
-                            <button onclick="setSearchType('all', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type', 'all') === 'all' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px]">home</span>
-                                <span>All Properties</span>
+                    <!-- Clean Search Container -->
+                    <div class="w-full max-w-4xl mx-auto text-left">
+                        
+                        <!-- Top Purpose Tabs (Rent / Buy / PG / Commercial) -->
+                        <div class="flex items-center justify-center gap-1.5 sm:gap-2 mb-3.5">
+                            <button type="button" onclick="setListingPurpose('rent', this)" class="purpose-tab h-11 px-6 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center {{ (request('listing_type', 'rent') === 'rent' && request('search_type') !== 'Studio' && request('search_type') !== 'Shop') ? 'bg-brandNavy text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                                Rent
                             </button>
-                            <button onclick="setSearchType('Apartment', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type') === 'Apartment' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px] text-secondary">apartment</span>
-                                <span>Apartments &amp; Flats</span>
+                            <button type="button" onclick="setListingPurpose('sale', this)" class="purpose-tab h-11 px-6 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center {{ request('listing_type') === 'sale' ? 'bg-brandNavy text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                                Buy
                             </button>
-                            <button onclick="setSearchType('Villa', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type') === 'Villa' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px] text-emerald-600">villa</span>
-                                <span>Villas &amp; Houses</span>
+                            <button type="button" onclick="setListingPurpose('pg', this)" class="purpose-tab h-11 px-6 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center {{ request('search_type') === 'Studio' ? 'bg-brandNavy text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                                PG / Co-living
                             </button>
-                            <button onclick="setSearchType('Studio', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type') === 'Studio' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px] text-amber-600">single_bed</span>
-                                <span>Studios &amp; Rooms</span>
-                            </button>
-                            <button onclick="setSearchType('Shop', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type') === 'Shop' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px] text-cyan-600">storefront</span>
-                                <span>Commercial &amp; Shops</span>
-                            </button>
-                            <button onclick="setSearchType('House', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type') === 'House' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px] text-teal-600">cottage</span>
-                                <span>Houses</span>
-                            </button>
-                            <button onclick="setSearchType('Hall', this)" class="mode-tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full {{ request('search_type') === 'Hall' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface border border-surface-container hover:bg-surface-container-high' }} font-label-md text-label-md transition-all shrink-0 cursor-pointer" type="button">
-                                <span class="material-symbols-outlined text-[18px] text-indigo-600">festival</span>
-                                <span>Event Halls</span>
+                            <button type="button" onclick="setListingPurpose('commercial', this)" class="purpose-tab h-11 px-6 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center {{ request('search_type') === 'Shop' ? 'bg-brandNavy text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                                Commercial
                             </button>
                         </div>
 
-                        <!-- Main Filter Card -->
-                        <form action="/#listings" method="GET" id="search-form" class="bg-surface-container-lowest/95 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-xl border border-surface-container transition-all">
-                            <input type="hidden" name="search_type" id="search-type-hidden" value="{{ request('search_type', 'all') }}">
-                            <input type="hidden" name="bedrooms" id="bedrooms-hidden" value="{{ request('bedrooms', 'all') }}">
-                            <input type="hidden" name="listing_type" id="listing-type-hidden" value="{{ request('listing_type', '') }}">
-                            <input type="hidden" name="max_price" id="max-price-hidden" value="{{ request('max_price', '') }}">
+                        <!-- Modern Unified Search Bar -->
+                        <form action="/#listings" method="GET" id="search-form" class="bg-white rounded-3xl md:rounded-full border border-slate-300 shadow-md hover:shadow-lg transition-all p-1.5 sm:p-2 flex flex-col md:flex-row items-stretch md:items-center">
+                            <input type="hidden" name="listing_type" id="listing-type-hidden" value="{{ request('listing_type', 'rent') }}">
+                            <input type="hidden" name="search_type" id="search-type-hidden" value="{{ request('search_type', '') }}">
 
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                                <!-- Column 1: Location & Micro-Zone -->
-                                <div class="md:col-span-4 p-4 rounded-2xl bg-surface-container-low/70 hover:bg-surface-container-low transition-colors border border-surface-container/60">
-                                    <div class="flex items-center justify-between mb-1.5">
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-secondary text-[20px]">pin_drop</span>
-                                            <span class="font-label-sm text-label-sm uppercase text-outline tracking-wider font-semibold">City or Address</span>
-                                        </div>
-                                        @if(request('search'))
-                                        <button type="button" onclick="clearSearchInput()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-0.5">
-                                            <span class="material-symbols-outlined text-[14px]">close</span> Clear
-                                        </button>
-                                        @endif
-                                    </div>
-                                    <input id="search-input" name="search" class="bg-transparent font-title-md text-title-md text-on-surface focus:outline-none w-full truncate font-semibold placeholder-slate-400" placeholder="e.g. New York, Miami, Austin..." type="text" value="{{ request('search', '') }}">
-                                    <!-- Dynamic Real Popular Cities -->
-                                    <div class="flex items-center gap-1.5 mt-2.5 overflow-x-auto no-scrollbar">
-                                        <span class="font-label-sm text-[10px] text-outline uppercase shrink-0">Popular:</span>
-                                        @foreach($popularCities as $city)
-                                        <button type="button" onclick="setLocality('{{ $city }}')" class="text-[11px] px-2.5 py-0.5 rounded-full {{ strtolower(request('search', '')) === strtolower($city) ? 'bg-secondary text-white font-bold' : 'bg-surface-container-lowest text-on-surface hover:text-secondary hover:border-secondary font-medium' }} shadow-2xs border border-surface-container whitespace-nowrap transition-colors cursor-pointer">{{ $city }}</button>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Column 2: Real Bedroom / Size Filter -->
-                                <div class="md:col-span-3 p-4 rounded-2xl bg-surface-container-low/70 hover:bg-surface-container-low transition-colors border border-surface-container/60">
-                                    <div class="flex items-center gap-2 mb-1.5">
-                                        <span class="material-symbols-outlined text-on-surface-variant text-[20px]">bed</span>
-                                        <span class="font-label-sm text-label-sm uppercase text-outline tracking-wider font-semibold">Bedrooms / BHK</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 mt-2">
-                                        <button type="button" onclick="setBedrooms('all', this)" class="bhk-btn flex-1 py-1.5 px-2 rounded-xl {{ request('bedrooms', 'all') === 'all' ? 'bg-secondary text-white font-bold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-lowest font-medium' }} font-label-sm text-[11px] text-center transition-colors cursor-pointer">Any</button>
-                                        <button type="button" onclick="setBedrooms('1', this)" class="bhk-btn flex-1 py-1.5 px-2 rounded-xl {{ request('bedrooms') === '1' ? 'bg-secondary text-white font-bold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-lowest font-medium' }} font-label-sm text-[11px] text-center transition-colors cursor-pointer">1 BHK</button>
-                                        <button type="button" onclick="setBedrooms('2', this)" class="bhk-btn flex-1 py-1.5 px-2 rounded-xl {{ request('bedrooms') === '2' ? 'bg-secondary text-white font-bold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-lowest font-medium' }} font-label-sm text-[11px] text-center transition-colors cursor-pointer">2 BHK</button>
-                                        <button type="button" onclick="setBedrooms('3', this)" class="bhk-btn flex-1 py-1.5 px-2 rounded-xl {{ request('bedrooms') === '3' ? 'bg-secondary text-white font-bold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-lowest font-medium' }} font-label-sm text-[11px] text-center transition-colors cursor-pointer">3+ BHK</button>
-                                    </div>
-                                </div>
-
-                                <!-- Column 3: Real Budget Filter -->
-                                @php
-                                    $isSaleListing = request('listing_type') === 'sale';
-                                    $sliderMin = $isSaleListing ? 100000 : 50;
-                                    $sliderMax = $isSaleListing ? 2000000 : 1000;
-                                    $sliderStep = $isSaleListing ? 25000 : 25;
-                                    $sliderCurrent = request('max_price') ? (float)request('max_price') : $sliderMax;
-                                @endphp
-                                <div class="md:col-span-3 p-4 rounded-2xl bg-surface-container-low/70 hover:bg-surface-container-low transition-colors border border-surface-container/60">
-                                    <div class="flex items-center justify-between mb-1.5">
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="font-label-sm text-label-sm uppercase text-outline tracking-wider font-semibold">Max Budget</span>
-                                            @if(request('max_price'))
-                                            <button type="button" onclick="clearBudgetFilter()" class="text-[10px] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer">✕ Reset</button>
-                                            @endif
-                                        </div>
-                                        <span class="font-label-sm text-[11px] text-on-tertiary-container font-semibold bg-tertiary-fixed/30 px-1.5 py-0.2 rounded">{{ $properties->count() }} homes</span>
-                                    </div>
-                                    <div class="flex items-baseline justify-between mt-0.5">
-                                        <span id="hero-budget-val" class="font-title-md text-title-md text-on-surface font-bold">{{ request('max_price') ? 'Up to ₹' . number_format(request('max_price')) : 'Any Price' }}</span>
-                                        <span class="text-outline text-xs">{{ $isSaleListing ? 'Total' : '/ mo' }}</span>
-                                    </div>
-                                    <input type="range" min="{{ $sliderMin }}" max="{{ $sliderMax }}" step="{{ $sliderStep }}" value="{{ $sliderCurrent }}" oninput="updateHeroBudget(this.value)" onchange="submitSearchForm()" class="w-full h-2 bg-surface-container rounded-full accent-secondary cursor-pointer mt-2">
-                                </div>
-
-                                <!-- Column 4: Submit Button with Live Database Count -->
-                                <div class="md:col-span-2 flex justify-end">
-                                    <button type="submit" class="w-full h-20 md:h-[98px] rounded-2xl bg-primary text-on-primary font-title-md text-title-md flex flex-col items-center justify-center gap-1 hover:bg-inverse-surface shadow-lg hover:shadow-xl transition-all active:scale-[0.98] group cursor-pointer">
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-[22px] group-hover:scale-110 transition-transform">search</span>
-                                            <span class="font-bold">Search</span>
-                                        </div>
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-lowest/15 text-[11px] font-medium text-primary-fixed">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                            {{ $properties->count() }} Available
-                                        </span>
-                                    </button>
+                            <!-- 1. Location Input -->
+                            <div class="flex-1 px-4 py-3 md:py-2.5 rounded-2xl md:rounded-l-full hover:bg-slate-50 focus-within:bg-slate-50 transition-colors">
+                                <label for="search-input" class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Location</label>
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-emerald-600 text-[20px] shrink-0">location_on</span>
+                                    <input id="search-input" name="search" type="text" class="w-full bg-transparent text-sm font-bold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none focus:outline-none p-0 placeholder-slate-400" placeholder="e.g. Sector 137, HSR Layout, Mumbai..." value="{{ request('search', '') }}">
                                 </div>
                             </div>
 
-                            <!-- Bottom Row: Real Amenity Toggles -->
-                            <div class="mt-5 pt-5 border-t border-surface-container flex flex-col lg:flex-row items-center justify-between gap-4">
-                                <!-- Listing Type Pills -->
-                                <div class="flex items-center gap-2 flex-wrap w-full lg:w-auto">
-                                    <span class="font-label-sm text-label-sm uppercase text-outline mr-1 shrink-0 font-medium">Listing:</span>
-                                    <button type="button" onclick="setListingType('', this)" class="listing-chip inline-flex items-center gap-1 px-3 py-1.5 rounded-xl {{ request('listing_type', '') === '' ? 'bg-primary text-on-primary font-semibold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:text-on-surface' }} text-body-sm transition-colors cursor-pointer">All Listings</button>
-                                    <button type="button" onclick="setListingType('rent', this)" class="listing-chip inline-flex items-center gap-1 px-3 py-1.5 rounded-xl {{ request('listing_type') === 'rent' ? 'bg-secondary text-on-secondary font-semibold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:text-on-surface' }} text-body-sm transition-colors cursor-pointer">For Rent</button>
-                                    <button type="button" onclick="setListingType('sale', this)" class="listing-chip inline-flex items-center gap-1 px-3 py-1.5 rounded-xl {{ request('listing_type') === 'sale' ? 'bg-secondary text-on-secondary font-semibold shadow-xs' : 'bg-surface-container text-on-surface-variant hover:text-on-surface' }} text-body-sm transition-colors cursor-pointer">For Sale</button>
+                            <!-- 2. Property Type Dropdown -->
+                            <div class="flex-1 px-4 py-3 md:py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
+                                <label for="type-select" class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Property Type</label>
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-slate-500 text-[20px] shrink-0">apartment</span>
+                                    <select id="type-select" onchange="document.getElementById('search-type-hidden').value = this.value" class="w-full bg-transparent text-sm font-bold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none focus:outline-none p-0 cursor-pointer">
+                                        <option value="">All Types</option>
+                                        <option value="Apartment" {{ request('search_type') === 'Apartment' ? 'selected' : '' }}>Flats &amp; Apartments</option>
+                                        <option value="Villa" {{ request('search_type') === 'Villa' ? 'selected' : '' }}>Villas &amp; Houses</option>
+                                        <option value="Studio" {{ request('search_type') === 'Studio' ? 'selected' : '' }}>PGs &amp; Rooms</option>
+                                        <option value="Shop" {{ request('search_type') === 'Shop' ? 'selected' : '' }}>Commercial / Shop</option>
+                                    </select>
                                 </div>
+                            </div>
 
-                                <!-- Real Amenity Filters -->
-                                <div class="flex items-center gap-4 flex-wrap w-full lg:w-auto justify-start lg:justify-end">
-                                    <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface hover:text-secondary transition-colors select-none">
-                                        <input type="checkbox" name="is_furnished" value="1" {{ request('is_furnished') ? 'checked' : '' }} onchange="submitSearchForm()" class="rounded text-secondary focus:ring-secondary cursor-pointer">
-                                        <span class="material-symbols-outlined text-[18px] text-secondary">chair</span>
-                                        <span>Fully Furnished</span>
-                                    </label>
-                                    <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface hover:text-secondary transition-colors select-none">
-                                        <input type="checkbox" name="is_pet_friendly" value="1" {{ request('is_pet_friendly') ? 'checked' : '' }} onchange="submitSearchForm()" class="rounded text-secondary focus:ring-secondary cursor-pointer">
-                                        <span class="material-symbols-outlined text-[18px] text-amber-600">pets</span>
-                                        <span>Pet Friendly</span>
-                                    </label>
-                                    <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface hover:text-secondary transition-colors select-none">
-                                        <input type="checkbox" name="has_parking" value="1" {{ request('has_parking') ? 'checked' : '' }} onchange="submitSearchForm()" class="rounded text-secondary focus:ring-secondary cursor-pointer">
-                                        <span class="material-symbols-outlined text-[18px] text-cyan-600">directions_car</span>
-                                        <span>Dedicated Parking</span>
-                                    </label>
-                                    @if(request()->hasAny(['search', 'search_type', 'bedrooms', 'max_price', 'is_furnished', 'is_pet_friendly', 'has_parking', 'listing_type']))
-                                    <a href="/#listings" class="inline-flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-semibold transition-colors ml-2">
-                                        <span class="material-symbols-outlined text-[16px]">restart_alt</span>
-                                        <span>Clear All Filters</span>
-                                    </a>
-                                    @endif
+                            <!-- 3. Bedrooms / BHK Dropdown -->
+                            <div class="w-full md:w-36 px-4 py-3 md:py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
+                                <label for="bedrooms-select" class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Bedrooms</label>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-slate-500 text-[20px] shrink-0">bed</span>
+                                    <select id="bedrooms-select" name="bedrooms" class="w-full bg-transparent text-sm font-bold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none focus:outline-none p-0 cursor-pointer">
+                                        <option value="all">Any BHK</option>
+                                        <option value="1" {{ request('bedrooms') === '1' ? 'selected' : '' }}>1 BHK</option>
+                                        <option value="2" {{ request('bedrooms') === '2' ? 'selected' : '' }}>2 BHK</option>
+                                        <option value="3" {{ request('bedrooms') === '3' ? 'selected' : '' }}>3+ BHK</option>
+                                    </select>
                                 </div>
+                            </div>
+
+                            <!-- 4. Budget Dropdown -->
+                            <div class="w-full md:w-44 px-4 py-3 md:py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
+                                <label for="budget-select" class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">Budget</label>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-slate-500 text-[20px] shrink-0">payments</span>
+                                    <select id="budget-select" name="max_price" class="w-full bg-transparent text-sm font-bold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none focus:outline-none p-0 cursor-pointer">
+                                        <option value="">Any Budget</option>
+                                        <option value="15000" {{ request('max_price') == '15000' ? 'selected' : '' }}>Under ₹15,000</option>
+                                        <option value="25000" {{ request('max_price') == '25000' ? 'selected' : '' }}>Under ₹25,000</option>
+                                        <option value="40000" {{ request('max_price') == '40000' ? 'selected' : '' }}>Under ₹40,000</option>
+                                        <option value="60000" {{ request('max_price') == '60000' ? 'selected' : '' }}>Under ₹60,000</option>
+                                        <option value="100000" {{ request('max_price') == '100000' ? 'selected' : '' }}>Under ₹1,00,000</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 5. Search Button -->
+                            <div class="p-1.5 flex justify-center">
+                                <button type="submit" class="w-full md:w-auto h-11 px-6 rounded-full bg-brandNavy hover:bg-slate-900 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 cursor-pointer">
+                                    <span class="material-symbols-outlined text-[18px] text-emerald-400">search</span>
+                                    <span>Search</span>
+                                </button>
                             </div>
                         </form>
 
-                        <!-- Quick Filter Tags Linking to Real Filters with Active Highlights -->
-                        <div class="flex items-center justify-center flex-wrap gap-2.5 mt-5">
-                            <a href="/?listing_type=rent#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('listing_type') === 'rent' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('listing_type') === 'rent' ? 'text-primary-fixed' : 'text-secondary' }}">key</span>
-                                <span>Verified Rentals</span>
-                            </a>
-                            <a href="/?listing_type=sale#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('listing_type') === 'sale' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('listing_type') === 'sale' ? 'text-primary-fixed' : 'text-emerald-600' }}">real_estate_agent</span>
-                                <span>Properties For Sale</span>
-                            </a>
-                            <a href="/?is_pet_friendly=1#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('is_pet_friendly') ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('is_pet_friendly') ? 'text-primary-fixed' : 'text-amber-600' }}">pets</span>
-                                <span>Pet Friendly</span>
-                            </a>
-                            <a href="/?is_furnished=1#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('is_furnished') ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('is_furnished') ? 'text-primary-fixed' : 'text-secondary' }}">chair</span>
-                                <span>Fully Furnished</span>
-                            </a>
-                            <a href="/?has_parking=1#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('has_parking') ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('has_parking') ? 'text-primary-fixed' : 'text-cyan-600' }}">directions_car</span>
-                                <span>With Parking</span>
-                            </a>
-                            <a href="/?search_type=Villa#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('search_type') === 'Villa' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('search_type') === 'Villa' ? 'text-primary-fixed' : 'text-emerald-600' }}">villa</span>
-                                <span>Luxury Villas</span>
-                            </a>
-                            <a href="/?search_type=Apartment#listings" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full {{ request('search_type') === 'Apartment' ? 'bg-primary text-on-primary font-bold shadow-xs' : 'bg-surface-container-lowest hover:bg-surface-container-high text-on-surface' }} font-label-md text-label-md transition-all shadow-2xs border border-surface-container">
-                                <span class="material-symbols-outlined text-[16px] {{ request('search_type') === 'Apartment' ? 'text-primary-fixed' : 'text-secondary' }}">apartment</span>
-                                <span>Modern Apartments</span>
-                            </a>
+                        <!-- Clean Trending Keywords Line -->
+                        <div class="flex items-center justify-center flex-wrap gap-2 mt-4 text-xs font-semibold text-slate-600">
+                            <span class="text-slate-400 font-bold uppercase text-[10px]">Trending:</span>
+                            @foreach($popularCities as $city)
+                            <a href="/?search={{ urlencode($city) }}#listings" class="hover:text-emerald-700 underline decoration-slate-300 hover:decoration-emerald-500">{{ $city }}</a>
+                            <span class="text-slate-300">•</span>
+                            @endforeach
+                            <a href="/?search_type=Studio#listings" class="hover:text-emerald-700 underline decoration-slate-300 hover:decoration-emerald-500">Student PGs</a>
+                            <span class="text-slate-300">•</span>
+                            <a href="/?bedrooms=2#listings" class="hover:text-emerald-700 underline decoration-slate-300 hover:decoration-emerald-500">2 BHK Flats</a>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- SECTION A: Explore by City / Micro-Zone (Connected to Real Database Cities) -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-14 w-full" id="neighborhood-lifestyle">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-                    <div>
-                        <div class="inline-flex items-center gap-1.5 text-secondary font-label-sm text-label-sm uppercase tracking-wider mb-2">
-                            <span class="material-symbols-outlined text-[16px]">travel_explore</span>
-                            Top Locations &amp; Micro-Districts
-                        </div>
-                        <h2 class="font-headline-xl text-headline-xl text-on-surface">Explore Available Homes by Location</h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Browse verified properties across premier residential neighborhoods with zero brokerage fees.</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="/?listing_type=rent" class="px-4 py-2 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container text-label-md font-semibold transition-colors flex items-center gap-1.5">
-                            <span>Browse All Rentals</span>
-                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    @foreach(array_slice($popularCities, 0, 3) as $city)
-                    @php
-                        $cityProperties = $properties->filter(function ($p) use ($city) {
-                            return str_contains(strtolower($p->address ?? ''), strtolower($city));
-                        });
-                        $cityCount = $cityProperties->count();
-                        $firstCityProp = $cityProperties->first();
-                        $coverImg = ($firstCityProp && !empty($firstCityProp->images) && is_array($firstCityProp->images)) ? $firstCityProp->images[0] : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80';
-                    @endphp
-                    <div class="group rounded-3xl bg-surface-container-lowest p-6 border border-surface-container hover:border-secondary/30 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
-                        <div>
-                            <div class="relative rounded-2xl overflow-hidden aspect-[16/9] mb-4 bg-surface-container">
-                                <img alt="{{ $city }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="{{ $coverImg }}">
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent"></div>
-                                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
-                                    <span class="font-bold text-lg drop-shadow-md">{{ $city }}</span>
-                                    <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold">{{ $cityCount }} Verified {{ $cityCount === 1 ? 'Home' : 'Homes' }}</span>
-                                </div>
-                            </div>
-                            <div class="flex items-start justify-between mb-3">
-                                <div>
-                                    <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-wider">Prime Location</span>
-                                    <h3 class="font-headline-md text-headline-md text-on-surface mt-1.5 font-bold group-hover:text-secondary transition-colors">{{ $city }}</h3>
-                                    <p class="text-xs text-on-surface-variant">Verified residences with direct host contact</p>
-                                </div>
-                            </div>
-                            <div class="space-y-2 bg-surface-container-low/70 p-3.5 rounded-2xl mb-6 text-xs text-on-surface-variant">
-                                <div class="flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span> Inspection Guarantee</span>
-                                    <span class="font-semibold text-on-surface">100% On-site</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-secondary">money_off</span> Brokerage Fee</span>
-                                    <span class="font-semibold text-emerald-600">0% Direct</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-amber-500">chat</span> Landlord Chat</span>
-                                    <span class="font-semibold text-on-surface">Instant Messaging</span>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="w-full py-2.5 rounded-xl bg-surface-container-high/60 hover:bg-secondary hover:text-on-secondary text-on-surface font-label-md text-label-md text-center transition-all flex items-center justify-center gap-2 group/btn" href="/?search={{ urlencode($city) }}">
-                            <span>Explore Homes in {{ $city }}</span>
-                            <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                        </a>
-                    </div>
-                    @endforeach
                 </div>
             </section>
 
-            <!-- SECTION B: Real Live Verified Properties Showcase (`#listings`) -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 pt-4 pb-16 w-full" id="listings">
-                <!-- Section Header with Category Quick Filter -->
+            <!-- ==========================================
+                 SECTION 2: EXPLORE PROPERTIES NEAR YOU
+                 ========================================== -->
+            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-14 w-full" id="listings">
+                <!-- Section Header -->
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
                     <div>
-                        <div class="inline-flex items-center gap-1.5 text-secondary font-label-sm text-label-sm uppercase tracking-wider mb-2">
-                            <span class="material-symbols-outlined text-[16px]">home_work</span>
-                            Active Database Inventory
+                        <div class="inline-flex items-center gap-1.5 text-emerald-700 font-black text-xs uppercase tracking-wider mb-2">
+                            <span class="material-symbols-outlined text-[16px]">travel_explore</span>
+                            Active Verified Inventory
                         </div>
-                        <h2 class="font-headline-xl text-headline-xl text-on-surface flex items-center gap-3">
-                            <span>Verified Available Properties</span>
-                            <span class="font-headline-sm text-headline-sm font-normal text-on-surface-variant">({{ $properties->count() }} listings)</span>
+                        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <span>Explore Properties Near You</span>
+                            <span class="text-base sm:text-lg font-bold text-slate-500 whitespace-nowrap">({{ $properties->count() }} available)</span>
                         </h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Browse all authentic, admin-approved listings with high-resolution photos and transparent pricing.</p>
+                        <p class="text-sm font-semibold text-slate-600 mt-1">100% on-site audited residences with zero brokerage and direct owner contact.</p>
                     </div>
 
-                    <!-- Category Pills Filter Bar -->
-                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                        <a href="/?search_type=all#listings" class="px-4 py-2 rounded-full {{ request('search_type', 'all') === 'all' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high' }} text-label-md font-semibold whitespace-nowrap transition-all">
+                    <!-- Category Filter Pills & Share Search Button -->
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <button type="button" onclick="shareCurrentSearch()" class="inline-flex items-center gap-1.5 h-11 px-5 rounded-full bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold border border-slate-300 transition-all shadow-xs cursor-pointer" title="Share this search on WhatsApp or Copy Link">
+                            <span class="material-symbols-outlined text-[17px] text-emerald-600">share</span>
+                            <span>Share Search</span>
+                        </button>
+
+                        <a href="/?search_type=all#listings" class="inline-flex items-center justify-center h-11 px-5 rounded-full {{ request('search_type', 'all') === 'all' ? 'bg-brandNavy text-white shadow-sm font-bold' : 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 font-bold' }} text-xs transition-all">
                             All ({{ $properties->count() }})
                         </a>
                         @foreach($categories as $cat)
-                        <a href="/?search_type={{ urlencode($cat['name']) }}#listings" class="px-4 py-2 rounded-full {{ request('search_type') === $cat['name'] ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high' }} text-label-md font-semibold whitespace-nowrap transition-all">
+                        <a href="/?search_type={{ urlencode($cat['name']) }}#listings" class="inline-flex items-center justify-center h-11 px-5 rounded-full {{ request('search_type') === $cat['name'] ? 'bg-brandNavy text-white shadow-sm font-bold' : 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 font-bold' }} text-xs transition-all">
                             {{ $cat['name'] }}
                         </a>
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Active Filters Notification & Removal Bar (Appears when any search/filter is active) -->
-                @if(request()->hasAny(['search', 'search_type', 'bedrooms', 'max_price', 'listing_type', 'is_furnished', 'is_pet_friendly', 'has_parking']) && (request('search') || (request('search_type') && request('search_type') !== 'all') || (request('bedrooms') && request('bedrooms') !== 'all') || request('max_price') || request('listing_type') || request('is_furnished') || request('is_pet_friendly') || request('has_parking')))
-                <div class="mb-8 p-4 rounded-2xl bg-surface-container-low border border-surface-container flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+                <!-- Active Filter Removal Bar -->
+                @if(request()->hasAny(['search', 'search_type', 'bedrooms', 'max_price', 'listing_type']) && (request('search') || (request('search_type') && request('search_type') !== 'all') || (request('bedrooms') && request('bedrooms') !== 'all') || request('max_price') || (request('listing_type') && request('listing_type') !== 'rent')))
+                <div class="mb-8 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-xs uppercase font-bold text-outline mr-1 flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[16px] text-secondary">tune</span>
+                        <span class="text-xs uppercase font-bold text-slate-600 mr-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px] text-emerald-600">tune</span>
                             Active Filters:
                         </span>
                         @if(request('search'))
-                        <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
+                        <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-slate-900 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 border border-slate-200 transition-colors group">
                             <span>Location: {{ request('search') }}</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
+                            <span class="material-symbols-outlined text-[14px] text-slate-400 group-hover:text-rose-600">close</span>
                         </a>
                         @endif
                         @if(request('search_type') && request('search_type') !== 'all')
-                        <a href="{{ request()->fullUrlWithQuery(['search_type' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
+                        <a href="{{ request()->fullUrlWithQuery(['search_type' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-slate-900 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 border border-slate-200 transition-colors group">
                             <span>Type: {{ request('search_type') }}</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
+                            <span class="material-symbols-outlined text-[14px] text-slate-400 group-hover:text-rose-600">close</span>
                         </a>
                         @endif
                         @if(request('bedrooms') && request('bedrooms') !== 'all')
-                        <a href="{{ request()->fullUrlWithQuery(['bedrooms' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
+                        <a href="{{ request()->fullUrlWithQuery(['bedrooms' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-slate-900 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 border border-slate-200 transition-colors group">
                             <span>Bedrooms: {{ request('bedrooms') >= 3 ? '3+ BHK' : request('bedrooms') . ' BHK' }}</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
+                            <span class="material-symbols-outlined text-[14px] text-slate-400 group-hover:text-rose-600">close</span>
                         </a>
                         @endif
                         @if(request('max_price'))
-                        <a href="{{ request()->fullUrlWithQuery(['max_price' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
+                        <a href="{{ request()->fullUrlWithQuery(['max_price' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-slate-900 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 border border-slate-200 transition-colors group">
                             <span>Max: ₹{{ number_format(request('max_price')) }}</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
-                        </a>
-                        @endif
-                        @if(request('listing_type'))
-                        <a href="{{ request()->fullUrlWithQuery(['listing_type' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
-                            <span>For {{ ucfirst(request('listing_type')) }}</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
-                        </a>
-                        @endif
-                        @if(request('is_furnished'))
-                        <a href="{{ request()->fullUrlWithQuery(['is_furnished' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
-                            <span>Furnished</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
-                        </a>
-                        @endif
-                        @if(request('is_pet_friendly'))
-                        <a href="{{ request()->fullUrlWithQuery(['is_pet_friendly' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
-                            <span>Pet Friendly</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
-                        </a>
-                        @endif
-                        @if(request('has_parking'))
-                        <a href="{{ request()->fullUrlWithQuery(['has_parking' => null]) }}#listings" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 border border-surface-container shadow-2xs transition-colors group">
-                            <span>Parking</span>
-                            <span class="material-symbols-outlined text-[14px] text-outline group-hover:text-rose-600">close</span>
+                            <span class="material-symbols-outlined text-[14px] text-slate-400 group-hover:text-rose-600">close</span>
                         </a>
                         @endif
                     </div>
@@ -578,619 +414,746 @@
                 </div>
                 @endif
 
-                <!-- Featured Property Spotlight (If Available) -->
-                @if($featuredProperties->isNotEmpty() && !request()->hasAny(['search', 'bedrooms', 'max_price', 'is_furnished', 'is_pet_friendly', 'has_parking']))
-                @php $spotlight = $featuredProperties->first(); @endphp
-                <div class="mb-12 rounded-3xl bg-white p-6 md:p-8 border border-slate-200/80 shadow-soft hover:shadow-xl transition-all duration-300">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        <div class="lg:col-span-7 relative rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 group">
-                            @php
-                                $spotImages = (!empty($spotlight->images) && is_array($spotlight->images)) ? $spotlight->images : ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'];
-                            @endphp
-                            <img alt="{{ $spotlight->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" src="{{ $spotImages[0] }}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
-                            <div class="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/85 backdrop-blur-md text-white font-bold text-xs shadow-md pointer-events-auto">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    <span>Featured Spotlight</span>
-                                </div>
-                                <span class="px-3 py-1 rounded-full bg-emerald-500 text-white font-bold text-xs shadow-sm pointer-events-auto">
-                                    For {{ ucfirst($spotlight->listing_type) }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="lg:col-span-5 flex flex-col justify-between h-full space-y-6">
-                            <div>
-                                <div class="flex items-center gap-2 mb-2.5">
-                                    <span class="px-3 py-1 rounded-full bg-slate-900 text-white text-xs font-bold uppercase tracking-wider">{{ $spotlight->category }}</span>
-                                    <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">0% Brokerage</span>
-                                </div>
-                                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">{{ $spotlight->title }}</h3>
-                                <p class="text-slate-500 text-sm flex items-center gap-1.5 mt-2 font-medium">
-                                    <span class="material-symbols-outlined text-base text-emerald-600">location_on</span>
-                                    <span>{{ $spotlight->address }}</span>
-                                </p>
-                            </div>
-
-                            <div class="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                                <div class="text-center">
-                                    <span class="block text-xs uppercase text-slate-400 font-bold">Bedrooms</span>
-                                    <span class="text-lg font-black text-slate-900">{{ $spotlight->bedrooms ?? 0 }} BHK</span>
-                                </div>
-                                <div class="text-center border-x border-slate-200">
-                                    <span class="block text-xs uppercase text-slate-400 font-bold">Bathrooms</span>
-                                    <span class="text-lg font-black text-slate-900">{{ $spotlight->bathrooms ?? 0 }} Bath</span>
-                                </div>
-                                <div class="text-center">
-                                    <span class="block text-xs uppercase text-slate-400 font-bold">Furnished</span>
-                                    <span class="text-lg font-black text-slate-900">{{ $spotlight->is_furnished ? 'Yes' : 'No' }}</span>
-                                </div>
-                            </div>
-
-                            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-                                <div>
-                                    <span class="block text-xs text-slate-400 font-bold uppercase tracking-wider">Direct Asking Price</span>
-                                    <span class="text-3xl font-black text-slate-900">{{ $spotlight->formatted_price }}</span>
-                                </div>
-                                <a href="/properties/{{ $spotlight->id }}" class="h-12 px-6 rounded-full bg-primary hover:bg-inverse-surface text-on-primary font-bold text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
-                                    <span>View Details</span>
-                                    <span class="material-symbols-outlined text-base">arrow_forward</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
-
-                <!-- Dynamic Grid of Real Properties -->
+                <!-- Dynamic Property Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @forelse($properties as $property)
                         <x-property-card :property="$property" />
                     @empty
-                    <!-- Empty State -->
-                    <div class="col-span-full py-16 px-6 text-center bg-surface-container-lowest rounded-3xl border border-surface-container">
-                        <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mx-auto mb-4 text-outline">
+                    <!-- Empty State & Request Hook -->
+                    <div class="col-span-full py-16 px-6 text-center bg-slate-50 rounded-3xl border border-slate-200">
+                        <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto mb-4 text-slate-400 border border-slate-200">
                             <span class="material-symbols-outlined text-[32px]">search_off</span>
                         </div>
-                        <h3 class="font-headline-md text-headline-md font-bold text-on-surface">No Properties Found</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mt-2 mb-6">
-                            We couldn't find any approved listings matching your selected search criteria. Try clearing some filters or searching for another city.
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">No Matching Properties Found</h3>
+                        <p class="text-sm font-semibold text-slate-600 max-w-md mx-auto mt-2 mb-6">
+                            We couldn't find an approved property for this exact criteria right now. Post a request on our Demand Board and matching property owners will reach out directly!
                         </p>
-                        <a href="/" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-inverse-surface transition-colors shadow-sm">
-                            <span class="material-symbols-outlined text-[18px]">refresh</span>
-                            <span>Reset All Filters</span>
-                        </a>
+                        <div class="flex items-center justify-center gap-3 flex-wrap">
+                            <button type="button" @click="requestModalOpen = true" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer">
+                                <span class="material-symbols-outlined text-[18px]">post_add</span>
+                                <span>Post a Property Request</span>
+                            </button>
+                            <a href="/#listings" class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs border border-slate-300 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">refresh</span>
+                                <span>Reset Filters</span>
+                            </a>
+                        </div>
                     </div>
                     @endforelse
                 </div>
             </section>
 
-            <!-- SECTION C: Verified Property Guarantee & Physical Inspection Standards (Replaces Fictional 3D Laser) -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="verified-inspection">
-                <div class="bg-primary-container text-on-primary rounded-[36px] p-8 md:p-14 shadow-2xl relative overflow-hidden">
-                    <div class="absolute -top-24 right-1/4 w-96 h-96 bg-secondary/30 rounded-full blur-3xl pointer-events-none"></div>
-                    <div class="absolute bottom-0 right-0 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <!-- ==========================================
+                 SECTION 3: WHY HOMIQ?
+                 ========================================== -->
+            <section class="w-full bg-slate-50 border-y border-slate-200 py-16" id="why-homiq">
+                <div class="max-w-[1440px] mx-auto px-6 sm:px-8">
+                    <div class="text-center max-w-2xl mx-auto mb-14">
+                        <span class="text-xs uppercase tracking-wider text-emerald-700 font-black">Why HomiQ?</span>
+                        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mt-1">Built for transparent, direct renting</h2>
+                        <p class="text-sm font-semibold text-slate-600 mt-2">Eliminate middleman friction and discover authentic residences with confidence.</p>
+                    </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-                        <div class="lg:col-span-5">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold mb-4">
-                                <span class="material-symbols-outlined text-[15px]">verified_user</span>
-                                100% Verified Quality Standard
-                            </span>
-                            <h2 class="font-headline-xl text-headline-xl text-on-primary leading-tight font-bold">Every listing is physically inspected before approval</h2>
-                            <p class="font-body-md text-body-md text-primary-fixed-dim mt-4 mb-8">
-                                Say goodbye to fake photos and bait-and-switch listings. HomiQ verifies ownership documents, conducts physical on-site audits, and ensures zero brokerage fees for all tenants.
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Pillar 1 -->
+                        <div class="rounded-3xl bg-white p-7 border border-slate-200 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100">
+                                    <span class="material-symbols-outlined text-[24px]">chat</span>
+                                </div>
+                                <h3 class="text-lg font-black text-slate-900 tracking-tight mb-2">Direct Owner Communication</h3>
+                                <p class="text-xs leading-relaxed text-slate-600 font-medium">Message landlords directly through in-app chat. Agree on terms and schedule in-person tours without unwanted spam calls.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-xs font-bold text-emerald-700">
+                                <span class="material-symbols-outlined text-[16px]">verified</span>
+                                <span>Direct Chat In-App</span>
+                            </div>
+                        </div>
+
+                        <!-- Pillar 2 -->
+                        <div class="rounded-3xl bg-white p-7 border border-slate-200 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5 border border-blue-100">
+                                    <span class="material-symbols-outlined text-[24px]">fact_check</span>
+                                </div>
+                                <h3 class="text-lg font-black text-slate-900 tracking-tight mb-2">Verified Listings</h3>
+                                <p class="text-xs leading-relaxed text-slate-600 font-medium">Every property undergoes on-site physical auditing, ownership title checks, and government ID validation before being published.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-xs font-bold text-blue-700">
+                                <span class="material-symbols-outlined text-[16px]">verified_user</span>
+                                <span>100% On-Site Audited</span>
+                            </div>
+                        </div>
+
+                        <!-- Pillar 3 -->
+                        <div class="rounded-3xl bg-white p-7 border border-slate-200 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mb-5 border border-amber-100">
+                                    <span class="material-symbols-outlined text-[24px]">savings</span>
+                                </div>
+                                <h3 class="text-lg font-black text-slate-900 tracking-tight mb-2">No Unnecessary Brokerage</h3>
+                                <p class="text-xs leading-relaxed text-slate-600 font-medium">Never pay 1 to 2 months' rent in agent commissions. Save ₹15,000 to ₹50,000 on every move with our strict zero brokerage policy.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-xs font-bold text-amber-700">
+                                <span class="material-symbols-outlined text-[16px]">currency_rupee</span>
+                                <span>₹0 Broker Commission</span>
+                            </div>
+                        </div>
+
+                        <!-- Pillar 4 -->
+                        <div class="rounded-3xl bg-white p-7 border border-slate-200 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center mb-5 border border-indigo-100">
+                                    <span class="material-symbols-outlined text-[24px]">travel_explore</span>
+                                </div>
+                                <h3 class="text-lg font-black text-slate-900 tracking-tight mb-2">Easy Property Discovery</h3>
+                                <p class="text-xs leading-relaxed text-slate-600 font-medium">Filter precisely by micro-districts, budget, BHK size, furnishing, and pet-friendliness to find your ideal home in seconds.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-xs font-bold text-indigo-700">
+                                <span class="material-symbols-outlined text-[16px]">speed</span>
+                                <span>High-Precision Filters</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 SECTION 4: LIST YOUR PROPERTY FREE
+                 ========================================== -->
+            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-12 w-full" id="list-free">
+                <div class="rounded-3xl bg-brandNavy text-white p-8 md:p-14 shadow-sm border border-slate-800">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                                <span class="material-symbols-outlined text-[16px]">add_home</span>
+                                For Landlords &amp; Property Owners
+                            </div>
+                            <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                                List Your Property Free<br>in Under 3 Minutes.
+                            </h2>
+                            <p class="text-slate-200 text-base leading-relaxed max-w-xl font-medium">
+                                Join hundreds of verified owners connecting directly with quality tenants. Enjoy zero listing fees, zero broker commissions, and manage inquiries seamlessly.
                             </p>
-                            <div class="space-y-4">
-                                <div class="flex items-start gap-3.5">
-                                    <div class="w-9 h-9 rounded-xl bg-surface-container-lowest/10 flex items-center justify-center text-tertiary-fixed shrink-0">
-                                        <span class="material-symbols-outlined text-[20px]">fact_check</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-title-md text-title-md text-on-primary font-bold">Admin-Audited Ownership</h4>
-                                        <p class="text-xs text-primary-fixed-dim mt-0.5">Every host is verified with government ID and legitimate title deeds before posting.</p>
-                                    </div>
+
+                            <!-- Owner Value Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                                <div class="p-4 rounded-2xl bg-white/10 border border-white/15">
+                                    <span class="block text-2xl font-black text-emerald-400">1,200+</span>
+                                    <span class="text-xs text-slate-200 font-bold mt-0.5 block">Active Tenant Searches</span>
                                 </div>
-                                <div class="flex items-start gap-3.5">
-                                    <div class="w-9 h-9 rounded-xl bg-surface-container-lowest/10 flex items-center justify-center text-amber-300 shrink-0">
-                                        <span class="material-symbols-outlined text-[20px]">photo_library</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-title-md text-title-md text-on-primary font-bold">Authentic Photo Galleries</h4>
-                                        <p class="text-xs text-primary-fixed-dim mt-0.5">High-resolution multi-angle photographs showing exact room dimensions and conditions.</p>
-                                    </div>
+                                <div class="p-4 rounded-2xl bg-white/10 border border-white/15">
+                                    <span class="block text-2xl font-black text-white">0%</span>
+                                    <span class="text-xs text-slate-200 font-bold mt-0.5 block">Commission Charged</span>
                                 </div>
-                                <div class="flex items-start gap-3.5">
-                                    <div class="w-9 h-9 rounded-xl bg-surface-container-lowest/10 flex items-center justify-center text-secondary-fixed-dim shrink-0">
-                                        <span class="material-symbols-outlined text-[20px]">chat</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-title-md text-title-md text-on-primary font-bold">Direct In-App Host Chat</h4>
-                                        <p class="text-xs text-primary-fixed-dim mt-0.5">Communicate directly with landlords to ask questions and schedule visits with no middlemen.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-8 flex flex-wrap items-center gap-4">
-                                <a href="#listings" class="px-6 py-3.5 rounded-full bg-secondary hover:bg-secondary-container text-on-secondary font-title-md text-title-md flex items-center gap-2 shadow-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">search</span>
-                                    <span>Browse Verified Homes</span>
-                                </a>
-                                <a href="{{ route('host.add-property') }}" class="px-6 py-3.5 rounded-full bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 text-on-primary font-title-md text-title-md flex items-center gap-2 transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">add_home</span>
-                                    <span>List Your Property</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="lg:col-span-7">
-                            <div class="rounded-3xl overflow-hidden bg-surface-container-lowest/5 border border-surface-container-lowest/15 backdrop-blur-xl p-3 shadow-2xl">
-                                <div class="relative rounded-2xl overflow-hidden aspect-[16/10] bg-surface-container-highest">
-                                    @php
-                                        $tourProperty = $properties->first();
-                                        $tourImage = ($tourProperty && !empty($tourProperty->images) && is_array($tourProperty->images)) ? $tourProperty->images[0] : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80';
-                                    @endphp
-                                    <img alt="Verified Property Preview" class="w-full h-full object-cover" src="{{ $tourImage }}">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-primary-container/90 via-transparent to-primary-container/40 flex flex-col justify-between p-5">
-                                        <div class="flex items-center justify-between">
-                                            <span class="px-3 py-1 rounded-full bg-primary-container/85 backdrop-blur-md text-tertiary-fixed text-xs font-bold border border-tertiary-fixed/30 flex items-center gap-1.5">
-                                                <span class="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></span>
-                                                PHYSICALLY AUDITED
-                                            </span>
-                                            <span class="px-3 py-1 rounded-full bg-surface-container-lowest/20 backdrop-blur-md text-white text-xs font-semibold">
-                                                Zero Brokerage Certified
-                                            </span>
-                                        </div>
-
-                                        <div class="p-4 rounded-2xl bg-surface-container-lowest/10 backdrop-blur-md border border-white/15 text-white flex items-center justify-between">
-                                            <div>
-                                                <span class="text-xs uppercase text-primary-fixed-dim">Sample Verified Residence</span>
-                                                <h4 class="font-bold text-base">{{ $tourProperty ? $tourProperty->title : 'Luxury Oceanfront Residence' }}</h4>
-                                                <p class="text-xs text-primary-fixed-dim">{{ $tourProperty ? $tourProperty->address : '102 Ocean Drive, Miami, FL' }}</p>
-                                            </div>
-                                            @if($tourProperty)
-                                            <a href="/properties/{{ $tourProperty->id }}" class="px-4 py-2 rounded-xl bg-secondary text-white text-xs font-bold hover:bg-secondary-container transition-colors shrink-0">
-                                                View Listing
-                                            </a>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Innovation Differentiators: Real Platform Pillars -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full">
-                <div class="text-center max-w-2xl mx-auto mb-14">
-                    <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">The HomiQ Advantage</span>
-                    <h2 class="font-headline-xl text-headline-xl text-on-surface mt-1">Engineered for authentic renting</h2>
-                    <p class="font-body-md text-body-md text-on-surface-variant mt-2">Zero middlemen commissions. Direct landlord contact. Safe in-app reservation management.</p>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Module A: Direct Host Messaging -->
-                    <div class="rounded-3xl bg-surface-container-lowest p-8 flex flex-col justify-between shadow-md hover:shadow-lg transition-all duration-300 border border-surface-container">
-                        <div>
-                            <div class="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center mb-6">
-                                <span class="material-symbols-outlined text-[26px]">chat</span>
-                            </div>
-                            <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Direct Communication</span>
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 mb-3 font-bold">In-App Host Chat</h3>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Message verified property owners directly. Discuss lease terms, ask about utilities, and schedule in-person tours without sharing your personal phone number.</p>
-                        </div>
-                        <div class="mt-8 p-4 rounded-2xl bg-surface-container-low flex items-center justify-between">
-                            <span class="font-label-md text-label-md text-on-surface font-semibold">Real-time Host Messaging</span>
-                            <a href="/chat" class="px-3 py-1.5 rounded-xl bg-secondary text-white text-xs font-semibold hover:bg-secondary-container transition-colors">Open Chat</a>
-                        </div>
-                    </div>
-
-                    <!-- Module B: Host Listing Portal -->
-                    <div class="rounded-3xl bg-surface-container-lowest p-8 flex flex-col justify-between shadow-md hover:shadow-lg transition-all duration-300 border border-surface-container">
-                        <div>
-                            <div class="w-12 h-12 rounded-2xl bg-on-tertiary-container/10 text-on-tertiary-container flex items-center justify-center mb-6">
-                                <span class="material-symbols-outlined text-[26px]">add_home</span>
-                            </div>
-                            <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Owner Portal</span>
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 mb-3 font-bold">List Your Property Fast</h3>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Are you a landlord or property manager? Upload photos, set your price, configure amenities, and publish to thousands of verified tenants in under 3 minutes.</p>
-                        </div>
-                        <div class="mt-8 p-4 rounded-2xl bg-surface-container-low flex items-center justify-between">
-                            <span class="font-label-md text-label-md text-on-surface font-semibold">Fast Landlord Onboarding</span>
-                            <a href="{{ route('host.add-property') }}" class="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-inverse-surface transition-colors">List Home</a>
-                        </div>
-                    </div>
-
-                    <!-- Module C: 100% Zero Brokerage -->
-                    <div class="rounded-3xl bg-surface-container-lowest p-8 flex flex-col justify-between shadow-md hover:shadow-lg transition-all duration-300 border border-surface-container">
-                        <div>
-                            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mb-6">
-                                <span class="material-symbols-outlined text-[26px]">savings</span>
-                            </div>
-                            <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">No Hidden Surcharges</span>
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 mb-3 font-bold">Strict Zero Brokerage</h3>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Never pay 1 to 2 months rent to an unhelpful broker again. HomiQ connects renters and hosts directly so you save thousands of dollars on every move.</p>
-                        </div>
-                        <div class="mt-8 p-4 rounded-2xl bg-surface-container-low flex items-center justify-between">
-                            <span class="font-label-md text-label-md text-on-surface font-semibold">Average Tenant Savings</span>
-                            <span class="font-label-md text-label-md text-on-tertiary-container font-bold">₹15,000 – ₹30,000</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION D: Move-in Cost & Zero-Brokerage Savings Calculator -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="calculator-section">
-                <div class="rounded-[36px] bg-gradient-to-br from-surface-container-lowest via-surface-container-low to-surface-container p-8 md:p-14 border border-surface-container shadow-xl">
-                    <div class="max-w-3xl mx-auto text-center mb-12">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-on-tertiary-container font-label-sm text-xs font-bold uppercase tracking-wider mb-3">
-                            <span class="material-symbols-outlined text-[15px]">verified_user</span>
-                            100% Financial Transparency
-                        </span>
-                        <h2 class="font-headline-xl text-headline-xl text-on-surface">Move-In Cost &amp; Savings Calculator</h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
-                            Estimate your total move-in budget including rent, security deposit, and see how much you save with HomiQ's ₹0 Brokerage policy.
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center max-w-5xl mx-auto">
-                        <div class="lg:col-span-6 bg-surface-container-lowest p-6 md:p-8 rounded-3xl border border-surface-container shadow-md space-y-6">
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-secondary text-[18px]">payments</span>
-                                        Target Monthly Rent
-                                    </label>
-                                    <span id="rent-display" class="font-headline-md text-headline-md font-bold text-on-surface">₹25,000</span>
-                                </div>
-                                <input id="rent-slider" type="range" min="5000" max="150000" step="1000" value="25000" oninput="calculateMoveInCost()" class="w-full h-2 bg-surface-container rounded-full accent-secondary cursor-pointer">
-                                <div class="flex justify-between text-[11px] text-outline mt-1 font-medium">
-                                    <span>₹5,000</span>
-                                    <span>₹50,000</span>
-                                    <span>₹1,50,000+</span>
+                                <div class="p-4 rounded-2xl bg-white/10 border border-white/15">
+                                    <span class="block text-2xl font-black text-amber-300">&lt; 3 Min</span>
+                                    <span class="text-xs text-slate-200 font-bold mt-0.5 block">Fast Listing Process</span>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5 mb-2.5">
-                                    <span class="material-symbols-outlined text-amber-500 text-[18px]">shield</span>
-                                    Security Deposit Multiplier
-                                </label>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <button type="button" onclick="setDepositMultiplier(1, this)" class="deposit-btn py-2 px-3 rounded-xl border border-surface-container text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors">1 Month</button>
-                                    <button type="button" onclick="setDepositMultiplier(2, this)" class="deposit-btn py-2 px-3 rounded-xl bg-secondary text-white text-xs font-semibold shadow-sm">2 Months (Standard)</button>
-                                    <button type="button" onclick="setDepositMultiplier(3, this)" class="deposit-btn py-2 px-3 rounded-xl border border-surface-container text-xs font-semibold text-on-surface hover:bg-surface-container-low transition-colors">3 Months</button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5 mb-2.5">
-                                    <span class="material-symbols-outlined text-emerald-600 text-[18px]">bolt</span>
-                                    Optional Move-in Add-ons
-                                </label>
-                                <div class="space-y-2">
-                                    <label class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low/70 border border-surface-container/60 cursor-pointer hover:bg-surface-container-low transition-colors">
-                                        <span class="text-xs font-medium text-on-surface flex items-center gap-2">
-                                            <input type="checkbox" id="addon-deepclean" onchange="calculateMoveInCost()" checked class="rounded text-secondary focus:ring-secondary">
-                                            Move-in Deep Clean Service
-                                        </span>
-                                        <span class="text-xs font-bold text-on-surface">₹2,500</span>
-                                    </label>
-                                    <label class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low/70 border border-surface-container/60 cursor-pointer hover:bg-surface-container-low transition-colors">
-                                        <span class="text-xs font-medium text-on-surface flex items-center gap-2">
-                                            <input type="checkbox" id="addon-insurance" onchange="calculateMoveInCost()" checked class="rounded text-secondary focus:ring-secondary">
-                                            Tenant Protection &amp; Damage Cover
-                                        </span>
-                                        <span class="text-xs font-bold text-on-surface">₹499/mo</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="lg:col-span-6 bg-primary-container text-on-primary p-6 md:p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
-                            <div class="absolute -right-16 -top-16 w-48 h-48 bg-secondary/20 rounded-full blur-2xl pointer-events-none"></div>
-                            <div class="relative z-10">
-                                <div class="flex items-center justify-between pb-4 border-b border-white/10">
-                                    <h4 class="font-headline-sm text-headline-sm text-on-primary font-bold">Move-In Breakdown</h4>
-                                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-label-sm text-[11px] font-bold">0 Brokerage Guaranteed</span>
-                                </div>
-
-                                <div class="space-y-3.5 my-6 text-sm">
-                                    <div class="flex justify-between items-center text-primary-fixed-dim">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">home</span> First Month Rent</span>
-                                        <span id="summary-rent" class="font-semibold text-white">₹25,000</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-primary-fixed-dim">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-tertiary-fixed">shield</span> Security Deposit</span>
-                                        <span id="summary-deposit" class="font-semibold text-white">₹50,000</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-primary-fixed-dim">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">money_off</span> HomiQ Brokerage Fee</span>
-                                        <span class="font-semibold text-emerald-400">FREE (₹0)</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-primary-fixed-dim">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">verified</span> Direct Landlord Inquiries</span>
-                                        <span class="font-semibold text-emerald-400">FREE (₹0)</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-primary-fixed-dim">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">tune</span> Selected Move-in Services</span>
-                                        <span id="summary-addons" class="font-semibold text-white">₹2,999</span>
-                                    </div>
-                                </div>
-
-                                <div class="pt-4 border-t border-white/15 flex items-baseline justify-between">
-                                    <div>
-                                        <span class="block text-xs uppercase tracking-wider text-primary-fixed-dim font-medium">Estimated Total Move-In</span>
-                                        <span class="text-[11px] text-emerald-400 font-medium">You save ~₹25,000 in broker fees</span>
-                                    </div>
-                                    <span id="summary-total" class="font-display-lg text-[34px] font-extrabold text-white">₹77,999</span>
-                                </div>
-                            </div>
-
-                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
-                                <a href="#listings" class="w-full py-3.5 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-sm font-semibold flex items-center justify-center gap-2 shadow-md transition-colors">
-                                    <span>Browse Verified Homes</span>
+                            <div class="pt-4 flex items-center gap-4 flex-wrap">
+                                <a href="{{ route('host.add-property') }}" class="h-14 px-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
+                                    <span>List Your Property Free</span>
                                     <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                                 </a>
+                                <a href="#demand-board" class="h-14 px-6 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-sm flex items-center gap-2 border border-white/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">group</span>
+                                    <span>View Tenant Demands</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5">
+                            <div class="rounded-3xl bg-white/10 border border-white/20 p-6 space-y-4">
+                                <div class="flex items-center justify-between pb-3 border-b border-white/15">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Live Demand Nearby</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">High Intent</span>
+                                </div>
+
+                                <div class="space-y-3">
+                                    @foreach($propertyRequests->take(2) as $req)
+                                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/10">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-bold text-white">{{ $req->bedrooms }} in {{ $req->locality ?? $req->city }}</span>
+                                            <span class="text-xs font-bold text-emerald-400">{{ $req->formatted_budget }}</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-200 mt-1 line-clamp-1 font-medium">{{ $req->description ?? 'Tenant ready to move in' }}</p>
+                                    </div>
+                                    @endforeach
+                                </div>
+
+                                <button type="button" @click="requestModalOpen = true" class="w-full h-11 rounded-xl bg-white text-slate-900 font-bold text-xs hover:bg-slate-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs">
+                                    <span class="material-symbols-outlined text-[17px] text-emerald-600">add_circle</span>
+                                    <span>Post a Request (Seekers)</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION E: Frequently Asked Questions (FAQ) Accordion Module -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="faq-section">
-                <div class="max-w-3xl mx-auto">
-                    <div class="text-center mb-12">
-                        <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Answers &amp; Policies</span>
-                        <h2 class="font-headline-xl text-headline-xl text-on-surface mt-1">Frequently Asked Questions</h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant mt-2">Clear answers about zero brokerage, booking visits, and listing your property on HomiQ.</p>
+            <!-- ==========================================
+                 SECTION 5: PROPERTY REQUEST MARKETPLACE
+                 ========================================== -->
+            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="demand-board">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 text-emerald-700 font-black text-xs uppercase tracking-wider mb-2">
+                            <span class="material-symbols-outlined text-[16px]">campaign</span>
+                            Two-Sided Liquidity Board
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Tenant &amp; Buyer Demand Board</h2>
+                        <p class="text-sm font-semibold text-slate-600 mt-1">Can't find what you need? Post what you're looking for, or owners can view active demand and connect.</p>
                     </div>
 
-                    <div class="space-y-4">
-                        <details class="group rounded-2xl bg-surface-container-lowest border border-surface-container p-5 transition-all open:shadow-md" open>
-                            <summary class="font-title-md text-title-md text-on-surface font-bold flex items-center justify-between cursor-pointer list-none">
-                                <span>How does Zero Brokerage work on HomiQ?</span>
-                                <span class="material-symbols-outlined text-secondary transition-transform group-open:rotate-180">expand_more</span>
-                            </summary>
-                            <p class="font-body-md text-body-md text-on-surface-variant mt-3 pt-3 border-t border-surface-container">
-                                Unlike traditional real estate agencies that charge 1 to 2 months' rent as brokerage commission, HomiQ connects tenants directly with verified property owners. You pay zero brokerage fees to discover, message landlords, and book visits.
-                            </p>
-                        </details>
+                    <div class="flex items-center gap-3">
+                        <button type="button" @click="requestModalOpen = true" class="h-12 px-6 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">post_add</span>
+                            <span>Post Your Request</span>
+                        </button>
+                    </div>
+                </div>
 
-                        <details class="group rounded-2xl bg-surface-container-lowest border border-surface-container p-5 transition-all open:shadow-md">
-                            <summary class="font-title-md text-title-md text-on-surface font-bold flex items-center justify-between cursor-pointer list-none">
-                                <span>How are properties verified before being approved?</span>
-                                <span class="material-symbols-outlined text-secondary transition-transform group-open:rotate-180">expand_more</span>
-                            </summary>
-                            <p class="font-body-md text-body-md text-on-surface-variant mt-3 pt-3 border-t border-surface-container">
-                                Every listing submitted by a landlord must undergo admin review. We verify ownership records, cross-check photos against physical premises, verify landlord identities, and confirm rent transparency before publishing.
-                            </p>
-                        </details>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @forelse($propertyRequests as $req)
+                    <div class="group rounded-3xl bg-white p-6 border border-slate-200 shadow-sm hover:border-emerald-500 transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-3">
+                                <span class="px-2.5 py-1 rounded-full bg-slate-900 text-white text-[10px] font-extrabold uppercase tracking-wider">
+                                    Wanted: {{ $req->bedrooms ?? $req->property_type }}
+                                </span>
+                                <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-bold">
+                                    {{ $req->responses_count }} Responses
+                                </span>
+                            </div>
 
-                        <details class="group rounded-2xl bg-surface-container-lowest border border-surface-container p-5 transition-all open:shadow-md">
-                            <summary class="font-title-md text-title-md text-on-surface font-bold flex items-center justify-between cursor-pointer list-none">
-                                <span>How can I message landlords and schedule visits?</span>
-                                <span class="material-symbols-outlined text-secondary transition-transform group-open:rotate-180">expand_more</span>
-                            </summary>
-                            <p class="font-body-md text-body-md text-on-surface-variant mt-3 pt-3 border-t border-surface-container">
-                                Simply click on any property card to view its details. From the property page, you can start a real-time chat with the owner via our built-in in-app chat system to ask questions or agree on a visit schedule.
-                            </p>
-                        </details>
+                            <h3 class="text-lg font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
+                                {{ $req->locality ? $req->locality . ', ' . $req->city : $req->city }}
+                            </h3>
 
-                        <details class="group rounded-2xl bg-surface-container-lowest border border-surface-container p-5 transition-all open:shadow-md">
-                            <summary class="font-title-md text-title-md text-on-surface font-bold flex items-center justify-between cursor-pointer list-none">
-                                <span>How do I list my property as a landlord or host?</span>
-                                <span class="material-symbols-outlined text-secondary transition-transform group-open:rotate-180">expand_more</span>
-                            </summary>
-                            <p class="font-body-md text-body-md text-on-surface-variant mt-3 pt-3 border-t border-surface-container">
-                                Click the "List Your Home" button in the top navigation bar. You can upload photos, set your asking rent and security deposit, specify amenities (parking, pet policy, furnishing), and submit for rapid admin review.
+                            <div class="mt-3 space-y-2 bg-slate-50 p-3.5 rounded-2xl text-xs text-slate-700 border border-slate-200">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-500 font-bold">Budget:</span>
+                                    <span class="font-black text-slate-900">{{ $req->formatted_budget }}</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-500 font-bold">Move-in:</span>
+                                    <span class="font-bold text-emerald-700">{{ $req->move_in_date ?? 'Immediate' }}</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-500 font-bold">Posted By:</span>
+                                    <span class="font-bold text-slate-900">{{ $req->seeker_name }}</span>
+                                </div>
+                            </div>
+
+                            @if($req->description)
+                            <p class="text-xs text-slate-600 mt-3 line-clamp-2 leading-relaxed font-medium">
+                                "{{ $req->description }}"
                             </p>
-                        </details>
+                            @endif
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <a href="{{ route('host.add-property') }}" class="w-full h-12 rounded-2xl bg-brandNavy hover:bg-slate-900 text-white font-bold text-xs text-center transition-all flex items-center justify-center gap-2 shadow-sm active:scale-98">
+                                <span class="material-symbols-outlined text-[17px] text-emerald-400">add_home</span>
+                                <span>I Have a Matching Home</span>
+                            </a>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="col-span-full py-10 px-6 text-center bg-white rounded-3xl border border-slate-200">
+                        <p class="text-sm font-bold text-slate-700">Be the first to post a property request!</p>
+                        <button type="button" @click="requestModalOpen = true" class="mt-3 h-11 px-6 rounded-full bg-emerald-600 text-white text-xs font-bold cursor-pointer inline-flex items-center justify-center">Post Request</button>
+                    </div>
+                    @endforelse
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 SECTION 6: POPULAR LOCATIONS & LOCAL SEO HUBS
+                 ========================================== -->
+            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="popular-locations">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 text-emerald-700 font-black text-xs uppercase tracking-wider mb-2">
+                            <span class="material-symbols-outlined text-[16px]">location_city</span>
+                            High-Demand Micro-Districts
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Popular Locations &amp; Hubs</h2>
+                        <p class="text-sm font-semibold text-slate-600 mt-1">Browse verified properties across premier student corridors and IT tech parks.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Location 1: Sector 137 Noida -->
+                    <div class="group rounded-3xl bg-white p-6 border border-slate-200 shadow-sm hover:border-emerald-500 transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative rounded-2xl overflow-hidden aspect-[16/9] mb-4 bg-slate-100">
+                                <img alt="Sector 137 Noida" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80">
+                                <div class="absolute inset-0 bg-slate-900/40"></div>
+                                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
+                                    <span class="font-black text-base drop-shadow-md">Sector 137, Noida</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-[11px] font-bold">2 BHK &amp; PGs</span>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-900 mb-1">Noida Expressway Corridor</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-medium">Near metro station, corporate tech hubs, and gated societies.</p>
+                        </div>
+                        <a href="/?search=Sector 137#listings" class="mt-5 w-full h-12 rounded-2xl bg-slate-100 hover:bg-brandNavy hover:text-white text-slate-900 font-bold text-xs text-center transition-all flex items-center justify-center gap-1.5 active:scale-98">
+                            <span>Explore Sector 137</span>
+                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        </a>
+                    </div>
+
+                    <!-- Location 2: Bangalore HSR Layout -->
+                    <div class="group rounded-3xl bg-white p-6 border border-slate-200 shadow-sm hover:border-emerald-500 transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative rounded-2xl overflow-hidden aspect-[16/9] mb-4 bg-slate-100">
+                                <img alt="HSR Layout Bangalore" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80">
+                                <div class="absolute inset-0 bg-slate-900/40"></div>
+                                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
+                                    <span class="font-black text-base drop-shadow-md">HSR Layout, Bangalore</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-[11px] font-bold">Startup Hub</span>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-900 mb-1">Tech &amp; Startup Capital</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-medium">Premium 1 &amp; 2 BHK flats, co-living spaces with 0% brokerage.</p>
+                        </div>
+                        <a href="/?search=HSR Layout#listings" class="mt-5 w-full h-12 rounded-2xl bg-slate-100 hover:bg-brandNavy hover:text-white text-slate-900 font-bold text-xs text-center transition-all flex items-center justify-center gap-1.5 active:scale-98">
+                            <span>Explore HSR Layout</span>
+                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        </a>
+                    </div>
+
+                    <!-- Location 3: Amity University Corridor -->
+                    <div class="group rounded-3xl bg-white p-6 border border-slate-200 shadow-sm hover:border-emerald-500 transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative rounded-2xl overflow-hidden aspect-[16/9] mb-4 bg-slate-100">
+                                <img alt="Amity University Student PGs" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80">
+                                <div class="absolute inset-0 bg-slate-900/40"></div>
+                                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
+                                    <span class="font-black text-base drop-shadow-md">Student PGs &amp; Rooms</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-[11px] font-bold">Under ₹15,000</span>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-900 mb-1">University Student Housing</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-medium">Furnished rooms with WiFi, food, and housekeeping near campuses.</p>
+                        </div>
+                        <a href="/?search_type=Studio#listings" class="mt-5 w-full h-12 rounded-2xl bg-slate-100 hover:bg-brandNavy hover:text-white text-slate-900 font-bold text-xs text-center transition-all flex items-center justify-center gap-1.5 active:scale-98">
+                            <span>Explore Student PGs</span>
+                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        </a>
                     </div>
                 </div>
             </section>
 
-            <!-- Bottom CTA Banner -->
-            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full">
-                <div class="relative overflow-hidden rounded-[32px] bg-primary-container text-on-primary p-10 md:p-16 shadow-2xl">
-                    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-secondary/30 rounded-full blur-3xl pointer-events-none"></div>
-                    <div class="absolute -left-20 -top-20 w-80 h-80 bg-tertiary-fixed-dim/20 rounded-full blur-3xl pointer-events-none"></div>
-                    <div class="relative z-10 max-w-2xl">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/10 backdrop-blur-md text-tertiary-fixed font-label-sm text-label-sm mb-4">
-                            <span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
-                            Direct Landlord Connection
-                        </span>
-                        <h2 class="font-headline-xl text-headline-xl text-on-primary leading-tight font-bold">Ready to find your next verified home?</h2>
-                        <p class="font-body-lg text-body-lg text-on-primary-container mt-3 mb-8">
-                            Join thousands of tenants renting directly from verified owners with zero brokerage fees.
-                        </p>
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-wrap">
-                            <a href="#listings" class="h-14 px-8 rounded-full bg-secondary hover:bg-secondary-container text-on-secondary font-title-md text-title-md flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98]">
-                                <span class="material-symbols-outlined text-[20px]">explore</span>
-                                <span>Browse Available Homes</span>
-                            </a>
-                            <a href="https://apps.apple.com/in/app/homiq-real-estate-marketplace/id6779412636" target="_blank" class="h-14 px-6 rounded-full bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 text-on-primary font-title-md text-sm font-bold flex items-center justify-center gap-2.5 backdrop-blur-sm transition-colors border border-white/15">
-                                <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.73-.86 2.76 1.01.08 2.04-.51 2.56-1.26z"/></svg>
-                                <span>App Store (iOS)</span>
-                            </a>
-                            <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="h-14 px-6 rounded-full bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 text-on-primary font-title-md text-sm font-bold flex items-center justify-center gap-2.5 backdrop-blur-sm transition-colors border border-white/15">
-                                <span class="material-symbols-outlined text-[20px] text-emerald-400">android</span>
-                                <span>Google Play</span>
-                            </a>
+            <!-- ==========================================
+                 SECTION 7: DOWNLOAD THE APP
+                 ========================================== -->
+            <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="download-app">
+                <div class="rounded-3xl bg-brandNavy text-white p-10 md:p-16 shadow-sm border border-slate-800">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <div class="lg:col-span-7">
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4 border border-white/15">
+                                <span class="material-symbols-outlined text-[16px]">phone_iphone</span>
+                                Mobile Experience
+                            </span>
+                            <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                                Take HomiQ With You Everywhere.
+                            </h2>
+                            <p class="text-slate-200 text-base mt-3 mb-8 max-w-xl font-medium">
+                                Real-time chat notifications, instant visit scheduling, and saved search alerts right on your phone.
+                            </p>
+
+                            <!-- DOWNLOAD OUR APP Container -->
+                            <div class="space-y-3">
+                                <span class="block text-xs font-black tracking-widest uppercase text-slate-300">
+                                    DOWNLOAD OUR APP
+                                </span>
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-wrap">
+                                    <!-- Google Play Badge -->
+                                    <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="h-14 px-5 rounded-2xl bg-black hover:bg-slate-900 text-white border border-slate-700/80 hover:border-slate-500 flex items-center gap-3.5 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                        <svg class="w-7 h-7 shrink-0" viewBox="0 0 512 512">
+                                            <path fill="#4285F4" d="M47.7 28.5C43.3 33.2 40.7 39.9 40.7 47.5V464.5c0 7.6 2.6 14.3 7 19L273.1 258 47.7 28.5z"/>
+                                            <path fill="#34A853" d="M346.5 184.5L273.1 258 47.7 28.5c4-4.3 9.9-7.2 16.5-7.2 4.1 0 7.9 1.1 11.4 3L346.5 184.5z"/>
+                                            <path fill="#EA4335" d="M47.7 483.5c4 4.3 9.9 7.2 16.5 7.2 4.1 0 7.9-1.1 11.4-3l270.9-156.2L273.1 258 47.7 483.5z"/>
+                                            <path fill="#FBBC05" d="M464.3 243.6L346.5 175.7 273.1 258l73.4 82.3 117.8-67.9c13.7-7.9 13.7-20.8 0-28.8z"/>
+                                        </svg>
+                                        <div class="text-left">
+                                            <span class="block text-[9px] text-slate-300 font-bold uppercase tracking-wider leading-none">GET IT ON</span>
+                                            <span class="text-base font-bold text-white tracking-tight leading-tight block mt-0.5">Google Play</span>
+                                        </div>
+                                    </a>
+
+                                    <!-- Apple App Store Badge -->
+                                    <a href="https://apps.apple.com/in/app/homiq-real-estate-marketplace/id6779412636" target="_blank" class="h-14 px-5 rounded-2xl bg-black hover:bg-slate-900 text-white border border-slate-700/80 hover:border-slate-500 flex items-center gap-3.5 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                        <svg class="w-7 h-7 fill-current text-white shrink-0" viewBox="0 0 170 170">
+                                            <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.7-7.8-12.01-14.28-5.44-8.15-9.76-17.65-12.96-28.48-3.2-10.84-4.8-21.2-4.8-31.1 0-14.82 3.73-26.65 11.2-35.48 7.46-8.84 16.73-13.35 27.81-13.55 4.8 0 10.14 1.25 16.03 3.75 5.88 2.5 9.73 3.8 11.54 3.9 1.48 0 5.63-1.42 12.44-4.24 6.81-2.83 12.77-4.08 17.87-3.76 13.74.8 24.32 5.92 31.75 15.36-12.07 7.34-18.01 17.51-17.81 30.5.21 10.16 4.17 18.66 11.89 25.48 3.51 3.15 7.44 5.48 11.78 7 1.06 3.71 2.05 7.43 2.97 11.16zm-38.31-105.12c0 3.83-1.07 7.79-3.21 11.89-2.14 4.09-5.11 7.46-8.91 10.11-3.6 2.47-7.42 4.04-11.45 4.7-1.1-.96-1.74-2.58-1.92-4.85-.23-2.92.42-6.1 1.95-9.54 1.53-3.44 3.76-6.49 6.69-9.14 3.15-2.84 6.74-4.83 10.77-5.97 4.03-1.14 7.28-1.54 9.76-1.2.22 1.34.32 2.67.32 4z"/>
+                                        </svg>
+                                        <div class="text-left">
+                                            <span class="block text-[9px] text-slate-300 font-medium leading-none">Download on the</span>
+                                            <span class="text-base font-bold text-white tracking-tight leading-tight block mt-0.5">App Store</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Visual Badge Showcase -->
+                        <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                            <div class="rounded-3xl bg-white/10 border border-white/20 p-6 sm:p-8 backdrop-blur-sm text-center max-w-sm w-full space-y-4">
+                                <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
+                                    <span class="material-symbols-outlined text-[32px]">devices</span>
+                                </div>
+                                <h3 class="text-xl font-black text-white">Instant Notifications</h3>
+                                <p class="text-xs text-slate-200 leading-relaxed font-medium">Get real-time alerts when landlords respond or matching properties are listed near you.</p>
+                                <div class="pt-2 flex items-center justify-center gap-2 text-emerald-300 text-xs font-bold">
+                                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                                    <span>iOS &amp; Android Compatible</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
         </div>
     </main>
 
+    <!-- ==========================================
+         MODALS & INTERACTIVE OVERLAYS
+         ========================================== -->
+
+    <!-- Modal 1: Post a Property Request -->
+    <div x-show="requestModalOpen" 
+         x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto"
+         aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="requestModalOpen" 
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 bg-slate-900/60 transition-opacity" 
+                 @click="requestModalOpen = false"></div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div x-show="requestModalOpen"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-slate-200 p-6 sm:p-8">
+                
+                <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700">Demand Board</span>
+                        <h3 class="text-xl font-black text-slate-900">Post a Property Request</h3>
+                    </div>
+                    <button @click="requestModalOpen = false" type="button" class="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 cursor-pointer">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+
+                <form id="property-request-form" onsubmit="submitPropertyRequest(event)" class="space-y-4 text-xs font-bold text-slate-800">
+                    @csrf
+                    <div>
+                        <label class="block text-slate-700 mb-1">Your Name *</label>
+                        <input type="text" name="seeker_name" required placeholder="e.g. Rahul Sharma" value="{{ Auth::user()?->name }}" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold focus:ring-2 focus:ring-emerald-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-700 mb-1">Phone Number *</label>
+                            <input type="tel" name="seeker_phone" required placeholder="e.g. 9876543210" value="{{ Auth::user()?->phone }}" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 mb-1">City *</label>
+                            <input type="text" name="city" required placeholder="e.g. Noida, Bangalore" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-700 mb-1">Locality / Sector</label>
+                        <input type="text" name="locality" placeholder="e.g. Sector 137 or HSR Layout" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold focus:ring-2 focus:ring-emerald-500">
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-slate-700 mb-1">Type *</label>
+                            <select name="property_type" class="w-full px-2 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold">
+                                <option value="Apartment">Apartment</option>
+                                <option value="PG / Co-living">PG / Co-living</option>
+                                <option value="House">House / Villa</option>
+                                <option value="Studio">Studio / Room</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 mb-1">Bedrooms</label>
+                            <select name="bedrooms" class="w-full px-2 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold">
+                                <option value="1 BHK">1 BHK</option>
+                                <option value="2 BHK" selected>2 BHK</option>
+                                <option value="3+ BHK">3+ BHK</option>
+                                <option value="Private Room">Private Room</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 mb-1">Max Budget (₹) *</label>
+                            <input type="number" name="max_budget" required placeholder="25000" class="w-full px-2 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-700 mb-1">Specific Requirements (Optional)</label>
+                        <textarea name="description" rows="2" placeholder="e.g. Need semi-furnished flat with dedicated parking near metro station." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-bold focus:ring-2 focus:ring-emerald-500"></textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="submit-request-btn" class="w-full h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">send</span>
+                            <span>Post Request to Demand Board</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Share Property Modal -->
+    <div x-show="shareModalOpen" 
+         x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto"
+         role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 text-center">
+            <div class="fixed inset-0 bg-slate-900/60 transition-opacity" @click="shareModalOpen = false"></div>
+
+            <div class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all max-w-sm w-full border border-slate-200 p-6 z-10">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+                    <h3 class="text-base font-black text-slate-900">Share This Property</h3>
+                    <button @click="shareModalOpen = false" type="button" class="h-7 w-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 cursor-pointer">
+                        <span class="material-symbols-outlined text-xs">close</span>
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-700 mb-4 font-bold" x-text="shareData.title"></p>
+
+                <div class="space-y-2.5">
+                    <!-- WhatsApp -->
+                    <a :href="'https://api.whatsapp.com/send?text=' + encodeURIComponent('🏠 *' + shareData.title + '* in ' + shareData.address + ' for *' + shareData.price + '* on HomiQ (0% Brokerage)! Check it out: ' + shareData.url)" target="_blank" class="w-full h-12 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-between transition-colors">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px]">chat</span>
+                            <span>Share on WhatsApp</span>
+                        </span>
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+
+                    <!-- Copy Link -->
+                    <button type="button" @click="copyToClipboard(shareData.url); shareModalOpen = false;" class="w-full h-12 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-between transition-colors cursor-pointer">
+                        <span class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-slate-700 text-[18px]">content_copy</span>
+                            <span>Copy Direct Link</span>
+                        </span>
+                        <span class="material-symbols-outlined text-sm">link</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
-    <footer class="w-full bg-surface-container-lowest border-t border-surface-container">
+    <footer class="w-full bg-white border-t border-slate-200">
         <div class="max-w-[1440px] mx-auto px-6 sm:px-8 pt-12 pb-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <img alt="HomiQ Brand Logo" class="h-7 w-auto object-contain" src="{{ asset('logo.png') }}">
-                        <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">HomiQ</span>
+                        <img alt="HomiQ Brand Logo" class="h-8 w-auto object-contain" src="{{ asset('logo.png') }}">
                     </div>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs mb-5">
+                    <p class="text-xs text-slate-600 max-w-xs mb-5 leading-relaxed font-medium">
                         Verified residential marketplace designed for modern tenants and certified landlords. Zero brokerage, transparent pricing.
                     </p>
                     <div class="flex flex-col gap-2">
-                        <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Experience Mobile</span>
-                        <div class="flex flex-wrap items-center gap-2.5">
-                            <a href="https://apps.apple.com/in/app/homiq-real-estate-marketplace/id6779412636" target="_blank" class="h-10 px-3.5 rounded-xl bg-surface-container text-on-surface flex items-center gap-2 cursor-pointer hover:bg-surface-container-high transition-colors">
-                                <svg class="w-4 h-4 fill-current text-on-surface" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.73-.86 2.76 1.01.08 2.04-.51 2.56-1.26z"/></svg>
-                                <span class="font-label-md text-xs font-bold">App Store</span>
+                        <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Experience Mobile</span>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <a href="https://apps.apple.com/in/app/homiq-real-estate-marketplace/id6779412636" target="_blank" class="h-10 px-3.5 rounded-xl bg-black hover:bg-slate-900 text-white flex items-center gap-2 transition-all shadow-xs font-bold active:scale-95 border border-slate-800">
+                                <svg class="w-4 h-4 fill-current text-white shrink-0" viewBox="0 0 170 170"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.7-7.8-12.01-14.28-5.44-8.15-9.76-17.65-12.96-28.48-3.2-10.84-4.8-21.2-4.8-31.1 0-14.82 3.73-26.65 11.2-35.48 7.46-8.84 16.73-13.35 27.81-13.55 4.8 0 10.14 1.25 16.03 3.75 5.88 2.5 9.73 3.8 11.54 3.9 1.48 0 5.63-1.42 12.44-4.24 6.81-2.83 12.77-4.08 17.87-3.76 13.74.8 24.32 5.92 31.75 15.36-12.07 7.34-18.01 17.51-17.81 30.5.21 10.16 4.17 18.66 11.89 25.48 3.51 3.15 7.44 5.48 11.78 7 1.06 3.71 2.05 7.43 2.97 11.16zm-38.31-105.12c0 3.83-1.07 7.79-3.21 11.89-2.14 4.09-5.11 7.46-8.91 10.11-3.6 2.47-7.42 4.04-11.45 4.7-1.1-.96-1.74-2.58-1.92-4.85-.23-2.92.42-6.1 1.95-9.54 1.53-3.44 3.76-6.49 6.69-9.14 3.15-2.84 6.74-4.83 10.77-5.97 4.03-1.14 7.28-1.54 9.76-1.2.22 1.34.32 2.67.32 4z"/></svg>
+                                <span class="text-xs font-bold text-white">App Store</span>
                             </a>
-                            <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="h-10 px-3.5 rounded-xl bg-surface-container text-on-surface flex items-center gap-2 cursor-pointer hover:bg-surface-container-high transition-colors">
-                                <span class="material-symbols-outlined text-[18px] text-secondary">android</span>
-                                <span class="font-label-md text-xs font-bold">Google Play</span>
+                            <a href="https://play.google.com/store/apps/details?id=com.homiq.acrocoder&hl=en" target="_blank" class="h-10 px-3.5 rounded-xl bg-black hover:bg-slate-900 text-white flex items-center gap-2 transition-all shadow-xs font-bold active:scale-95 border border-slate-800">
+                                <svg class="w-4 h-4 shrink-0" viewBox="0 0 512 512">
+                                    <path fill="#4285F4" d="M47.7 28.5C43.3 33.2 40.7 39.9 40.7 47.5V464.5c0 7.6 2.6 14.3 7 19L273.1 258 47.7 28.5z"/>
+                                    <path fill="#34A853" d="M346.5 184.5L273.1 258 47.7 28.5c4-4.3 9.9-7.2 16.5-7.2 4.1 0 7.9 1.1 11.4 3L346.5 184.5z"/>
+                                    <path fill="#EA4335" d="M47.7 483.5c4 4.3 9.9 7.2 16.5 7.2 4.1 0 7.9-1.1 11.4-3l270.9-156.2L273.1 258 47.7 483.5z"/>
+                                    <path fill="#FBBC05" d="M464.3 243.6L346.5 175.7 273.1 258l73.4 82.3 117.8-67.9c13.7-7.9 13.7-20.8 0-28.8z"/>
+                                </svg>
+                                <span class="text-xs font-bold text-white">Google Play</span>
                             </a>
                         </div>
                     </div>
                 </div>
+
                 <div>
-                    <h4 class="font-title-md text-title-md text-on-surface mb-4 font-bold">Discover Categories</h4>
-                    <ul class="flex flex-col gap-2.5">
-                        <li><a href="/category/Apartment" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Modern Apartments</a></li>
-                        <li><a href="/category/Villa" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Luxury Villas</a></li>
-                        <li><a href="/category/House" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Suburban Houses</a></li>
-                        <li><a href="/category/Studio" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Studios &amp; Rooms</a></li>
-                        <li><a href="/category/Shop" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Commercial &amp; Shops</a></li>
+                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-4">Discover Categories</h4>
+                    <ul class="flex flex-col gap-2.5 text-xs font-semibold text-slate-600">
+                        <li><a href="/category/Apartment" class="hover:text-brandNavy transition-colors">Modern Apartments</a></li>
+                        <li><a href="/category/Studio" class="hover:text-brandNavy transition-colors">PGs, Rooms &amp; Studios</a></li>
+                        <li><a href="/category/Villa" class="hover:text-brandNavy transition-colors">Luxury Villas &amp; Houses</a></li>
+                        <li><a href="/category/Shop" class="hover:text-brandNavy transition-colors">Commercial &amp; Shops</a></li>
                     </ul>
                 </div>
+
                 <div>
-                    <h4 class="font-title-md text-title-md text-on-surface mb-4 font-bold">For Owners &amp; Hosts</h4>
-                    <ul class="flex flex-col gap-2.5">
-                        <li><a href="{{ route('host.add-property') }}" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">List Your Property</a></li>
-                        <li><a href="/pricing" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Subscription Plans</a></li>
-                        <li><a href="/about" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Owner Verification Guide</a></li>
-                        <li><a href="/chat" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Tenant Inquiries</a></li>
+                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-4">For Owners &amp; Seekers</h4>
+                    <ul class="flex flex-col gap-2.5 text-xs font-semibold text-slate-600">
+                        <li><a href="{{ route('host.add-property') }}" class="hover:text-brandNavy transition-colors">List Your Property Free</a></li>
+                        <li><a href="#demand-board" class="hover:text-brandNavy transition-colors">Seeker Demand Board</a></li>
+                        <li><a href="/pricing" class="hover:text-brandNavy transition-colors">Subscription Plans</a></li>
+                        <li><a href="/about" class="hover:text-brandNavy transition-colors">Verification Standards</a></li>
                     </ul>
                 </div>
+
                 <div>
-                    <h4 class="font-title-md text-title-md text-on-surface mb-4 font-bold">Company &amp; Trust</h4>
-                    <ul class="flex flex-col gap-2.5">
-                        <li><a href="/about" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">About HomiQ</a></li>
-                        <li><a href="/privacy" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Privacy Policy</a></li>
-                        <li><a href="/terms" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Terms of Service</a></li>
-                        <li><a href="/contact" class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">Contact Support</a></li>
+                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-4">Company &amp; Legal</h4>
+                    <ul class="flex flex-col gap-2.5 text-xs font-semibold text-slate-600">
+                        <li><a href="/about" class="hover:text-brandNavy transition-colors">About HomiQ</a></li>
+                        <li><a href="/privacy" class="hover:text-brandNavy transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms" class="hover:text-brandNavy transition-colors">Terms of Service</a></li>
+                        <li><a href="/contact" class="hover:text-brandNavy transition-colors">Contact Support</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-surface-container flex flex-col md:flex-row items-center justify-between gap-4">
-                <p class="font-body-sm text-body-sm text-on-surface-variant">© {{ date('Y') }} HomiQ Technologies Inc. All rights reserved. Zero-brokerage verified marketplace.</p>
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-1 text-on-surface-variant font-label-md text-xs">
-                        <span class="material-symbols-outlined text-[16px]">verified</span>
-                        <span>Admin Verified Platform</span>
-                    </div>
+            <div class="pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-semibold">
+                <p>© {{ date('Y') }} HomiQ Marketplace Inc. All rights reserved. 100% Zero-brokerage verified platform.</p>
+                <div class="flex items-center gap-2 text-emerald-800 font-bold">
+                    <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+                    <span>Admin Certified Network</span>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Client-side Scripts -->
+    <!-- Client-side Interactive Scripts -->
     <script>
-        function submitSearchForm() {
-            document.getElementById('search-form').submit();
-        }
+        function setListingPurpose(purpose, btn) {
+            const listingTypeInput = document.getElementById('listing-type-hidden');
+            const searchTypeInput = document.getElementById('search-type-hidden');
+            const typeSelect = document.getElementById('type-select');
 
-        function setLocality(loc) {
-            const input = document.getElementById('search-input');
-            input.value = loc;
-            submitSearchForm();
-        }
-
-        function clearSearchInput() {
-            const input = document.getElementById('search-input');
-            input.value = '';
-            submitSearchForm();
-        }
-
-        function setSearchType(cat, btn) {
-            document.getElementById('search-type-hidden').value = cat;
-            if (btn) {
-                document.querySelectorAll('.mode-tab').forEach(el => {
-                    el.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
-                    el.classList.add('bg-surface-container-lowest', 'text-on-surface');
-                });
-                btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
-                btn.classList.remove('bg-surface-container-lowest', 'text-on-surface');
-            }
-            submitSearchForm();
-        }
-
-        function setBedrooms(bhk, btn) {
-            document.getElementById('bedrooms-hidden').value = bhk;
-            if (btn) {
-                document.querySelectorAll('.bhk-btn').forEach(el => {
-                    el.classList.remove('bg-secondary', 'text-white', 'font-bold', 'shadow-xs');
-                    el.classList.add('bg-surface-container', 'text-on-surface-variant');
-                });
-                btn.classList.add('bg-secondary', 'text-white', 'font-bold', 'shadow-xs');
-                btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
-            }
-            submitSearchForm();
-        }
-
-        function setListingType(type, btn) {
-            document.getElementById('listing-type-hidden').value = type;
-            if (btn) {
-                document.querySelectorAll('.listing-chip').forEach(el => {
-                    el.classList.remove('bg-primary', 'bg-secondary', 'text-on-primary', 'text-on-secondary', 'font-semibold', 'shadow-xs');
-                    el.classList.add('bg-surface-container', 'text-on-surface-variant');
-                });
-                btn.classList.add('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-xs');
-                btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
-            }
-            submitSearchForm();
-        }
-
-        function updateHeroBudget(val) {
-            document.getElementById('hero-budget-val').innerText = 'Up to ₹' + Number(val).toLocaleString();
-            document.getElementById('max-price-hidden').value = val;
-        }
-
-        function clearBudgetFilter() {
-            document.getElementById('max-price-hidden').value = '';
-            submitSearchForm();
-        }
-
-        let currentDepositMultiplier = 2;
-
-        function setDepositMultiplier(mult, btn) {
-            currentDepositMultiplier = mult;
-            document.querySelectorAll('.deposit-btn').forEach(b => {
-                b.classList.remove('bg-secondary', 'text-white', 'shadow-sm');
-                b.classList.add('border', 'border-surface-container', 'text-on-surface');
+            document.querySelectorAll('.purpose-tab').forEach(el => {
+                el.classList.remove('bg-brandNavy', 'text-white', 'shadow-sm');
+                el.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
             });
-            btn.classList.remove('border', 'border-surface-container', 'text-on-surface');
-            btn.classList.add('bg-secondary', 'text-white', 'shadow-sm');
-            calculateMoveInCost();
+            btn.classList.add('bg-brandNavy', 'text-white', 'shadow-sm');
+            btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+
+            if (purpose === 'pg') {
+                listingTypeInput.value = 'rent';
+                searchTypeInput.value = 'Studio';
+                if (typeSelect) typeSelect.value = 'Studio';
+            } else if (purpose === 'commercial') {
+                listingTypeInput.value = '';
+                searchTypeInput.value = 'Shop';
+                if (typeSelect) typeSelect.value = 'Shop';
+            } else {
+                listingTypeInput.value = purpose;
+                if (searchTypeInput.value === 'Studio' || searchTypeInput.value === 'Shop') {
+                    searchTypeInput.value = '';
+                    if (typeSelect) typeSelect.value = '';
+                }
+            }
         }
 
-        function calculateMoveInCost() {
-            const rent = parseInt(document.getElementById('rent-slider').value, 10);
-            document.getElementById('rent-display').innerText = '₹' + rent.toLocaleString();
-            document.getElementById('summary-rent').innerText = '₹' + rent.toLocaleString();
-
-            const deposit = rent * currentDepositMultiplier;
-            document.getElementById('summary-deposit').innerText = '₹' + deposit.toLocaleString();
-
-            let addons = 0;
-            if (document.getElementById('addon-deepclean').checked) addons += 2500;
-            if (document.getElementById('addon-insurance').checked) addons += 499;
-            document.getElementById('summary-addons').innerText = '₹' + addons.toLocaleString();
-
-            const total = rent + deposit + addons;
-            document.getElementById('summary-total').innerText = '₹' + total.toLocaleString();
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const alpineEl = document.querySelector('[x-data]');
+                if (alpineEl && alpineEl._x_dataStack) {
+                    alpineEl._x_dataStack[0].showToast('Link copied to clipboard!');
+                }
+            });
         }
 
-        calculateMoveInCost();
+        function shareProperty(title, address, price, url) {
+            if (navigator.share) {
+                navigator.share({
+                    title: title + ' on HomiQ',
+                    text: '🏠 ' + title + ' in ' + address + ' for ' + price + ' on HomiQ (0% Brokerage)!',
+                    url: url
+                }).catch(() => {});
+            } else {
+                const alpineEl = document.querySelector('[x-data]');
+                if (alpineEl && alpineEl._x_dataStack) {
+                    alpineEl._x_dataStack[0].shareData = { title, address, price, url };
+                    alpineEl._x_dataStack[0].shareModalOpen = true;
+                }
+            }
+        }
+
+        function shareCurrentSearch() {
+            const currentUrl = window.location.href;
+            const searchVal = document.getElementById('search-input')?.value || 'Properties';
+            const text = '🔍 Check out verified ' + searchVal + ' with 0% Brokerage on HomiQ: ' + currentUrl;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Search results on HomiQ',
+                    text: text,
+                    url: currentUrl
+                }).catch(() => {});
+            } else {
+                copyToClipboard(currentUrl);
+            }
+        }
+
+        async function submitPropertyRequest(event) {
+            event.preventDefault();
+            const form = event.target;
+            const btn = document.getElementById('submit-request-btn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Submitting...</span>';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/property-requests', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    const alpineEl = document.querySelector('[x-data]');
+                    if (alpineEl && alpineEl._x_dataStack) {
+                        alpineEl._x_dataStack[0].requestModalOpen = false;
+                        alpineEl._x_dataStack[0].showToast('Property Request posted successfully!');
+                    }
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1200);
+                } else {
+                    alert('Could not submit request. Please verify fields.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Something went wrong. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
     </script>
 </body>
 </html>

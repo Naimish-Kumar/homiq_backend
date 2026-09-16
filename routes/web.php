@@ -18,6 +18,7 @@ Route::get('/terms', [WebHomeController::class, 'terms']);
 Route::view('/contact', 'contact');
 Route::get('/delete-account', [WebHomeController::class, 'showDeleteAccount']);
 Route::post('/delete-account', [WebHomeController::class, 'deleteAccount']);
+Route::post('/property-requests', [WebHomeController::class, 'storePropertyRequest'])->name('property-requests.store');
 
 // Authentication (Guest)
 Route::middleware(['guest'])->group(function () {

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\PropertyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -162,7 +163,62 @@ class WebHomeController extends Controller
             ];
         })->toArray();
 
-        return view('home', compact('properties', 'featuredProperties', 'categories', 'popularCities', 'search'));
+        // Active Property Requests (Seeker Demand Board)
+        $propertyRequests = PropertyRequest::where('status', 'active')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        return view('home', compact('properties', 'featuredProperties', 'categories', 'popularCities', 'search', 'propertyRequests'));
+    }
+
+    /**
+     * Store a new property demand request from a seeker.
+     */
+    public function storePropertyRequest(Request $request)
+    {
+        $validated = $request->validate([
+            'seeker_name' => 'required|string|max:100',
+            'seeker_phone' => 'required|string|max:20',
+            'seeker_email' => 'nullable|email|max:100',
+            'city' => 'required|string|max:100',
+            'locality' => 'nullable|string|max:150',
+            'property_type' => 'required|string|max:50',
+            'bedrooms' => 'nullable|string|max:30',
+            'min_budget' => 'nullable|numeric|min:0',
+            'max_budget' => 'required|numeric|min:500',
+            'purpose' => 'nullable|string|in:rent,buy',
+            'move_in_date' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $propertyRequest = PropertyRequest::create([
+            'user_id' => Auth::id(),
+            'seeker_name' => $validated['seeker_name'],
+            'seeker_phone' => $validated['seeker_phone'],
+            'seeker_email' => $validated['seeker_email'] ?? (Auth::user()?->email),
+            'city' => $validated['city'],
+            'locality' => $validated['locality'] ?? null,
+            'property_type' => $validated['property_type'],
+            'bedrooms' => $validated['bedrooms'] ?? 'Any',
+            'min_budget' => $validated['min_budget'] ?? null,
+            'max_budget' => $validated['max_budget'],
+            'purpose' => $validated['purpose'] ?? 'rent',
+            'move_in_date' => $validated['move_in_date'] ?? 'Within 15 days',
+            'description' => $validated['description'] ?? null,
+            'status' => 'active',
+            'responses_count' => 0,
+        ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your property request has been posted successfully! Verified property owners matching your criteria will reach out to you.',
+                'request' => $propertyRequest,
+            ]);
+        }
+
+        return back()->with('success', 'Your property request has been posted to our Demand Board! Verified landlords will contact you shortly.');
     }
 
     /**

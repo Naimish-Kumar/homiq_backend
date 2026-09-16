@@ -44,13 +44,24 @@
                     @endif
                 </div>
 
-                <!-- Favorite / Save Button -->
-                <button type="button" 
-                        @click.prevent.stop="isSaved = !isSaved" 
-                        class="pointer-events-auto h-8 w-8 rounded-full bg-white/85 hover:bg-white text-slate-700 backdrop-blur-md shadow-md flex items-center justify-center transition-all transform hover:scale-110 active:scale-95"
-                        :title="isSaved ? 'Remove from Saved' : 'Save to Favorites'">
-                    <span class="material-symbols-outlined text-base transition-colors" :class="isSaved ? 'text-rose-500 fill-current' : 'text-slate-700'">favorite</span>
-                </button>
+                <!-- Action Buttons (Share + Favorite) -->
+                <div class="flex items-center gap-1.5 pointer-events-auto">
+                    <!-- Share Button -->
+                    <button type="button" 
+                            @click.prevent.stop="shareProperty('{{ addslashes($property->title) }}', '{{ addslashes($property->address) }}', '{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}', '{{ url('/properties/' . $property->id) }}')" 
+                            class="h-8 w-8 rounded-full bg-white/85 hover:bg-white text-slate-700 hover:text-emerald-600 backdrop-blur-md shadow-md flex items-center justify-center transition-all transform hover:scale-110 active:scale-95"
+                            title="Share on WhatsApp & Social">
+                        <span class="material-symbols-outlined text-base">share</span>
+                    </button>
+
+                    <!-- Favorite / Save Button -->
+                    <button type="button" 
+                            @click.prevent.stop="isSaved = !isSaved" 
+                            class="h-8 w-8 rounded-full bg-white/85 hover:bg-white text-slate-700 backdrop-blur-md shadow-md flex items-center justify-center transition-all transform hover:scale-110 active:scale-95"
+                            :title="isSaved ? 'Remove from Saved' : 'Save to Favorites'">
+                        <span class="material-symbols-outlined text-base transition-colors" :class="isSaved ? 'text-rose-500 fill-current' : 'text-slate-700'">favorite</span>
+                    </button>
+                </div>
             </div>
 
             <!-- In-Card Photo Navigation Controls (Only if > 1 photo) -->
@@ -106,7 +117,7 @@
             </a>
 
             <!-- Modern Specs Bento Chips -->
-            <div class="grid grid-cols-3 gap-2 p-2.5 rounded-2xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-700 mb-4">
+            <div class="grid grid-cols-3 gap-2 p-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 mb-4">
                 @if($isLandOrCommercial)
                     <div class="flex items-center justify-center gap-1">
                         <span class="material-symbols-outlined text-base text-emerald-600">square_foot</span>
@@ -139,16 +150,14 @@
     </div>
 
     <!-- Card Action Bottom Bar -->
-    <div class="px-5 pb-5 pt-0">
-        <a href="/properties/{{ $property->id }}" class="w-full py-2.5 px-4 rounded-xl bg-slate-100/90 group-hover:bg-[#0A2540] group-hover:text-white text-slate-800 font-bold text-xs flex items-center justify-between transition-all duration-200 shadow-2xs">
-            <span class="inline-flex items-center gap-1.5 text-slate-600 group-hover:text-white">
-                <span class="material-symbols-outlined text-sm text-emerald-500">verified</span>
-                Verified Inspection
-            </span>
-            <span class="inline-flex items-center gap-1 text-slate-800 group-hover:text-emerald-400">
-                <span>View Details</span>
-                <span class="material-symbols-outlined text-sm transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </span>
+    <div class="px-5 pb-5 pt-0 flex items-center justify-between gap-3 border-t border-slate-100 pt-3.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+            <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+            <span>Verified Listing</span>
+        </div>
+        <a href="/properties/{{ $property->id }}" class="h-11 px-5 rounded-full bg-brandNavy hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 group/btn">
+            <span>View Details</span>
+            <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-0.5 transition-transform">arrow_forward</span>
         </a>
     </div>
 </div>
