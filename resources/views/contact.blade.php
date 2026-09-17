@@ -10,7 +10,7 @@
     <!-- HEADER -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="pt-12 pb-16 bg-gradient-to-b from-white via-slate-50 to-slate-100/60 border-b border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <!-- Breadcrumbs -->
             <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-8" aria-label="Breadcrumb">
                 <a href="/" class="hover:text-emerald-700 transition flex items-center gap-1">
@@ -40,7 +40,7 @@
     <!-- CONTACT CHANNELS -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-12 -mt-6">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Channel 1: Email Support -->
                 <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-2">
@@ -91,7 +91,7 @@
     <!-- MAIN INTERACTIVE SUPPORT FORM & QUICK ROUTING -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-12">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
                 <!-- Left Column: Support Form -->

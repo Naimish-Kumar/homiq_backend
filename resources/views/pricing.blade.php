@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-b from-[#f5f8fc] to-white py-20 px-6">
-    <div class="max-w-7xl mx-auto text-center">
+<div class="min-h-screen bg-gradient-to-b from-[#f5f8fc] to-white py-20 px-6 sm:px-8">
+    <div class="max-w-[1440px] mx-auto text-center">
         <span class="text-xs font-black uppercase tracking-widest text-[#133e74] bg-[#133e74]/10 px-4 py-1.5 rounded-full mb-4 inline-block">Pricing Plans</span>
         <h1 class="text-4xl md:text-6xl font-black text-[#1a2d42] tracking-tight mb-4">Subscription Packages</h1>
         <p class="text-slate-500 text-sm md:text-base max-w-xl mx-auto mb-20 leading-relaxed">

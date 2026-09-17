@@ -187,7 +187,9 @@
                     <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors flex items-center gap-1" href="/explore/commercial">
                         <span>Commercial</span>
                     </a>
+                    @if(isset($propertyRequests) && $propertyRequests->isNotEmpty())
                     <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors" href="#demand-board">Demand Board</a>
+                    @endif
                     <a class="text-sm font-bold text-slate-700 hover:text-brandNavy transition-colors" href="/pricing">Pricing</a>
                 </nav>
             </div>
@@ -918,6 +920,7 @@
                  SECTION 7: TENANT / BUYER DEMAND BOARD
                  (Real demand requests)
                  ========================================== -->
+            @if(isset($propertyRequests) && $propertyRequests->isNotEmpty())
             <section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-16 w-full" id="demand-board" x-data="{
                 demandPurpose: 'all',
                 demandCity: 'all',
@@ -998,7 +1001,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @forelse($propertyRequests as $req)
+                    @foreach($propertyRequests as $req)
                     <div x-show="matchesFilter('{{ $req->purpose ?? 'rent' }}', '{{ addslashes($req->city ?? '') }}', '{{ addslashes($req->bhk ?? $req->property_type ?? '') }}')"
                          class="group rounded-3xl bg-white p-6 border border-slate-200 shadow-sm hover:border-emerald-500 transition-all duration-300 flex flex-col justify-between">
                         <div>
@@ -1078,21 +1081,10 @@
                             @endif
                         </div>
                     </div>
-                    @empty
-                    <div class="col-span-full py-12 px-6 text-center bg-white rounded-3xl border border-slate-200 shadow-sm">
-                        <div class="h-12 w-12 rounded-full bg-emerald-50 text-emerald-600 mx-auto flex items-center justify-center mb-3">
-                            <span class="material-symbols-outlined text-2xl">campaign</span>
-                        </div>
-                        <h4 class="text-base font-black text-slate-900">Be the First to Post a Property Request!</h4>
-                        <p class="text-xs text-slate-600 mt-1 max-w-md mx-auto font-medium">Tell verified property owners exactly what type of flat, room, PG, or commercial unit you are searching for.</p>
-                        <button type="button" @click="requestModalOpen = true" class="mt-4 h-11 px-6 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer inline-flex items-center justify-center gap-1.5 shadow-sm">
-                            <span class="material-symbols-outlined text-[17px]">post_add</span>
-                            <span>Post Request Free</span>
-                        </button>
-                    </div>
-                    @endforelse
+                    @endforeach
                 </div>
             </section>
+            @endif
 
             <!-- ==========================================
                  SECTION 8: LIST YOUR PROPERTY FREE

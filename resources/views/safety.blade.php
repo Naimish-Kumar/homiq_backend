@@ -10,7 +10,7 @@
     <!-- HEADER -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="pt-12 pb-16 bg-gradient-to-b from-white via-slate-50 to-slate-100/60 border-b border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <!-- Breadcrumbs -->
             <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-8" aria-label="Breadcrumb">
                 <a href="/" class="hover:text-emerald-700 transition flex items-center gap-1">
@@ -40,7 +40,7 @@
     <!-- 8 CORE SAFETY RULES -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="text-center max-w-2xl mx-auto mb-14">
                 <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-2">Golden Rules</span>
                 <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -147,7 +147,7 @@
     <!-- SCAM ANATOMY: COMMON TRAPS -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 bg-white border-y border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="max-w-3xl mx-auto text-center mb-12">
                 <span class="text-xs font-bold text-rose-600 uppercase tracking-widest block mb-2">Red Flags</span>
                 <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -193,7 +193,7 @@
     <!-- EMERGENCY & HELPLINE CONTACTS -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="p-8 sm:p-12 rounded-3xl bg-slate-900 text-white shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div class="lg:col-span-8 space-y-4">
                     <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5">

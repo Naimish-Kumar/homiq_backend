@@ -286,7 +286,7 @@ function initPropertyDetail() {
 }
 </script>
 
-<div x-data="initPropertyDetail()" @keydown.escape.window="closeModal(); isVerifyModalOpen = false; isReportModalOpen = false; isScheduleModalOpen = false;" @keydown.right.window="if(isModalOpen) nextImage()" @keydown.left.window="if(isModalOpen) prevImage()" class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+<div x-data="initPropertyDetail()" @keydown.escape.window="closeModal(); isVerifyModalOpen = false; isReportModalOpen = false; isScheduleModalOpen = false;" @keydown.right.window="if(isModalOpen) nextImage()" @keydown.left.window="if(isModalOpen) prevImage()" class="max-w-[1440px] mx-auto px-6 sm:px-8 py-6 sm:py-10">
 
     <!-- Expiration / Availability Warning Banner (If applicable) -->
     @if($property->is_expired || $property->status === 'temporarily_unavailable')

@@ -113,14 +113,6 @@
     <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-[1440px] mx-auto px-6 sm:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-8">
-                <a href="/" class="flex items-center gap-2.5 group">
-                    <div class="h-10 w-10 rounded-xl bg-brandNavy text-white flex items-center justify-center font-black text-xl group-hover:scale-105 transition shadow-sm">
-                        H
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-xl font-black tracking-tight text-brandNavy leading-none">HomiQ</span>
-                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600">0% Brokerage</span>
-                    </div>
                 <a href="/" class="flex items-center group">
                     <img src="{{ asset('logo.png') }}" alt="HomiQ" class="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
                 </a>
@@ -283,7 +275,6 @@
     <footer class="bg-white border-t border-slate-200 py-12">
         <div class="max-w-[1440px] mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-500">
             <div class="flex items-center gap-2">
-                <div class="h-6 w-6 rounded-md bg-brandNavy text-white flex items-center justify-center font-black text-xs">H</div>
                 <img src="{{ asset('logo.png') }}" alt="HomiQ" class="h-6 w-auto object-contain">
                 <span>&copy; {{ date('Y') }} HomiQ. 0% Brokerage Property Network.</span>
             </div>

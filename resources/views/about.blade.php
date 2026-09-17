@@ -10,7 +10,7 @@
     <!-- HERO SECTION -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="relative pt-12 pb-20 overflow-hidden bg-gradient-to-b from-white via-slate-50 to-slate-100/50 border-b border-slate-200/80">
-        <div class="site-shell px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="site-shell px-6 sm:px-8 relative z-10">
             <!-- Breadcrumbs -->
             <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-8" aria-label="Breadcrumb">
                 <a href="/" class="hover:text-emerald-700 transition flex items-center gap-1">
@@ -64,7 +64,7 @@
     <!-- THE PROBLEM & WHAT HOMIQ SOLVES -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 sm:py-20">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="text-center max-w-2xl mx-auto mb-14">
                 <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-2">The Rental Reality</span>
                 <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -128,7 +128,7 @@
     <!-- OUR VERIFICATION PHILOSOPHY -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 bg-white border-y border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-6 space-y-6">
                     <span class="px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider inline-flex items-center gap-1.5">
@@ -204,7 +204,7 @@
     <!-- OPERATING GEOGRAPHY -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 sm:py-20">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-2">Coverage</span>
                 <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -275,7 +275,7 @@
     <!-- TEAM & IDENTITY -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 bg-white border-t border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="max-w-3xl mx-auto text-center space-y-4">
                 <span class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-800 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-sm">groups</span>

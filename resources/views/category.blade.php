@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- Page Header / Breadcrumbs -->
-<section class="max-w-7xl mx-auto px-6 pt-10 pb-6">
+<section class="max-w-[1440px] mx-auto px-6 sm:px-8 pt-10 pb-6">
     <nav class="flex items-center gap-2 text-xs text-slate-400 font-semibold mb-6">
         <a href="/" class="hover:text-steelAzure flex items-center gap-1 transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,7 +31,7 @@
 
 
 <!-- Listings Section -->
-<section class="max-w-7xl mx-auto px-6 py-12">
+<section class="max-w-[1440px] mx-auto px-6 sm:px-8 py-12">
     @if ($properties->isEmpty())
         <div class="text-center py-20 bg-white border border-slate-100 rounded-2xl">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-slate-200 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

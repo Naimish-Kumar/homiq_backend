@@ -13,6 +13,15 @@ class DemandBoardImprovementsTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_demand_board_section_is_hidden_when_no_property_requests()
+    {
+        $response = $this->get('/');
+        $response->assertOk();
+        $response->assertDontSee('id="demand-board"', false);
+        $response->assertDontSee('Tenant &amp; Buyer Demand Board', false);
+        $response->assertDontSee('Two-Sided Liquidity Board', false);
+    }
+
     public function test_demand_board_displays_active_requests_with_details()
     {
         PropertyRequest::create([

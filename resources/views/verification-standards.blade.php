@@ -10,7 +10,7 @@
     <!-- HEADER -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="pt-12 pb-16 bg-gradient-to-b from-white via-slate-50 to-slate-100/60 border-b border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <!-- Breadcrumbs -->
             <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-8" aria-label="Breadcrumb">
                 <a href="/" class="hover:text-emerald-700 transition flex items-center gap-1">
@@ -40,7 +40,7 @@
     <!-- WHAT IS CHECKED VS WHAT IS NOT CHECKED -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- What IS Checked -->
                 <div class="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-200 shadow-soft space-y-6">
@@ -159,7 +159,7 @@
     <!-- VERIFICATION SLA & RE-VERIFICATION CYCLE -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 bg-white border-y border-slate-200">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="max-w-3xl mx-auto text-center mb-12">
                 <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-2">Audit Timelines</span>
                 <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -208,7 +208,7 @@
     <!-- BADGE MEANINGS & HIERARCHY -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="max-w-3xl mx-auto text-center mb-12">
                 <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-2">Visual Transparency</span>
                 <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -260,7 +260,7 @@
     <!-- REPORT FRAUD WORKFLOW -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <section class="py-16 bg-slate-900 text-white">
-        <div class="site-shell px-4 sm:px-6 lg:px-8">
+        <div class="site-shell px-6 sm:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                 <div class="lg:col-span-8 space-y-4">
                     <span class="px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5">

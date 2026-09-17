@@ -93,6 +93,12 @@
         .delay-100 { transition-delay: 100ms; }
         .delay-150 { transition-delay: 150ms; }
         .delay-200 { transition-delay: 200ms; }
+        .site-shell {
+            max-width: 1440px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
     </style>
 
     <!-- HomiQ Analytics & Clarity Infrastructure (Tasks 46, 47, 49) -->
@@ -104,7 +110,7 @@
          @scroll.window="scrolled = (window.pageYOffset > 20)"
          :class="{'bg-white/95 backdrop-blur-xl shadow-[0_10px_40px_rgba(10,37,64,0.06)] border-b border-slate-200/80': scrolled || !{{ Request::is('/') ? 'true' : 'false' }}, 'bg-transparent border-transparent': !scrolled && {{ Request::is('/') ? 'true' : 'false' }}}"
          class="sticky top-0 z-50 transition-all duration-300">
-        <div class="site-shell px-4 lg:px-6 h-20 flex items-center justify-between gap-4">
+        <div class="site-shell px-6 sm:px-8 h-20 flex items-center justify-between gap-4">
             <a href="/" class="flex items-center gap-3 flex-shrink-0 group">
                 <img src="{{ asset('logo.png') }}" alt="HomiQ" class="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
             </a>
@@ -231,7 +237,7 @@
 
     @if(!Request::is('/'))
     <div class="border-b border-slate-200/80 bg-white/70 backdrop-blur-sm">
-        <div class="site-shell px-4 lg:px-6 py-3">
+        <div class="site-shell px-6 sm:px-8 py-3">
             <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 <a href="/" class="hover:text-brandEmerald transition {{ Request::is('/') ? 'text-brandEmerald font-bold' : '' }}">Explore Properties</a>
                 <a href="/list-property" class="hover:text-brandEmerald transition {{ Request::is('list-property') || Request::is('owners') ? 'text-brandEmerald font-bold' : '' }}">List Property (Free)</a>
@@ -248,35 +254,40 @@
     <!-- Main Content -->
     <main class="flex-1">
         @if (session('success'))
-            <div id="success-toast" class="fixed top-24 right-6 z-50 transform translate-x-0 opacity-100 transition-all duration-500 ease-out">
-                <div class="px-5 py-3.5 bg-white/95 backdrop-blur border border-emerald-100 text-emerald-800 rounded-2xl shadow-xl shadow-emerald-500/5 flex items-center gap-3">
-                    <div class="h-7 w-7 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 shadow shadow-emerald-500/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
+            <div class="site-shell px-6 sm:px-8 pt-4">
+                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+                        <span class="text-sm font-semibold">{{ session('success') }}</span>
                     </div>
-                    <span class="text-xs font-extrabold tracking-wide">{{ session('success') }}</span>
+                    <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
                 </div>
             </div>
-            <script>
-                setTimeout(() => {
-                    const toast = document.getElementById('success-toast');
-                    if (toast) {
-                        toast.style.transform = 'translateX(50px)';
-                        toast.style.opacity = '0';
-                        setTimeout(() => toast.remove(), 500);
-                    }
-                }, 2000);
-            </script>
+        @endif
+
+        @if (session('error'))
+            <div class="site-shell px-6 sm:px-8 pt-4">
+                <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-rose-600">error</span>
+                        <span class="text-sm font-semibold">{{ session('error') }}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-700">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+            </div>
         @endif
 
         @if ($errors->any())
-            <div class="max-w-7xl mx-auto px-6 mt-6">
-                <div class="p-4 bg-rose-50 text-rose-800 border border-rose-100 rounded-2xl flex flex-col gap-1">
+            <div class="site-shell px-6 sm:px-8 pt-4">
+                <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl space-y-1 shadow-sm">
                     @foreach ($errors->all() as $error)
-                        <div class="flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-rose-500" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-rose-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span class="text-sm font-medium">{{ $error }}</span>
                         </div>
@@ -291,7 +302,7 @@
     <!-- Footer -->
     <footer class="bg-slate-950 text-slate-300 pt-16 pb-10 mt-24 relative overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.18),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.12),transparent_30%)] pointer-events-none"></div>
-        <div class="site-shell px-4 lg:px-6 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm relative z-10 mb-12">
+        <div class="site-shell px-6 sm:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm relative z-10 mb-12">
             <div class="space-y-5">
                 <div class="flex items-center gap-3">
                     <div class="bg-white/95 rounded-xl px-3 py-1.5 inline-flex items-center shadow-sm">
@@ -369,7 +380,7 @@
             </div>
         </div>
 
-        <div class="site-shell px-4 lg:px-6 border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium relative z-10">
+        <div class="site-shell px-6 sm:px-8 border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium relative z-10">
             <p>&copy; 2026 HomiQ Space Rentals. All rights reserved.</p>
             <div class="flex flex-wrap gap-4 sm:gap-6">
                 <a href="/contact" class="hover:text-white transition">Contact Us</a>
