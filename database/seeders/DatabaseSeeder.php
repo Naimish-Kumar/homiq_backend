@@ -380,5 +380,7 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'terms'],
             ['title' => 'Terms & Conditions', 'content' => $termsHtml]
         );
+
+        $this->call(PropertyRequestSeeder::class);
     }
 }

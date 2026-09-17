@@ -3,11 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomiQ - Rent Spaces, List Properties</title>
-    <meta name="description" content="Find premium homes, apartments, villas, and commercial spaces with trusted landlords and seamless booking." />
+    <title>@yield('title', 'HomiQ - Verified Flats, PGs & Properties for Rent, Buy and Sell')</title>
+    <meta name="description" content="@yield('meta_description', 'Discover verified rental homes, flats, rooms, PGs and properties with 0% brokerage and direct owner contact on HomiQ.')" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="google-site-verification" content="{{ config('services.google.site_verification', 'google-site-verification-homiq-growth-2026') }}" />
+    <link rel="canonical" href="@yield('canonical_url', \App\Helpers\SeoHelper::canonicalUrl(url()->current()))" />
+    @hasSection('og_tags')
+        @yield('og_tags')
+    @else
+        <meta property="og:site_name" content="HomiQ" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="@yield('title', 'HomiQ - Verified Flats, PGs & Properties for Rent, Buy and Sell')" />
+        <meta property="og:description" content="@yield('meta_description', 'Discover verified rental homes, flats, rooms, PGs and properties with 0% brokerage and direct owner contact on HomiQ.')" />
+        <meta property="og:url" content="@yield('canonical_url', \App\Helpers\SeoHelper::canonicalUrl(url()->current()))" />
+        <meta property="og:image" content="{{ asset('logo.png') }}" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="@yield('title', 'HomiQ - Verified Flats, PGs & Properties for Rent, Buy and Sell')" />
+        <meta name="twitter:description" content="@yield('meta_description', 'Discover verified rental homes, flats, rooms, PGs and properties with 0% brokerage and direct owner contact on HomiQ.')" />
+        <meta name="twitter:image" content="{{ asset('logo.png') }}" />
+    @endif
+    @yield('structured_data')
     <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -72,6 +94,9 @@
         .delay-150 { transition-delay: 150ms; }
         .delay-200 { transition-delay: 200ms; }
     </style>
+
+    <!-- HomiQ Analytics & Clarity Infrastructure (Tasks 46, 47, 49) -->
+    @include('partials.analytics')
 </head>
 <body class="flex flex-col min-h-screen text-slate-800 antialiased selection:bg-brandEmerald selection:text-white">
 
@@ -208,8 +233,9 @@
     <div class="border-b border-slate-200/80 bg-white/70 backdrop-blur-sm">
         <div class="site-shell px-4 lg:px-6 py-3">
             <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">
-                <a href="/" class="hover:text-brandEmerald transition {{ Request::is('/') ? 'text-brandEmerald font-bold' : '' }}">Explore Feed</a>
-                <a href="/dashboard" class="hover:text-brandEmerald transition {{ Request::is('dashboard') ? 'text-brandEmerald font-bold' : '' }}">List Property</a>
+                <a href="/" class="hover:text-brandEmerald transition {{ Request::is('/') ? 'text-brandEmerald font-bold' : '' }}">Explore Properties</a>
+                <a href="/list-property" class="hover:text-brandEmerald transition {{ Request::is('list-property') || Request::is('owners') ? 'text-brandEmerald font-bold' : '' }}">List Property (Free)</a>
+                <a href="/guides" class="hover:text-brandEmerald transition {{ Request::is('guides*') || Request::is('blog*') ? 'text-brandEmerald font-bold' : '' }}">Guides & Advice</a>
                 <a href="/about" class="hover:text-brandEmerald transition {{ Request::is('about') ? 'text-brandEmerald font-bold' : '' }}">About Us</a>
                 <a href="/contact" class="hover:text-brandEmerald transition {{ Request::is('contact') ? 'text-brandEmerald font-bold' : '' }}">Contact</a>
                 <a href="/privacy" class="hover:text-brandEmerald transition {{ Request::is('privacy') ? 'text-brandEmerald font-bold' : '' }}">Privacy</a>
@@ -305,22 +331,26 @@
             </div>
 
             <div class="space-y-4">
-                <h4 class="text-xs font-bold text-white uppercase tracking-[0.18em]">Discover Spaces</h4>
+                <h4 class="text-xs font-bold text-white uppercase tracking-[0.18em]">Explore Hubs</h4>
                 <ul class="space-y-2.5 text-sm text-slate-400">
-                    <li><a href="/?category=Apartment" class="hover:text-white transition">Apartments</a></li>
-                    <li><a href="/?category=House" class="hover:text-white transition">Family Houses</a></li>
-                    <li><a href="/?category=Villa" class="hover:text-white transition">Beachfront Villas</a></li>
-                    <li><a href="/?category=Shop" class="hover:text-white transition">Commercial Shops</a></li>
+                    <li><a href="/rent/noida" class="hover:text-white transition">Rent in Noida</a></li>
+                    <li><a href="/rent/flats/noida" class="hover:text-white transition">Flats in Noida</a></li>
+                    <li><a href="/rent/pg/noida" class="hover:text-white transition">PGs & Rooms Noida</a></li>
+                    <li><a href="/rent/flats/sector-137-noida" class="hover:text-white transition">Sector 137 Noida</a></li>
+                    <li><a href="/buy/flats/noida" class="hover:text-white transition">Flats for Sale</a></li>
                 </ul>
             </div>
 
             <div class="space-y-4">
-                <h4 class="text-xs font-bold text-white uppercase tracking-[0.18em]">Platform Links</h4>
+                <h4 class="text-xs font-bold text-white uppercase tracking-[0.18em]">Trust &amp; Guides</h4>
                 <ul class="space-y-2.5 text-sm text-slate-400">
-                    <li><a href="/about" class="hover:text-white transition">About Us</a></li>
-                    <li><a href="/contact" class="hover:text-white transition">Contact Us</a></li>
-                    <li><a href="/login" class="hover:text-white transition">Sign In Portal</a></li>
-                    <li><a href="/register" class="hover:text-white transition">Create Account</a></li>
+                    <li><a href="/guides" class="hover:text-white transition">Guides &amp; Rental Advice</a></li>
+                    <li><a href="/verification-standards" class="text-emerald-400 hover:text-emerald-300 font-semibold transition">Verification Standards</a></li>
+                    <li><a href="/safety" class="hover:text-white transition">Safety Center &amp; Anti-Fraud</a></li>
+                    <li><a href="/list-property" class="text-emerald-400 hover:text-emerald-300 font-semibold transition">List Property Free (0%)</a></li>
+                    <li><a href="/about" class="hover:text-white transition">About HomiQ</a></li>
+                    <li><a href="/pricing" class="hover:text-white transition">Owner Plans</a></li>
+                    <li><a href="/contact" class="hover:text-white transition">Contact Support</a></li>
                 </ul>
             </div>
 
@@ -341,10 +371,12 @@
 
         <div class="site-shell px-4 lg:px-6 border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium relative z-10">
             <p>&copy; 2026 HomiQ Space Rentals. All rights reserved.</p>
-            <div class="flex gap-6">
+            <div class="flex flex-wrap gap-4 sm:gap-6">
                 <a href="/contact" class="hover:text-white transition">Contact Us</a>
+                <a href="/safety" class="hover:text-white transition">Safety Center</a>
+                <a href="/verification-standards" class="hover:text-white transition">Verification Standards</a>
                 <a href="/privacy" class="hover:text-white transition">Privacy Policy</a>
-                <a href="/terms" class="hover:text-white transition">Terms & Conditions</a>
+                <a href="/terms" class="hover:text-white transition">Terms &amp; Conditions</a>
             </div>
         </div>
     </footer>

@@ -7,18 +7,58 @@ use App\Http\Controllers\Web\CustomerDashboardController;
 use App\Http\Controllers\Web\AttributeController;
 use App\Http\Controllers\Web\HostPropertyController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Web\SeoLandingController;
+use App\Http\Controllers\Web\BlogController;
+
 // Public Pages
 Route::get('/', [WebHomeController::class, 'index']);
 Route::get('/category/{name}', [WebHomeController::class, 'category']);
+
+// SEO Property Detail URLs (backward-compatible)
+Route::get('/property/{slug}', [WebHomeController::class, 'property'])->name('property.show');
 Route::get('/properties/{id}', [WebHomeController::class, 'property']);
+Route::post('/properties/{id}/report', [WebHomeController::class, 'reportProperty'])->name('properties.report');
+Route::post('/properties/{id}/renew', [WebHomeController::class, 'renewProperty'])->name('properties.renew');
+Route::post('/properties/{id}/track-contact', [WebHomeController::class, 'trackContact'])->name('properties.track-contact');
+Route::post('/properties/{id}/track-save', [WebHomeController::class, 'trackSave'])->name('properties.track-save');
+
+// SEO Programmatic Landing Pages (Tasks 19 & 20)
+Route::get('/rent/{city}', [SeoLandingController::class, 'rentCity'])->name('seo.rent.city');
+Route::get('/rent/{category}/{city}', [SeoLandingController::class, 'rentCategoryCity'])->name('seo.rent.category.city');
+Route::get('/buy/{city}', [SeoLandingController::class, 'buyCity'])->name('seo.buy.city');
+Route::get('/buy/{category}/{city}', [SeoLandingController::class, 'buyCategoryCity'])->name('seo.buy.category.city');
+Route::get('/explore/{intent}', [SeoLandingController::class, 'intentLanding'])->name('seo.explore.intent');
+
+// Guides & Blog Knowledge Hub (Task 25)
+Route::get('/guides', [BlogController::class, 'index'])->name('guides.index');
+Route::get('/guides/{slug}', [BlogController::class, 'show'])->name('guides.show');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+
+// Dedicated Owner Landing Page & Shortcuts
+Route::get('/list-property', [WebHomeController::class, 'ownersLanding'])->name('owners.landing');
+Route::get('/owners', [WebHomeController::class, 'ownersLanding']);
+Route::get('/list-your-property', [WebHomeController::class, 'ownersLanding']);
+
 Route::get('/pricing', [WebHomeController::class, 'pricing']);
 Route::get('/about', [WebHomeController::class, 'about']);
 Route::get('/privacy', [WebHomeController::class, 'privacy']);
 Route::get('/terms', [WebHomeController::class, 'terms']);
 Route::view('/contact', 'contact');
-Route::get('/delete-account', [WebHomeController::class, 'showDeleteAccount']);
+Route::get('/pricing', [WebHomeController::class, 'pricing'])->name('pricing');
+Route::get('/about', [WebHomeController::class, 'about'])->name('about');
+Route::get('/verification-standards', [WebHomeController::class, 'verificationStandards'])->name('verification.standards');
+Route::get('/safety', [WebHomeController::class, 'safety'])->name('safety');
+Route::get('/privacy', [WebHomeController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [WebHomeController::class, 'terms'])->name('terms');
+Route::get('/contact', [WebHomeController::class, 'contact'])->name('contact');
+Route::post('/contact', [WebHomeController::class, 'submitContact'])->name('contact.submit');
 Route::post('/delete-account', [WebHomeController::class, 'deleteAccount']);
 Route::post('/property-requests', [WebHomeController::class, 'storePropertyRequest'])->name('property-requests.store');
+Route::post('/recently-viewed/clear', [WebHomeController::class, 'clearRecentlyViewed'])->name('recently-viewed.clear');
+Route::post('/saved-searches', [WebHomeController::class, 'saveSearch'])->name('saved-searches.store');
+Route::delete('/saved-searches/{id}', [WebHomeController::class, 'deleteSavedSearch'])->name('saved-searches.destroy');
+Route::post('/saved-searches/{id}/toggle', [WebHomeController::class, 'toggleSavedSearch'])->name('saved-searches.toggle');
 
 // Authentication (Guest)
 Route::middleware(['guest'])->group(function () {
@@ -43,8 +83,10 @@ Route::middleware(['auth'])->group(function () {
     // Actions requiring verified email (Customer Dashboard & Subscriptions)
     Route::middleware(['verified_otp'])->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index']);
+        Route::get('/dashboard/listings/{id}/matching-demands', [CustomerDashboardController::class, 'getMatchingDemands'])->name('dashboard.listings.matching-demands');
         Route::post('/dashboard/listings', [CustomerDashboardController::class, 'storeListing']);
         Route::post('/dashboard/listings/{id}/toggle-featured', [CustomerDashboardController::class, 'toggleFeatured']);
+        Route::post('/dashboard/listings/{id}/renew', [WebHomeController::class, 'renewProperty'])->name('dashboard.listings.renew');
         Route::post('/dashboard/reservations', [CustomerDashboardController::class, 'makeReservation']);
         Route::post('/upgrade-subscription', [WebHomeController::class, 'upgradeSubscription']);
         Route::post('/pricing/razorpay/create-order', [\App\Http\Controllers\Api\RazorpayController::class, 'createOrder']);
@@ -117,5 +159,18 @@ Route::middleware(['admin'])->prefix('old-admin')->group(function () {
     Route::post('/amenities/{id}', [AttributeController::class, 'updateAmenity']);
     Route::delete('/amenities/{id}', [AttributeController::class, 'deleteAmenity']);
 });
+
+// Analytics & Event Tracking (Tasks 46 & 47)
+Route::post('/analytics/events', [\App\Http\Controllers\AnalyticsController::class, 'recordEvent'])->name('analytics.events');
+Route::get('/admin/analytics/funnels', [\App\Http\Controllers\AnalyticsController::class, 'funnels'])->name('admin.analytics.funnels');
+
+// XML Sitemap Strategy (Task 52)
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap-pages.xml', [\App\Http\Controllers\SitemapController::class, 'pages'])->name('sitemap.pages');
+Route::get('/sitemap-locations.xml', [\App\Http\Controllers\SitemapController::class, 'locations'])->name('sitemap.locations');
+Route::get('/sitemap-properties.xml', [\App\Http\Controllers\SitemapController::class, 'properties'])->name('sitemap.properties');
+Route::get('/sitemap-blog.xml', [\App\Http\Controllers\SitemapController::class, 'blog'])->name('sitemap.blog');
+
+
 
 

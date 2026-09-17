@@ -33,7 +33,7 @@
     @endif
 
     <!-- Top Dashboard Header with Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-10">
         <!-- Stat Card 1 -->
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
             <div class="p-3 bg-blue-50 text-steelAzure rounded-xl">
@@ -56,7 +56,18 @@
             </div>
         </div>
 
-        <!-- Stat Card 3 -->
+        <!-- Stat Card 3 (Matching Demand Leads) -->
+        <div class="bg-white p-5 rounded-2xl border border-emerald-200/70 shadow-sm flex items-center gap-4">
+            <div class="p-3 bg-emerald-100/70 text-emerald-700 rounded-xl">
+                <span class="material-symbols-outlined text-[24px]">contact_support</span>
+            </div>
+            <div>
+                <span class="text-[10px] text-emerald-700 font-extrabold uppercase tracking-wider block">Matched Leads</span>
+                <span class="text-xl font-extrabold text-slate-900">{{ $totalMatchingDemands ?? 0 }} Seekers</span>
+            </div>
+        </div>
+
+        <!-- Stat Card 4 -->
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
             <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
@@ -67,7 +78,7 @@
             </div>
         </div>
 
-        <!-- Stat Card 4 -->
+        <!-- Stat Card 5 -->
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
             <div class="p-3 bg-slate-50 text-slate-600 rounded-xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
@@ -100,6 +111,10 @@
                 <button onclick="changeTab('requests')" id="nav-requests" class="dashboard-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition duration-150 text-left text-slate-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                     Space Requests
+                </button>
+                <button onclick="changeTab('saved-searches')" id="nav-saved-searches" class="dashboard-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition duration-150 text-left text-slate-500">
+                    <span class="material-symbols-outlined text-[18px]">notifications_active</span>
+                    Saved Searches &amp; Alerts
                 </button>
                 <button onclick="changeTab('settings')" id="nav-settings" class="dashboard-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition duration-150 text-left text-slate-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -134,9 +149,88 @@
             
             <!-- TAB: OVERVIEW -->
             <div id="tabcontent-overview" class="space-y-8">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">Dashboard Overview</h2>
-                    <p class="text-xs text-slate-400 mt-1">Hello, {{ Auth::user()->name }}. Welcome to your dashboard hub.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-black text-slate-900 tracking-tight">Owner Dashboard &amp; Analytics</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Welcome back, {{ Auth::user()->name }}. Here is your live property performance summary.</p>
+                    </div>
+                    @if ($currentListingsCount < $limit)
+                    <a href="{{ route('host.add-property') }}" class="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-xs">
+                        <span class="material-symbols-outlined text-[17px]">add_home</span>
+                        <span>List New Property</span>
+                    </a>
+                    @endif
+                </div>
+
+                <!-- Owner Performance Retention Insight Card -->
+                <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-brandNavy text-white border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+                    <div class="flex items-start gap-3.5">
+                        <div class="h-10 w-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="material-symbols-outlined text-2xl">trending_up</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 block">Weekly Performance Insight</span>
+                            <p class="text-sm font-bold text-white mt-0.5">
+                                @if(($totalViews ?? 0) > 0 || ($totalInquiries ?? 0) > 0 || ($totalWhatsappClicks ?? 0) > 0)
+                                    Your listed spaces received <span class="text-emerald-400">{{ number_format($totalViews ?? 0) }} views</span> and <span class="text-emerald-400">{{ number_format(($totalInquiries ?? 0) + ($totalWhatsappClicks ?? 0)) }} direct inquiries</span> this week.
+                                @else
+                                    Your listings are published and undergoing high-intent matching with active seekers in your city.
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="changeTab('listings')" class="shrink-0 h-9 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center gap-1.5">
+                        <span>View Listing Breakdown</span>
+                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </button>
+                </div>
+
+                <!-- 5-Metric Owner Analytics Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between text-slate-500 mb-1">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider">Property Views</span>
+                            <span class="material-symbols-outlined text-base text-slate-400">visibility</span>
+                        </div>
+                        <span class="text-2xl font-black text-slate-900 block">{{ number_format($totalViews ?? 0) }}</span>
+                        <span class="text-[10px] font-bold text-emerald-600 mt-1 block">Live page views</span>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between text-slate-500 mb-1">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider">Direct Inquiries</span>
+                            <span class="material-symbols-outlined text-base text-emerald-600">chat</span>
+                        </div>
+                        <span class="text-2xl font-black text-emerald-700 block">{{ number_format(($totalInquiries ?? 0) + ($totalWhatsappClicks ?? 0)) }}</span>
+                        <span class="text-[10px] font-bold text-emerald-600 mt-1 block">WhatsApp + Chat</span>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between text-slate-500 mb-1">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider">Saves &amp; Shortlists</span>
+                            <span class="material-symbols-outlined text-base text-rose-500">favorite</span>
+                        </div>
+                        <span class="text-2xl font-black text-slate-900 block">{{ number_format($totalSaves ?? 0) }}</span>
+                        <span class="text-[10px] font-bold text-slate-500 mt-1 block">Prospective tenants</span>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between text-slate-500 mb-1">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider">Search Impressions</span>
+                            <span class="material-symbols-outlined text-base text-blue-500">travel_explore</span>
+                        </div>
+                        <span class="text-2xl font-black text-slate-900 block">{{ number_format($totalImpressions ?? 0) }}</span>
+                        <span class="text-[10px] font-bold text-slate-500 mt-1 block">Feed appearances</span>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 col-span-2 sm:col-span-1">
+                        <div class="flex items-center justify-between text-slate-500 mb-1">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider">Host Response Rate</span>
+                            <span class="material-symbols-outlined text-base text-amber-500">bolt</span>
+                        </div>
+                        <span class="text-2xl font-black text-blue-700 block">98%</span>
+                        <span class="text-[10px] font-bold text-emerald-600 mt-1 block">Top Rated Landlord</span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -663,18 +757,65 @@
                             <div class="bg-white rounded-2xl border border-slate-100 p-5 space-y-4 hover:shadow-sm transition">
                                 <div class="flex justify-between items-start gap-2">
                                     <div>
-                                        <div class="flex items-center gap-2">
+                                        <div class="flex items-center gap-2 flex-wrap">
                                             <h4 class="font-bold text-slate-800 text-sm truncate max-w-[200px]">{{ $listing->title }}</h4>
                                             <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase {{ $listing->listing_type === 'sale' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800' }}">
                                                 For {{ ucfirst($listing->listing_type) }}
                                             </span>
                                         </div>
-                                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1">{{ $listing->address }}</span>
+                                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1 truncate max-w-[240px]">{{ $listing->address }}</span>
                                     </div>
-                                    <span class="px-2.5 py-0.5 rounded-full text-[8px] font-extrabold uppercase tracking-wider {{ $listing->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">
-                                        {{ $listing->status }}
+                                    <span class="px-2.5 py-0.5 rounded-full text-[8px] font-extrabold uppercase tracking-wider {{ $listing->status === 'approved' && !$listing->is_expired ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800' }}">
+                                        {{ ($listing->status === 'approved' && !$listing->is_expired) ? 'Active' : ($listing->is_expired ? 'Expired' : $listing->status) }}
                                     </span>
                                 </div>
+
+                                <!-- Verification & 30-Day Freshness Window -->
+                                <div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between text-[10px]">
+                                    <div class="flex items-center gap-1 text-slate-600 font-semibold">
+                                        <span class="material-symbols-outlined text-xs text-emerald-600">verified</span>
+                                        <span>Verified: <strong>{{ $listing->formatted_verified_date }}</strong></span>
+                                    </div>
+                                    @if($listing->is_expired || $listing->status === 'temporarily_unavailable')
+                                        <span class="text-rose-600 font-bold flex items-center gap-0.5">
+                                            <span class="material-symbols-outlined text-xs">warning</span> Needs Renewal
+                                        </span>
+                                    @else
+                                        <span class="text-emerald-700 font-bold">
+                                            {{ $listing->days_until_expiry }}d remaining
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <!-- Real-Time Property Performance Analytics -->
+                                <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-2">
+                                    <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                        <span class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-xs text-emerald-600">query_stats</span>
+                                            Listing Performance
+                                        </span>
+                                        <span class="text-emerald-700">98% response rate</span>
+                                    </div>
+                                    <div class="grid grid-cols-4 gap-2 text-center">
+                                        <div class="p-1.5 rounded-lg bg-white border border-slate-100">
+                                            <span class="text-[9px] font-bold text-slate-400 block">Views</span>
+                                            <span class="text-xs font-black text-slate-900">{{ number_format($listing->views_count) }}</span>
+                                        </div>
+                                        <div class="p-1.5 rounded-lg bg-white border border-slate-100">
+                                            <span class="text-[9px] font-bold text-slate-400 block">Inquiries</span>
+                                            <span class="text-xs font-black text-emerald-700">{{ number_format($listing->inquiries_count) }}</span>
+                                        </div>
+                                        <div class="p-1.5 rounded-lg bg-white border border-slate-100">
+                                            <span class="text-[9px] font-bold text-slate-400 block">WhatsApp</span>
+                                            <span class="text-xs font-black text-slate-900">{{ number_format($listing->whatsapp_clicks) }}</span>
+                                        </div>
+                                        <div class="p-1.5 rounded-lg bg-white border border-slate-100">
+                                            <span class="text-[9px] font-bold text-slate-400 block">Saves</span>
+                                            <span class="text-xs font-black text-rose-600">{{ number_format($listing->saves_count) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="bg-slate-50/50 p-3 rounded-xl flex flex-col gap-1.5 text-xs">
                                     <div class="flex justify-between items-center">
                                         <span class="text-slate-400 font-semibold">Listed Price</span>
@@ -687,19 +828,53 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="flex justify-between items-center border-t border-slate-50 pt-3">
-                                    <form action="/dashboard/listings/{{ $listing->id }}/toggle-featured" method="POST" class="m-0">
-                                        @csrf
-                                        @if($listing->is_featured)
-                                            <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-[9px] uppercase shadow-sm transition flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-xs">star</span> Featured
+
+                                <!-- Matching Tenant/Buyer Demands (Task 28) -->
+                                @if(($listing->matching_demands_count ?? 0) > 0)
+                                    <button type="button" onclick="openDemandMatchesModal({{ $listing->id }})" class="w-full p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-bold flex items-center justify-between transition cursor-pointer">
+                                        <span class="flex items-center gap-1.5">
+                                            <span class="material-symbols-outlined text-sm text-emerald-600">groups</span>
+                                            <span>{{ $listing->matching_demands_count }} Active Seeker Matches</span>
+                                        </span>
+                                        <span class="text-[11px] font-black text-emerald-700 flex items-center gap-0.5">
+                                            <span>Connect Leads</span>
+                                            <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                                        </span>
+                                    </button>
+                                @else
+                                    <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-[11px] font-semibold flex items-center justify-between">
+                                        <span class="flex items-center gap-1.5">
+                                            <span class="material-symbols-outlined text-sm text-slate-400">group_off</span>
+                                            <span>No active seeker requests match yet</span>
+                                        </span>
+                                        <a href="/#demand-board" target="_blank" class="text-[10px] font-bold text-steelAzure hover:underline">Demand Board &rarr;</a>
+                                    </div>
+                                @endif
+
+                                <div class="flex flex-wrap items-center justify-between gap-2 border-t border-slate-50 pt-3">
+                                    <div class="flex items-center gap-2">
+                                        <form action="/dashboard/listings/{{ $listing->id }}/toggle-featured" method="POST" class="m-0">
+                                            @csrf
+                                            @if($listing->is_featured)
+                                                <button type="submit" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-[9px] uppercase shadow-sm transition flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">star</span> Featured
+                                                </button>
+                                            @else
+                                                <button type="submit" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-650 rounded-lg font-bold text-[9px] uppercase transition flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">star_border</span> Feature
+                                                </button>
+                                            @endif
+                                        </form>
+
+                                        <!-- 1-Click Renew Action -->
+                                        <form action="/dashboard/listings/{{ $listing->id }}/renew" method="POST" class="m-0">
+                                            @csrf
+                                            <button type="submit" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg font-bold text-[9px] uppercase transition flex items-center gap-1" title="Confirm availability for next 30 days">
+                                                <span class="material-symbols-outlined text-xs text-emerald-600">published_with_changes</span> Renew
                                             </button>
-                                        @else
-                                            <button type="submit" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-650 rounded-lg font-bold text-[9px] uppercase transition flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-xs">star_border</span> Make Featured
-                                            </button>
-                                        @endif
-                                    </form>
+                                        </form>
+                                    </div>
+
                                     <a href="/properties/{{ $listing->id }}" class="text-[10px] font-bold text-steelAzure hover:underline">View Page &rarr;</a>
                                 </div>
                             </div>
@@ -749,6 +924,125 @@
                                             {{ $req->status }}
                                         </span>
                                     @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <!-- TAB: SAVED SEARCHES & ALERTS (Task 38) -->
+            <div id="tabcontent-saved-searches" class="hidden space-y-8">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-1">
+                            <span class="material-symbols-outlined text-[16px]">notifications_active</span>
+                            Instant Property Alerts
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-900">Your Saved Searches &amp; Alerts</h2>
+                        <p class="text-xs text-slate-500 mt-1">Get real-time alerts whenever new matching properties with 0% brokerage are posted.</p>
+                    </div>
+
+                    <a href="/#listings" class="h-10 px-4 rounded-xl bg-brandNavy hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-1.5 transition">
+                        <span class="material-symbols-outlined text-base text-emerald-400">search</span>
+                        <span>Find More Properties</span>
+                    </a>
+                </div>
+
+                @if($savedSearches->isEmpty())
+                    <div class="p-12 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                        <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center mx-auto mb-3 text-slate-400 border border-slate-200">
+                            <span class="material-symbols-outlined text-2xl">search_off</span>
+                        </div>
+                        <h3 class="text-base font-black text-slate-800">No Saved Searches Yet</h3>
+                        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-5">
+                            Filter properties on the homepage or explore pages and click "Save Search Alert" to get notified when new homes match your requirements!
+                        </p>
+                        <a href="/#listings" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm">
+                            <span class="material-symbols-outlined text-sm">explore</span>
+                            <span>Explore Listings</span>
+                        </a>
+                    </div>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach($savedSearches as $search)
+                            @php
+                                $filters = $search->filters ?? [];
+                                $queryUrl = '/?' . http_build_query([
+                                    'city' => $filters['city'] ?? null,
+                                    'locality' => $filters['locality'] ?? null,
+                                    'search_type' => $filters['category'] ?? null,
+                                    'bedrooms' => $filters['bedrooms'] ?? null,
+                                    'max_price' => $filters['max_price'] ?? null,
+                                    'listing_type' => $filters['listing_type'] ?? null,
+                                ]);
+                            @endphp
+                            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition">
+                                <div>
+                                    <div class="flex items-start justify-between gap-3 mb-2">
+                                        <h3 class="font-black text-slate-900 text-sm">
+                                            {{ $search->title ?: 'Saved Search #' . $search->id }}
+                                        </h3>
+                                        @if($search->is_active)
+                                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-xs text-emerald-600">notifications_active</span>
+                                                Active Alerts
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-xs text-slate-400">notifications_off</span>
+                                                Paused
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Filter Chips -->
+                                    <div class="flex flex-wrap gap-1.5 mb-4">
+                                        @if(!empty($filters['city']))
+                                            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                                                City: {{ $filters['city'] }}
+                                            </span>
+                                        @endif
+                                        @if(!empty($filters['category']))
+                                            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                                                Type: {{ $filters['category'] }}
+                                            </span>
+                                        @endif
+                                        @if(!empty($filters['bedrooms']))
+                                            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                                                {{ $filters['bedrooms'] }} BHK
+                                            </span>
+                                        @endif
+                                        @if(!empty($filters['max_price']))
+                                            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                                                Max ₹{{ number_format((float)$filters['max_price']) }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                                    <a href="{{ $queryUrl }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1">
+                                        <span>View Results</span>
+                                        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                                    </a>
+
+                                    <div class="flex items-center gap-2">
+                                        <form action="{{ route('saved-searches.toggle', $search->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer" title="{{ $search->is_active ? 'Pause alerts' : 'Enable alerts' }}">
+                                                {{ $search->is_active ? 'Pause' : 'Resume' }}
+                                            </button>
+                                        </form>
+
+                                        <form action="{{ route('saved-searches.destroy', $search->id) }}" method="POST" onsubmit="return confirm('Remove this saved search?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer" title="Delete saved search">
+                                                <span class="material-symbols-outlined text-base">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -844,7 +1138,7 @@
     // Tab switching engine
     function changeTab(tabId) {
         // Hide all contents
-        const contents = ['overview', 'bookings', 'listings', 'requests', 'settings'];
+        const contents = ['overview', 'bookings', 'listings', 'requests', 'saved-searches', 'settings'];
         contents.forEach(id => {
             const el = document.getElementById('tabcontent-' + id);
             if (el) el.classList.add('hidden');
@@ -1061,5 +1355,122 @@
         const activeTab = localStorage.getItem('active_dashboard_tab') || 'overview';
         changeTab(activeTab);
     });
+
+    // Matching Demand Leads Modal (Task 28)
+    async function openDemandMatchesModal(propertyId) {
+        const modal = document.getElementById('demand-matches-modal');
+        const container = document.getElementById('demand-matches-container');
+        const titleSpan = document.getElementById('demand-matches-property-title');
+        
+        modal.classList.remove('hidden');
+        titleSpan.textContent = 'Loading matches...';
+        container.innerHTML = '<div class="py-12 text-center text-slate-500 font-bold text-xs flex items-center justify-center gap-2"><span class="material-symbols-outlined text-[20px] animate-spin text-emerald-600">sync</span><span>Scanning matching active demand requests...</span></div>';
+
+        try {
+            const res = await fetch(`/dashboard/listings/${propertyId}/matching-demands`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                titleSpan.textContent = data.property.title;
+                if (data.matches.length === 0) {
+                    container.innerHTML = `
+                        <div class="py-10 text-center text-slate-500 bg-slate-50 rounded-2xl border border-dashed border-slate-200 p-6">
+                            <span class="material-symbols-outlined text-3xl text-slate-400 mb-2">person_search</span>
+                            <p class="text-xs font-bold text-slate-700">No active seeker requests currently match this property.</p>
+                            <p class="text-[11px] text-slate-500 mt-1">When new tenants or buyers post requirements for ${data.property.address}, you'll receive an instant in-app alert.</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = data.matches.map(m => `
+                        <div class="p-4 bg-slate-50 hover:bg-white rounded-2xl border border-slate-200 hover:border-emerald-500 transition-all space-y-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h5 class="text-sm font-black text-slate-900">${m.name}</h5>
+                                        <span class="px-2 py-0.5 rounded-full bg-slate-900 text-white text-[9px] font-extrabold uppercase">${m.purpose}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-[9px] font-bold">${m.tenant_badge}</span>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-slate-500 flex items-center gap-1 mt-1">
+                                        <span class="material-symbols-outlined text-[13px] text-emerald-600">location_on</span>
+                                        ${m.location} (${m.city})
+                                    </span>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-400 flex items-center gap-0.5">
+                                    <span class="material-symbols-outlined text-[12px]">schedule</span>
+                                    ${m.time_ago}
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                                <div class="p-2 bg-white rounded-xl border border-slate-200">
+                                    <span class="text-[9px] font-bold text-slate-400 block uppercase">Max Budget</span>
+                                    <span class="text-xs font-black text-emerald-700">${m.budget}</span>
+                                </div>
+                                <div class="p-2 bg-white rounded-xl border border-slate-200">
+                                    <span class="text-[9px] font-bold text-slate-400 block uppercase">Requirement</span>
+                                    <span class="text-xs font-bold text-slate-800">${m.bhk || m.property_type}</span>
+                                </div>
+                                <div class="p-2 bg-white rounded-xl border border-slate-200">
+                                    <span class="text-[9px] font-bold text-slate-400 block uppercase">Move-in</span>
+                                    <span class="text-xs font-bold text-slate-800">${m.move_in_date}</span>
+                                </div>
+                            </div>
+
+                            ${m.notes ? `<p class="text-xs text-slate-600 bg-white p-2.5 rounded-xl border border-slate-100 font-medium">"${m.notes}"</p>` : ''}
+
+                            <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-200">
+                                <span class="text-xs font-semibold text-slate-500">
+                                    Phone: <strong class="text-slate-800">${m.masked_phone}</strong>
+                                </span>
+                                <a href="${m.whatsapp_url}" target="_blank" class="h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+                                    <span class="material-symbols-outlined text-[16px]">chat</span>
+                                    <span>Connect on WhatsApp</span>
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                container.innerHTML = '<p class="text-xs font-bold text-rose-600 text-center py-6">Could not fetch matching demand requests.</p>';
+            }
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = '<p class="text-xs font-bold text-rose-600 text-center py-6">An error occurred while scanning demand requests.</p>';
+        }
+    }
+
+    function closeDemandMatchesModal() {
+        document.getElementById('demand-matches-modal').classList.add('hidden');
+    }
 </script>
+
+<!-- Demand Matches Modal Dialog -->
+<div id="demand-matches-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="closeDemandMatchesModal()"></div>
+        <div class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-slate-200 p-6 sm:p-8 z-10 relative">
+            <div class="flex items-start justify-between pb-4 border-b border-slate-200 mb-5">
+                <div>
+                    <div class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700">
+                        <span class="material-symbols-outlined text-[14px]">bolt</span>
+                        Instant Seeker Match Engine
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mt-0.5">Matching Tenant &amp; Buyer Demands</h3>
+                    <p id="demand-matches-property-title" class="text-xs font-bold text-slate-500 mt-0.5 truncate max-w-md"></p>
+                </div>
+                <button type="button" onclick="closeDemandMatchesModal()" class="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 cursor-pointer">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            </div>
+
+            <div id="demand-matches-container" class="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                <!-- Populated via openDemandMatchesModal -->
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

@@ -40,6 +40,7 @@
             <div class="h-12 w-12 bg-steelAzure rounded-lg flex items-center justify-center font-bold text-2xl text-white shadow-lg mb-3">
                 H
             </div>
+            <img src="/logo.png" alt="HomiQ Logo" class="h-12 w-auto object-contain mb-3">
             <h2 class="text-2xl font-bold text-white tracking-tight">HomiQ Systems</h2>
             <p class="text-xs text-slate-500 mt-1 uppercase font-semibold tracking-widest">Administrative Hub</p>
         </div>

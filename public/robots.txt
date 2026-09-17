@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /chat
+Allow: /
+
+Sitemap: https://homiq.in/sitemap.xml

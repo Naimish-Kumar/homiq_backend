@@ -40,5 +40,15 @@ return [
         'key_secret' => env('RAZORPAY_KEY_SECRET'),
     ],
 
+    // Google Search Console & Webmaster Tools (Task 48)
+    'google' => [
+        'site_verification' => env('GOOGLE_SITE_VERIFICATION', 'google-site-verification-homiq-growth-2026'),
+    ],
+
+    // Microsoft Clarity Session Recordings & Heatmaps (Task 49)
+    'clarity' => [
+        'project_id' => env('CLARITY_PROJECT_ID', 'clarity_homiq_prod'),
+    ],
+
 ];
 

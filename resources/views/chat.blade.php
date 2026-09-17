@@ -207,7 +207,7 @@
                     @endforeach
 
                     <!-- Typing Indicator -->
-                    <div id="typing-indicator" class="hidden flex items-center gap-1.5 px-4.5 py-1 text-[10px] text-slate-400 font-semibold italic">
+                    <div id="typing-indicator" class="hidden flex items-center gap-1.5 px-4 py-1 text-[10px] text-slate-400 font-semibold italic">
                         <span class="flex gap-0.5">
                             <span class="h-1 w-1 bg-slate-400 rounded-full animate-bounce"></span>
                             <span class="h-1 w-1 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>

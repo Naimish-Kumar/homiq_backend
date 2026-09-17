@@ -128,4 +128,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/subscription/razorpay/verify', [\App\Http\Controllers\Api\RazorpayController::class, 'verifyPayment']);
 });
 
+// Analytics Ingestion (Tasks 46 & 47)
+Route::post('/analytics/events', [\App\Http\Controllers\AnalyticsController::class, 'recordEvent']);
+
+
 

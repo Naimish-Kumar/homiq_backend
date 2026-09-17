@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
 use App\Models\Booking;
+use App\Models\PropertyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -33,12 +34,23 @@ class CustomerDashboardController extends Controller
             ->latest()
             ->get();
 
-        // 3. Fetch incoming booking requests for their properties
+        // 3. Match tenant/buyer demands with active listings (Task 28)
+        $activeDemands = PropertyRequest::active()->get();
+        $totalMatchingDemands = 0;
+        foreach ($myListings as $listing) {
+            $matchingCount = $activeDemands->filter(function ($demand) use ($listing) {
+                return $demand->matchesProperty($listing);
+            })->count();
+            $listing->matching_demands_count = $matchingCount;
+            $totalMatchingDemands += $matchingCount;
+        }
+
+        // 4. Fetch incoming booking requests for their properties
         $bookingRequests = Booking::whereHas('property', function ($query) use ($user) {
             $query->where('owner_id', $user->id);
         })->with(['property', 'renter'])->latest()->get();
 
-        // 4. Calculate subscription limits
+        // 5. Calculate subscription limits
         $currentListingsCount = $myListings->count();
         $limit = 10;
         if ($user->subscription_plan === 'standard') {
@@ -53,7 +65,81 @@ class CustomerDashboardController extends Controller
         $features = \App\Models\KeyFeature::all();
         $siteConfigs = \App\Models\Configuration::pluck('value', 'key');
 
-        return view('dashboard', compact('bookings', 'myListings', 'bookingRequests', 'currentListingsCount', 'limit', 'categories', 'amenities', 'specifications', 'features', 'siteConfigs'));
+        // Owner Analytics Totals
+        $totalViews = $myListings->sum('views_count');
+        $totalImpressions = $myListings->sum('impressions_count');
+        $totalInquiries = $myListings->sum('inquiries_count');
+        $totalWhatsappClicks = $myListings->sum('whatsapp_clicks');
+        $totalSaves = $myListings->sum('saves_count');
+
+        // Saved Searches (Task 38)
+        $savedSearches = \App\Models\SavedSearch::where('user_id', $user->id)->latest()->get();
+
+        return view('dashboard', compact(
+            'bookings',
+            'myListings',
+            'bookingRequests',
+            'currentListingsCount',
+            'limit',
+            'categories',
+            'amenities',
+            'specifications',
+            'features',
+            'siteConfigs',
+            'totalViews',
+            'totalImpressions',
+            'totalInquiries',
+            'totalWhatsappClicks',
+            'totalSaves',
+            'totalMatchingDemands',
+            'savedSearches'
+        ));
+    }
+
+    /**
+     * Get matching seeker demands for a specific property (Task 28).
+     */
+    public function getMatchingDemands($id)
+    {
+        $user = Auth::user();
+        $property = Property::where('owner_id', $user->id)->findOrFail($id);
+
+        $demands = PropertyRequest::active()->get()->filter(function ($demand) use ($property) {
+            return $demand->matchesProperty($property);
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'property' => [
+                'id' => $property->id,
+                'title' => $property->title,
+                'address' => $property->address,
+                'price' => $property->price,
+                'category' => $property->category,
+                'bedrooms' => $property->bedrooms,
+            ],
+            'matches' => $demands->map(function ($d) {
+                return [
+                    'id' => $d->id,
+                    'name' => $d->name,
+                    'phone' => $d->phone,
+                    'masked_phone' => substr($d->phone, 0, 3) . '****' . substr($d->phone, -3),
+                    'whatsapp_url' => 'https://wa.me/91' . preg_replace('/[^0-9]/', '', $d->phone) . '?text=' . urlencode("Hi {$d->name}, I noticed your requirement on HomiQ for {$d->property_type} in {$d->location}. I have a verified property matching your budget and criteria."),
+                    'purpose' => ucfirst($d->purpose),
+                    'property_type' => $d->property_type,
+                    'location' => $d->location,
+                    'city' => $d->city,
+                    'bhk' => $d->bhk,
+                    'budget' => $d->budget_formatted,
+                    'tenant_type' => $d->tenant_type ? ucfirst(str_replace('_', ' ', $d->tenant_type)) : 'All Tenants',
+                    'tenant_badge' => $d->tenant_badge,
+                    'furnishing_preference' => $d->furnishing_preference ? ucfirst(str_replace('_', ' ', $d->furnishing_preference)) : 'Any Furnishing',
+                    'move_in_date' => $d->move_in_timeline,
+                    'time_ago' => $d->time_ago,
+                    'notes' => $d->notes,
+                ];
+            }),
+        ]);
     }
 
     /**

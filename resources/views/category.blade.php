@@ -41,7 +41,7 @@
             <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">There are currently no approved properties listed under the {{ $name }} category. Check back later or explore other spaces.</p>
         </div>
     @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach ($properties as $prop)
                 <x-property-card :property="$prop" />
             @endforeach
