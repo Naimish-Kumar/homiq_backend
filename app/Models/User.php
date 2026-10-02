@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'phone', 'dob', 'gender', 'profile_photo', 'is_admin', 'is_host', 'subscription_plan', 'fcm_token', 'last_seen_at', 'is_verified', 'email_verified_at', 'kyc_document', 'kyc_status', 'referral_code', 'referred_by_id', 'country'])]
+#[Fillable(['name', 'email', 'password', 'phone', 'dob', 'gender', 'profile_photo', 'is_admin', 'subscription_plan', 'fcm_token', 'last_seen_at', 'is_verified', 'email_verified_at', 'kyc_document', 'kyc_status', 'referral_code', 'referred_by_id', 'country', 'referral_balance', 'total_referral_earned'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements \Filament\Models\Contracts\FilamentUser, \Filament\Models\Contracts\HasAvatar
 {
@@ -68,6 +68,8 @@ class User extends Authenticatable implements \Filament\Models\Contracts\Filamen
             'is_admin' => 'boolean',
             'is_verified' => 'boolean',
             'last_seen_at' => 'datetime',
+            'referral_balance' => 'decimal:2',
+            'total_referral_earned' => 'decimal:2',
         ];
     }
 
@@ -110,5 +112,15 @@ class User extends Authenticatable implements \Filament\Models\Contracts\Filamen
     public function wishlistProperties()
     {
         return $this->belongsToMany(Property::class, 'wishlists');
+    }
+
+    public function referralTransactions()
+    {
+        return $this->hasMany(ReferralTransaction::class)->latest();
+    }
+
+    public function withdrawalRequests()
+    {
+        return $this->hasMany(WithdrawalRequest::class)->latest();
     }
 }

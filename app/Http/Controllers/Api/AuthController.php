@@ -69,17 +69,7 @@ class AuthController extends Controller
         ]);
 
         if ($referrer) {
-            try {
-                $notificationService = app(\App\Services\NotificationService::class);
-                $notificationService->notify(
-                    $referrer,
-                    'New Referral Registered!',
-                    $user->name . ' signed up using your referral code. You have earned 2 extra listing slots!',
-                    'info'
-                );
-            } catch (\Exception $e) {
-                Log::error("Failed to notify referrer: " . $e->getMessage());
-            }
+            app(\App\Services\ReferralService::class)->rewardSignup($user, $referrer);
         }
 
         $token = $user->createToken('homiq_auth_token')->plainTextToken;
@@ -465,17 +455,7 @@ class AuthController extends Controller
         $user->referred_by_id = $referrer->id;
         $user->save();
 
-        try {
-            $notificationService = app(\App\Services\NotificationService::class);
-            $notificationService->notify(
-                $referrer,
-                'Referral Reward Claimed!',
-                $user->name . ' applied your referral code. You have earned 2 extra listing slots!',
-                'info'
-            );
-        } catch (\Exception $e) {
-            Log::error("Failed to notify referrer: " . $e->getMessage());
-        }
+        app(\App\Services\ReferralService::class)->rewardSignup($user, $referrer);
 
         return response([
             'message' => 'Referral code applied successfully!',

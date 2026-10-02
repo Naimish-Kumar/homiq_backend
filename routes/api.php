@@ -40,6 +40,14 @@ Route::get('/app-version', function() {
 // Dashboards
 Route::get('/dashboard/renter', [DashboardController::class, 'renterDashboard']);
 
+// Property Requests / Demand Board (Public/Seeker)
+Route::get('/property-requests', [\App\Http\Controllers\Api\PropertyRequestApiController::class, 'index']);
+Route::post('/property-requests', [\App\Http\Controllers\Api\PropertyRequestApiController::class, 'store']);
+
+// Contact Support Desk & Listing Reporting (Public & Authenticated)
+Route::post('/contact', [\App\Http\Controllers\Api\ContactApiController::class, 'submitContact']);
+Route::post('/properties/{id}/report', [\App\Http\Controllers\Api\ContactApiController::class, 'reportProperty']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
@@ -50,6 +58,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/change-password', [AuthController::class, 'changePassword']);
     Route::put('/fcm-token', [AuthController::class, 'updateFcmToken']);
     Route::post('/referral/apply', [AuthController::class, 'applyReferralCode']);
+    Route::get('/referral/wallet', [\App\Http\Controllers\Api\ReferralWalletApiController::class, 'getWallet']);
+    Route::post('/referral/withdraw', [\App\Http\Controllers\Api\ReferralWalletApiController::class, 'requestWithdrawal']);
 
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -81,6 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/properties', [PropertyController::class, 'store']);
     Route::put('/properties/{id}', [PropertyController::class, 'update']);
     Route::delete('/properties/{id}', [PropertyController::class, 'destroy']);
+    Route::get('/properties/{id}/matching-demands', [\App\Http\Controllers\Api\PropertyRequestApiController::class, 'matchingDemands']);
     
     // Property Questions
     Route::post('/properties/{id}/questions', [\App\Http\Controllers\PropertyQuestionController::class, 'store']);

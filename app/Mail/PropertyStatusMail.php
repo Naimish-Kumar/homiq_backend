@@ -15,15 +15,24 @@ class PropertyStatusMail extends Mailable
     public string $ownerName;
     public string $propertyTitle;
     public string $status;
+    public ?string $reason;
+    public ?string $notes;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(string $ownerName, string $propertyTitle, string $status)
-    {
+    public function __construct(
+        string $ownerName,
+        string $propertyTitle,
+        string $status,
+        ?string $reason = null,
+        ?string $notes = null
+    ) {
         $this->ownerName = $ownerName;
         $this->propertyTitle = $propertyTitle;
         $this->status = $status;
+        $this->reason = $reason;
+        $this->notes = $notes;
     }
 
     /**
@@ -31,8 +40,9 @@ class PropertyStatusMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $statusText = ucfirst($this->status);
         return new Envelope(
-            subject: 'HomiQ - Property Listing Status Update',
+            subject: "HomiQ - Property Listing {$statusText}: {$this->propertyTitle}",
         );
     }
 

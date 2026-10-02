@@ -18,6 +18,12 @@ class AdminMiddleware
             return $next($request);
         }
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Unauthorized. Administrator access required.'
+            ], 403);
+        }
+
         return redirect('/login')->withErrors([
             'email' => 'Please log in with an administrator account to access this area.',
         ]);

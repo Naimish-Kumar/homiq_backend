@@ -1,182 +1,230 @@
 @extends('admin.layout')
 
-@section('page_title', '')
+@section('page_title', 'Overview')
 
 @section('content')
-<!-- Header Section (Donezo Style) -->
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 relative z-10">
+<!-- Header & Welcome Banner -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <h1 class="text-2xl font-black text-slate-800">Dashboard</h1>
-        <p class="text-xs text-slate-400 font-semibold mt-1">Manage listings, approve reservation requests, and moderate user accounts with ease.</p>
+        <div class="flex items-center gap-2.5 mb-1">
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight font-heading">System Overview</h1>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Live System
+            </span>
+        </div>
+        <p class="text-xs text-slate-500 font-medium">Welcome back, <strong class="text-slate-700 font-semibold">{{ Auth::user()->name }}</strong>. Operational performance summary for {{ now()->format('l, d M Y') }}.</p>
     </div>
-    <div class="flex gap-2.5">
-        <a href="/admin/properties?status=pending" class="px-4 py-2.5 bg-donezoGreen hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+    
+    <!-- Action buttons -->
+    <div class="flex items-center gap-2.5 flex-wrap">
+        @if($pendingProperties > 0)
+            <a href="/admin/properties?status=pending" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-2">
+                <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+                <span>Review Spaces</span>
+                <span class="px-1.5 py-0.5 bg-white/20 rounded-md text-[10px] font-extrabold">{{ $pendingProperties }}</span>
+            </a>
+        @else
+            <a href="/admin/properties" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.75a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 011.5 1.5V21m6-9h.75m-.75 3h.75m-.75 3h.75" />
+                </svg>
+                <span>Browse Listings</span>
+            </a>
+        @endif
+        
+        <a href="/admin/users" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shadow-2xs flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
             </svg>
-            Moderate Spaces
-        </a>
-        <a href="/admin/users" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-bold transition border border-slate-200 shadow-sm flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            User Database
+            <span>User Database</span>
         </a>
     </div>
 </div>
 
-<!-- Donezo-Style Metrics Grid -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 relative z-10">
-    <!-- Card 1: Platform Revenue (Solid Green) -->
-    <div class="bg-donezoGreen p-5 rounded-2xl text-white shadow-sm flex flex-col justify-between h-36 border border-emerald-800 relative group overflow-hidden">
-        <!-- SVG background accent line -->
-        <div class="absolute inset-0 bg-gradient-to-tr from-transparent to-white/5 pointer-events-none"></div>
-        <div class="flex items-center justify-between z-10">
-            <span class="text-[10px] font-bold text-emerald-250 uppercase tracking-widest block">Total Revenue</span>
-            <div class="h-7 w-7 bg-white rounded-full flex items-center justify-center text-donezoGreen shadow group-hover:rotate-45 transition duration-300 cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+<!-- Primary Metric KPI Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    
+    <!-- Card 1: Total Platform Revenue -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-emerald-300 transition flex flex-col justify-between h-40 group">
+        <div class="flex items-center justify-between">
+            <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Platform Revenue</span>
+            <div class="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 transition duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                 </svg>
             </div>
         </div>
-        <div class="mt-2 z-10">
-            <span class="text-3xl font-extrabold block">₹{{ number_format($totalRevenue, 2) }}</span>
-            <span class="text-[9px] text-emerald-200 bg-emerald-800/60 border border-emerald-700/50 px-2 py-0.5 rounded-md mt-2 inline-block font-semibold">
-                +5% Platform commission active
-            </span>
+        <div class="mt-2">
+            <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight block">₹{{ number_format($totalRevenue, 2) }}</span>
+            <div class="flex items-center gap-1.5 mt-2">
+                <span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md font-semibold">
+                    +5% Platform Commission
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- Card 2: Total Members -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between h-36 relative group">
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-emerald-300 transition flex flex-col justify-between h-40 group">
         <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Members</span>
-            <div class="h-7 w-7 border border-slate-200 hover:bg-slate-50 rounded-full flex items-center justify-center text-slate-600 shadow-sm group-hover:rotate-45 transition duration-300 cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Registered Members</span>
+            <div class="h-9 w-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600 transition duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                 </svg>
             </div>
         </div>
         <div class="mt-2">
-            <span class="text-3xl font-extrabold text-slate-800 block">{{ $totalUsers }}</span>
-            <span class="text-[9px] text-slate-400 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md mt-2 inline-block font-semibold">
-                Unified customer profiles
-            </span>
+            <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight block">{{ number_format($totalUsers) }}</span>
+            <div class="flex items-center gap-1.5 mt-2">
+                <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md font-semibold">
+                    Renters & Property Owners
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- Card 3: Total Bookings -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between h-36 relative group">
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-emerald-300 transition flex flex-col justify-between h-40 group">
         <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Bookings</span>
-            <div class="h-7 w-7 border border-slate-200 hover:bg-slate-50 rounded-full flex items-center justify-center text-slate-600 shadow-sm group-hover:rotate-45 transition duration-300 cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Bookings & Deals</span>
+            <div class="h-9 w-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600 transition duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
                 </svg>
             </div>
         </div>
         <div class="mt-2">
-            <span class="text-3xl font-extrabold text-slate-800 block">{{ $totalBookings }}</span>
-            <span class="text-[9px] text-slate-400 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md mt-2 inline-block font-semibold">
-                Approved rental contracts
-            </span>
+            <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight block">{{ number_format($totalBookings) }}</span>
+            <div class="flex items-center gap-1.5 mt-2">
+                <span class="text-[10px] text-slate-600 bg-slate-100 border border-slate-200/60 px-2 py-0.5 rounded-md font-semibold">
+                    Finalized Deals & Reservations
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- Card 4: Total Properties -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between h-36 relative group">
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-emerald-300 transition flex flex-col justify-between h-40 group">
         <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Total Properties</span>
-            <div class="h-7 w-7 border border-slate-200 hover:bg-slate-50 rounded-full flex items-center justify-center text-slate-600 shadow-sm group-hover:rotate-45 transition duration-300 cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Property Inventory</span>
+            <div class="h-9 w-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600 transition duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.75a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 011.5 1.5V21m6-9h.75m-.75 3h.75m-.75 3h.75" />
                 </svg>
             </div>
         </div>
         <div class="mt-2">
-            <span class="text-3xl font-extrabold text-slate-800 block">{{ $totalProperties }}</span>
-            <span class="text-[9px] text-slate-400 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md mt-2 inline-block font-semibold">
-                Live search index directory
-            </span>
+            <span class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight block">{{ number_format($totalProperties) }}</span>
+            <div class="flex items-center gap-1.5 mt-2">
+                <span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md font-semibold">
+                    {{ $approvedProperties }} Active & Live
+                </span>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Middle Section: Analytics Chart + Reminders + Recent Listings -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 relative z-10">
+<!-- Middle Analytics Section: Chart + Reminders + Recent Bookings -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+    
     <!-- Chart Column (5 cols) -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-5 flex flex-col justify-between min-h-[300px]">
-        <div>
-            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Listing Volume</h3>
-            <p class="text-[10px] text-slate-400 mt-1 font-semibold">Weekly listings review statistics</p>
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs lg:col-span-5 flex flex-col justify-between min-h-[320px]">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">Listing Ingestion Volume</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Weekly property submissions distribution</p>
+            </div>
+            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold">7-Day Scan</span>
         </div>
 
-        <!-- Custom CSS bar chart matching reference layout style -->
-        <div class="flex items-end justify-between h-36 px-4">
+        <!-- Sleek CSS Bar Chart -->
+        <div class="flex items-end justify-between h-40 px-4 pt-6">
             @foreach ($listingVolume as $vol)
-                <div class="flex flex-col items-center gap-2">
+                <div class="flex flex-col items-center gap-2 flex-1">
                     @if ($vol['count'] == 0)
-                        <div class="w-7 bg-slate-100 rounded-full h-4 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 3px, #e2e8f0 3px, #e2e8f0 6px)" title="0 listings"></div>
+                        <div class="w-8 bg-slate-100 rounded-lg h-4 relative overflow-hidden" title="0 listings"></div>
                     @else
-                        <div class="w-7 rounded-full relative {{ $vol['is_max'] ? 'bg-[#1e483b]' : 'bg-emerald-400' }}" style="height: {{ $vol['height'] }}px;" title="{{ $vol['count'] }} listings">
+                        <div class="w-8 rounded-lg relative transition-all duration-300 {{ $vol['is_max'] ? 'bg-emerald-600 shadow-sm' : 'bg-slate-200 hover:bg-emerald-500' }}" style="height: {{ max(16, $vol['height']) }}px;" title="{{ $vol['count'] }} listings">
                             @if ($vol['is_max'])
-                                <span class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white font-extrabold text-[8px] px-1.5 py-0.5 rounded-sm">{{ $vol['count'] }}</span>
+                                <span class="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#0A2540] text-white font-extrabold text-[9px] px-2 py-0.5 rounded-md shadow-sm">
+                                    {{ $vol['count'] }}
+                                </span>
                             @endif
                         </div>
                     @endif
-                    <span class="text-[10px] font-bold text-slate-400">{{ $vol['letter'] }}</span>
+                    <span class="text-[11px] font-bold text-slate-500">{{ $vol['letter'] }}</span>
                 </div>
             @endforeach
         </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Active submissions</span>
+            <span class="font-semibold text-slate-700">{{ array_sum(array_column($listingVolume, 'count')) }} Total this week</span>
+        </div>
     </div>
 
-    <!-- Reminders Column (3 cols) -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-3 flex flex-col justify-between min-h-[300px]">
+    <!-- Action Center Column (3 cols) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs lg:col-span-3 flex flex-col justify-between min-h-[320px]">
         <div>
-            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Reminders</h3>
-            <span class="text-[9px] text-slate-400 font-bold tracking-widest block mt-1 uppercase">Pending Alerts</span>
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">Action Center</h3>
+                <span class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+            </div>
+            <p class="text-[11px] text-slate-400">Items requiring administrative attention</p>
         </div>
 
-        <div class="space-y-3.5">
-            <div class="border-b border-slate-50 pb-2">
-                <h4 class="font-extrabold text-donezoGreen text-xs leading-snug">Review Pending Listings</h4>
-                <p class="text-[10px] text-slate-500 mt-1 leading-normal">There are <strong class="text-slate-800 font-bold">{{ $pendingProperties }}</strong> properties pending review.</p>
-            </div>
-            <div>
-                <h4 class="font-extrabold text-amber-600 text-xs leading-snug">Pending KYC Verifications</h4>
-                <p class="text-[10px] text-slate-500 mt-1 leading-normal">There are <strong class="text-slate-800 font-bold">{{ $pendingKycCount }}</strong> KYC uploads awaiting moderation.</p>
-            </div>
+        <div class="space-y-3 my-3">
+            <a href="/admin/properties?status=pending" class="block p-3 rounded-xl bg-slate-50 border border-slate-200/60 hover:border-emerald-300 transition group">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-800">Pending Listings</span>
+                    <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-black">{{ $pendingProperties }}</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Properties awaiting verification and approval.</p>
+            </a>
+
+            <a href="/admin/users" class="block p-3 rounded-xl bg-slate-50 border border-slate-200/60 hover:border-amber-300 transition group">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-800">KYC Verifications</span>
+                    <span class="px-2 py-0.5 bg-amber-600 text-white rounded-md text-[10px] font-black">{{ $pendingKycCount }}</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Owner identity documents to be vetted.</p>
+            </a>
         </div>
 
-        <a href="/admin/properties?status=pending" class="block w-full py-3 bg-donezoGreen hover:bg-emerald-800 text-white text-center rounded-xl text-[10px] font-extrabold transition shadow-sm flex items-center justify-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <a href="/admin/properties?status=pending" class="w-full py-2.5 bg-[#0A2540] hover:bg-[#061826] text-white text-center rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-2">
+            <span>Start Moderating</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-            Start Moderating
         </a>
     </div>
 
-    <!-- Recent Reservation Log (4 cols) -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-4 flex flex-col justify-between min-h-[300px]">
-        <div class="flex items-center justify-between border-b border-slate-50 pb-3 mb-2.5">
-            <span class="text-xs font-bold text-slate-850 uppercase tracking-widest">Recent Activity</span>
-            <span class="px-2 py-0.5 bg-donezoLightGreen text-donezoGreen border border-emerald-100 rounded-md text-[8px] font-extrabold uppercase">Live Feed</span>
+    <!-- Recent Activity Log (4 cols) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs lg:col-span-4 flex flex-col justify-between min-h-[320px]">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">Recent Activity</span>
+            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 border border-slate-200/60 rounded-md text-[9px] font-extrabold uppercase">Live Feed</span>
         </div>
 
         @if ($recentBookings->isEmpty())
-            <p class="text-xs text-slate-400 py-12 text-center font-bold">No active reservations.</p>
+            <div class="py-10 text-center">
+                <p class="text-xs text-slate-400 font-semibold">No recent reservations recorded.</p>
+            </div>
         @else
-            <div class="space-y-3.5 flex-1 overflow-y-auto pr-1">
+            <div class="space-y-3.5 flex-1 overflow-y-auto pr-1 my-2">
                 @foreach ($recentBookings->take(4) as $booking)
                     <div class="flex items-center justify-between border-b border-slate-50 pb-2.5 last:border-0 last:pb-0">
                         <div class="overflow-hidden pr-2">
-                            <span class="text-xs font-black text-slate-800 block truncate leading-none mb-1">{{ $booking->property->title }}</span>
-                            <span class="text-[9px] text-slate-400 block truncate leading-none">Renter: {{ $booking->renter->name }}</span>
+                            <span class="text-xs font-bold text-slate-800 block truncate leading-tight">{{ $booking->property->title }}</span>
+                            <span class="text-[10px] text-slate-400 block truncate mt-0.5">Renter: {{ $booking->renter->name }}</span>
                         </div>
                         <div class="text-right flex-shrink-0">
-                            <span class="text-xs font-black text-slate-800 block mb-0.5">₹{{ number_format($booking->total_price, 0) }}</span>
-                            <span class="text-[8px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider {{ $booking->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">
+                            <span class="text-xs font-black text-slate-900 block">₹{{ number_format($booking->total_price, 0) }}</span>
+                            <span class="inline-block text-[9px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider {{ $booking->status === 'approved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200' }}">
                                 {{ $booking->status }}
                             </span>
                         </div>
@@ -184,198 +232,189 @@
                 @endforeach
             </div>
         @endif
+
+        <div class="pt-2 border-t border-slate-100 text-right">
+            <a href="/admin/financials" class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
+                View transactions ledger →
+            </a>
+        </div>
     </div>
 </div>
 
-<!-- Bottom Section: Active Users + Project Progress + Time Tracker -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-    <!-- Active Users list (5 cols) -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-5 flex flex-col justify-between min-h-[300px]">
-        <div class="flex items-center justify-between border-b border-slate-50 pb-3 mb-2.5">
-            <span class="text-xs font-bold text-slate-800 uppercase tracking-widest">Active Administrators</span>
-            <a href="/admin/users" class="text-[10px] font-bold text-donezoGreen hover:underline">View database</a>
+<!-- Bottom Row: Team Members + Moderation Health Gauge + Time Tracker -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+    
+    <!-- Active Administrators List (5 cols) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs lg:col-span-5 flex flex-col justify-between min-h-[300px]">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+            <div>
+                <span class="text-xs font-bold text-slate-900 uppercase tracking-wider block font-heading">Staff & Active Profiles</span>
+                <span class="text-[10px] text-slate-400">Recently onboarded users</span>
+            </div>
+            <a href="/admin/users" class="text-[11px] font-bold text-emerald-600 hover:underline">View All</a>
         </div>
 
-        <div class="space-y-3.5">
+        <div class="space-y-3 flex-1">
             @foreach ($latestUsers as $user)
-                <div class="flex items-center justify-between bg-slate-50/50 p-3 rounded-xl border border-slate-100">
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100/60 transition">
                     <div class="flex items-center gap-3">
-                        <div class="h-8.5 w-8.5 rounded-lg {{ $user->is_admin ? 'bg-donezoLightGreen text-[#187053]' : 'bg-slate-100 text-slate-500' }} flex items-center justify-center font-bold text-xs">
+                        <div class="h-9 w-9 rounded-xl {{ $user->is_admin ? 'bg-[#0A2540] text-emerald-400' : 'bg-slate-200 text-slate-600' }} flex items-center justify-center font-extrabold text-xs shadow-2xs">
                             {{ $user->initials }}
                         </div>
                         <div>
                             <h4 class="text-xs font-bold text-slate-800">{{ $user->name }}</h4>
-                            <span class="text-[9px] text-slate-400 block mt-0.5">{{ $user->role_desc }}</span>
+                            <span class="text-[10px] text-slate-400 block mt-0.5">{{ $user->role_desc }}</span>
                         </div>
                     </div>
-                    <span class="px-2 py-0.5 {{ $user->badge_class }} border rounded-md text-[8px] font-extrabold uppercase">{{ $user->display_role }}</span>
+                    <span class="px-2 py-0.5 {{ $user->badge_class }} border rounded-md text-[9px] font-extrabold uppercase">{{ $user->display_role }}</span>
                 </div>
             @endforeach
         </div>
     </div>
 
-    <!-- Project Progress Half Donut SVG Gauge (3 cols) -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-3 flex flex-col justify-between min-h-[300px]">
+    <!-- Moderation Health Gauge (3 cols) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs lg:col-span-3 flex flex-col justify-between min-h-[300px]">
         <div>
-            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Moderation Progress</h3>
-            <span class="text-[9px] text-slate-400 font-bold block mt-1 uppercase">Directory Ratio</span>
+            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">Moderation Health</h3>
+            <span class="text-[10px] text-slate-400 font-semibold block mt-0.5">Directory Approval Ratio</span>
         </div>
 
-        <!-- Custom SVG Half Donut Chart matching layout -->
-        <div class="flex flex-col items-center justify-center relative mt-2">
+        <!-- Half Donut SVG Gauge -->
+        <div class="flex flex-col items-center justify-center relative my-4">
             @php
                 $total = max(1, $totalProperties);
                 $approvedPercentage = round(($approvedProperties / $total) * 100);
             @endphp
-            <svg class="w-32 h-20" viewBox="0 0 100 60">
-                <!-- Background gray stroke path -->
-                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/>
-                <!-- Approved green stroke path -->
-                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#187053" stroke-width="12" stroke-linecap="round"
+            <svg class="w-36 h-20" viewBox="0 0 100 60">
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E2E8F0" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#10B981" stroke-width="12" stroke-linecap="round"
                       stroke-dasharray="125.6" stroke-dashoffset="{{ 125.6 - (125.6 * ($approvedPercentage / 100)) }}"/>
             </svg>
-            <div class="absolute bottom-2 text-center">
-                <span class="text-2xl font-black text-slate-800">{{ $approvedPercentage }}%</span>
-                <p class="text-[9px] text-slate-400 font-bold uppercase mt-0.5">Approved Ratio</p>
+            <div class="absolute bottom-1 text-center">
+                <span class="text-2xl font-black text-slate-900">{{ $approvedPercentage }}%</span>
+                <p class="text-[9px] text-slate-400 font-bold uppercase">Approved Rate</p>
             </div>
         </div>
 
-        <div class="flex justify-between text-[9px] text-slate-400 font-bold border-t border-slate-50 pt-2 px-1">
-            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-donezoGreen block"></span> Live</span>
-            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-amber-400 block"></span> Pending</span>
-            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-rose-500 block"></span> Denied</span>
+        <div class="flex justify-between text-[10px] text-slate-500 font-semibold border-t border-slate-100 pt-2 px-1">
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Live</span>
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-amber-400"></span> Pending</span>
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-rose-500"></span> Denied</span>
         </div>
     </div>
 
-    <!-- Time Tracker Widget Card (4 cols) -->
-    <div class="bg-gradient-to-tr from-emerald-950 via-[#0e3b2b] to-slate-950 p-6 rounded-2xl border border-emerald-900/50 shadow-sm lg:col-span-4 flex flex-col justify-between text-white min-h-[300px] relative overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-800/10 via-transparent to-transparent pointer-events-none"></div>
+    <!-- Live System Watch / Time Tracker (4 cols) -->
+    <div class="bg-gradient-to-tr from-[#0A2540] via-[#081F36] to-[#061826] p-6 rounded-2xl border border-slate-800 shadow-md lg:col-span-4 flex flex-col justify-between text-white min-h-[300px] relative overflow-hidden">
         <div class="z-10">
-            <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Live Time Tracker</h3>
-            <span class="text-[8px] text-emerald-300/70 block mt-1 uppercase">Live System Watch</span>
+            <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider font-heading">System Status</h3>
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Admin Session Monitor</span>
         </div>
 
         <div class="my-6 text-center z-10">
             <span id="dashboardClock" class="text-4xl font-extrabold tracking-widest font-mono text-emerald-400">00:00:00</span>
-            <p class="text-[9px] text-emerald-300/50 uppercase mt-1 tracking-widest font-semibold">Active Administration session</p>
+            <p class="text-[10px] text-slate-400 uppercase mt-1 tracking-widest font-medium">Server Synchronized</p>
         </div>
 
-        <div class="flex items-center justify-center gap-4 z-10">
-            <button class="h-10 w-10 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/35 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </button>
-            <button class="h-10 w-10 rounded-full bg-rose-500/15 border border-rose-500/20 flex items-center justify-center text-rose-450 hover:bg-rose-500/35 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H10a1 1 0 01-1-1v-4z" />
-                </svg>
-            </button>
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-300 z-10">
+            <span class="flex items-center gap-1.5">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Operational
+            </span>
+            <span class="text-[10px] font-bold text-emerald-300 bg-white/10 px-2 py-0.5 rounded-md">HTTP 200 OK</span>
         </div>
     </div>
 </div>
 
-<!-- Bottom Widgets Grid (Feedback & KYC) -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 relative z-10">
-    <!-- Feedback Section -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between min-h-[300px]">
+<!-- Bottom Widgets: Feedback & KYC Approval Queue -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- User Feedback & Bug Submissions -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col justify-between min-h-[320px]">
         <div>
-            <div class="flex items-center justify-between border-b border-slate-50 pb-3 mb-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
                 <div>
-                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Recent User Feedback</h3>
-                    <p class="text-[10px] text-slate-400 mt-1 font-semibold">User feedback and bug submissions from mobile app</p>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">Recent User Feedback</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Submissions from HomiQ Mobile App</p>
                 </div>
-                <a href="/admin/feedbacks" class="text-[10px] font-bold text-donezoGreen hover:underline">View All Feedback</a>
+                <a href="/admin/feedbacks" class="text-[11px] font-bold text-emerald-600 hover:underline">View All ({{ $recentFeedbacks->count() }})</a>
             </div>
 
             @if ($recentFeedbacks->isEmpty())
-                <p class="text-xs text-slate-400 py-12 text-center font-bold">No feedback received yet.</p>
+                <p class="text-xs text-slate-400 py-12 text-center font-semibold">No feedback submissions received yet.</p>
             @else
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @foreach ($recentFeedbacks as $feedback)
-                        <div class="flex flex-col md:flex-row md:items-center justify-between p-3.5 bg-slate-50/50 border border-slate-100 rounded-xl gap-3">
-                            <div class="flex items-start gap-3">
-                                <div class="h-8 w-8 rounded-full bg-slate-100 border border-slate-200/60 flex items-center justify-center font-bold text-xs text-slate-500 flex-shrink-0">
-                                    {{ substr($feedback->user->name ?? 'G', 0, 1) }}
+                        <div class="p-3.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-slate-900">{{ $feedback->user->name ?? 'Guest User' }}</span>
+                                    @if($feedback->type === 'issue')
+                                        <span class="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-md text-[9px] font-extrabold uppercase">Bug Report</span>
+                                    @else
+                                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[9px] font-extrabold uppercase">Suggestion</span>
+                                    @endif
                                 </div>
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-xs font-black text-slate-800">{{ $feedback->user->name ?? 'Guest' }}</span>
-                                        <span class="text-[9px] text-slate-400 font-semibold">({{ $feedback->user->email ?? 'N/A' }})</span>
-                                        @if($feedback->type === 'issue')
-                                            <span class="px-1.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-100 rounded text-[8px] font-extrabold uppercase tracking-wider">Bug: {{ $feedback->area ?? 'General' }}</span>
-                                        @else
-                                            <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[8px] font-extrabold uppercase tracking-wider">Suggestion</span>
-                                        @endif
-                                    </div>
-                                    <p class="text-xs text-slate-650 mt-1 font-semibold leading-relaxed">{{ Str::limit($feedback->feedback, 160) }}</p>
-                                </div>
+                                <span class="text-[10px] text-slate-400 font-medium">{{ $feedback->created_at->diffForHumans() }}</span>
                             </div>
-                            <div class="flex-shrink-0 text-right flex flex-col items-end gap-1">
-                                @if($feedback->type === 'suggestion')
-                                    <div class="flex items-center gap-0.5">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 {{ $i <= $feedback->stars ? 'text-amber-400 fill-amber-400' : 'text-slate-200' }}" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                            </svg>
-                                        @endfor
-                                    </div>
-                                @endif
-                                <span class="text-[9px] text-slate-400 font-semibold">{{ $feedback->created_at->diffForHumans() }}</span>
-                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">{{ Str::limit($feedback->feedback, 140) }}</p>
                         </div>
                     @endforeach
                 </div>
             @endif
         </div>
+        
+        <div class="mt-4 pt-3 border-t border-slate-100 text-right">
+            <a href="/admin/feedbacks" class="text-[11px] font-bold text-emerald-600 hover:underline">Open Feedback Management →</a>
+        </div>
     </div>
 
-    <!-- Pending KYC Approvals Section -->
-    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between min-h-[300px]">
+    <!-- Pending KYC Approvals Queue -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col justify-between min-h-[320px]">
         <div>
-            <div class="flex items-center justify-between border-b border-slate-50 pb-3 mb-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
                 <div>
-                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Pending KYC Approvals</h3>
-                    <p class="text-[10px] text-slate-400 mt-1 font-semibold">Verify identity documents uploaded by hosts and users</p>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">Pending KYC Verification</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Government ID & Host verification requests</p>
                 </div>
-                <span class="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200/60 rounded-md text-[8px] font-extrabold uppercase tracking-wider">{{ $pendingKycCount }} Pending</span>
+                <span class="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-[10px] font-extrabold uppercase">{{ $pendingKycCount }} Pending</span>
             </div>
 
             @if ($pendingKycUsers->isEmpty())
-                <p class="text-xs text-slate-400 py-12 text-center font-bold">No pending KYC verifications.</p>
+                <p class="text-xs text-slate-400 py-12 text-center font-semibold">No pending KYC approvals in queue.</p>
             @else
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @foreach ($pendingKycUsers as $user)
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50/50 border border-slate-100 rounded-xl gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 border border-slate-100 rounded-xl gap-3">
                             <div class="flex items-center gap-3">
                                 @if($user->profile_photo)
-                                    <img src="{{ $user->profile_photo }}" class="h-8.5 w-8.5 rounded-lg object-cover border border-slate-200" alt="avatar">
+                                    <img src="{{ $user->profile_photo }}" class="h-9 w-9 rounded-xl object-cover border border-slate-200 shadow-2xs" alt="avatar">
                                 @else
-                                    <div class="h-8.5 w-8.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-500 uppercase">
+                                    <div class="h-9 w-9 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center font-extrabold text-xs text-slate-600 uppercase">
                                         {{ substr($user->name, 0, 1) }}
                                     </div>
                                 @endif
                                 <div>
                                     <h4 class="text-xs font-bold text-slate-800">{{ $user->name }}</h4>
-                                    <span class="text-[9px] text-slate-400 block mt-0.5">{{ $user->email }}</span>
+                                    <span class="text-[10px] text-slate-400 block">{{ $user->email }}</span>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2 self-end sm:self-auto">
                                 @if ($user->kyc_document)
-                                    <a href="{{ $user->kyc_document }}" target="_blank" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[10px] font-extrabold border border-slate-200 transition">
+                                    <a href="{{ $user->kyc_document }}" target="_blank" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-lg text-[11px] font-bold border border-slate-200 transition">
                                         View ID
                                     </a>
                                 @endif
                                 <form action="/admin/users/{{ $user->id }}/verify-kyc" method="POST" class="inline m-0">
                                     @csrf
-                                    <button type="submit" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-[10px] font-extrabold transition">
+                                    <button type="submit" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-bold shadow-2xs transition">
                                         Approve
                                     </button>
                                 </form>
                                 <form action="/admin/users/{{ $user->id }}/reject-kyc" method="POST" class="inline m-0">
                                     @csrf
-                                    <button type="submit" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[10px] font-extrabold transition">
+                                    <button type="submit" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold transition">
                                         Reject
                                     </button>
                                 </form>
@@ -385,14 +424,15 @@
                 </div>
             @endif
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-50 flex justify-end">
-            <a href="/admin/users" class="text-[10px] font-bold text-donezoGreen hover:underline">Manage All Users</a>
+        
+        <div class="mt-4 pt-3 border-t border-slate-100 text-right">
+            <a href="/admin/users" class="text-[11px] font-bold text-emerald-600 hover:underline">Manage All Accounts →</a>
         </div>
     </div>
 </div>
 
 <script>
-    // Live ticking clock for Time Tracker card
+    // Live ticking clock
     function startClock() {
         const clockEl = document.getElementById('dashboardClock');
         if (!clockEl) return;

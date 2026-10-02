@@ -112,6 +112,9 @@ class HostPropertyController extends Controller
             'status' => 'pending',
         ]));
 
+        // Process referral bonus for referrer if applicable
+        app(\App\Services\ReferralService::class)->rewardPropertyAdded($property);
+
         // Notify admins
         try {
             $admins = \App\Models\User::where('is_admin', true)->get();

@@ -7,6 +7,10 @@ use App\Models\User;
 use App\Models\Property;
 use App\Models\Booking;
 use App\Models\Configuration;
+use App\Models\PropertyRequest;
+use App\Models\Notification;
+use App\Models\NotificationBroadcast;
+use App\Services\FcmService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -301,41 +305,123 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * Update status of property listing.
+     * Update status of single property listing with optional rejection reason and notes.
      */
     public function updatePropertyStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:approved,rejected,pending',
+            'rejection_reason' => 'nullable|string|max:255',
+            'rejection_notes' => 'nullable|string|max:1000',
+            'notify_owner' => 'nullable|boolean',
         ]);
 
         $property = Property::with('owner')->findOrFail($id);
         $oldStatus = $property->status;
+        $newStatus = $request->status;
+
         $property->update([
-            'status' => $request->status,
+            'status' => $newStatus,
         ]);
 
-        if ($oldStatus !== $request->status && in_array($request->status, ['approved', 'rejected'])) {
-            $notificationService = app(\App\Services\NotificationService::class);
-            $title = 'Property Listing ' . ucfirst($request->status);
-            $message = 'Your property listing "' . $property->title . '" has been ' . $request->status . ' by the administrator.';
-            
-            $notificationService->notify(
-                $property->owner,
-                $title,
-                $message,
-                'info', // notification type
-                true, // send email
-                \App\Mail\PropertyStatusMail::class,
-                [$property->owner->name, $property->title, $request->status]
-            );
+        $rejectionReason = $request->input('rejection_reason');
+        $rejectionNotes = $request->input('rejection_notes');
+        $notifyOwner = $request->boolean('notify_owner', true);
 
-            if ($request->status === 'approved') {
+        if ($oldStatus !== $newStatus && in_array($newStatus, ['approved', 'rejected'])) {
+            if ($notifyOwner && $property->owner) {
+                $notificationService = app(\App\Services\NotificationService::class);
+                $title = 'Property Listing ' . ucfirst($newStatus);
+                $message = ($newStatus === 'approved')
+                    ? 'Your property listing "' . $property->title . '" has been approved and is now live on HomiQ.'
+                    : 'Your property listing "' . $property->title . '" was rejected: ' . ($rejectionReason ?: 'Please inspect the community guidelines and resubmit.');
+
+                $notificationService->notify(
+                    $property->owner,
+                    $title,
+                    $message,
+                    'info',
+                    true,
+                    \App\Mail\PropertyStatusMail::class,
+                    [$property->owner->name, $property->title, $newStatus, $rejectionReason, $rejectionNotes]
+                );
+            }
+
+            if ($newStatus === 'approved') {
                 event(new \App\Events\PropertyApproved($property));
             }
         }
 
-        return back()->with('success', 'Property status updated to ' . $request->status);
+        return back()->with('success', 'Property status updated to ' . $newStatus);
+    }
+
+    /**
+     * Handle bulk property moderation actions (approve, reject, delete, feature, unfeature).
+     */
+    public function bulkPropertyStatus(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|in:approve,reject,delete,feature,unfeature',
+            'property_ids' => 'required|array|min:1',
+            'property_ids.*' => 'exists:properties,id',
+            'rejection_reason' => 'nullable|string|max:255',
+            'rejection_notes' => 'nullable|string|max:1000',
+            'notify_owner' => 'nullable|boolean',
+        ]);
+
+        $action = $request->action;
+        $propertyIds = $request->property_ids;
+        $rejectionReason = $request->input('rejection_reason');
+        $rejectionNotes = $request->input('rejection_notes');
+        $notifyOwner = $request->boolean('notify_owner', true);
+        $count = count($propertyIds);
+
+        if ($action === 'delete') {
+            Property::whereIn('id', $propertyIds)->delete();
+            return back()->with('success', "{$count} properties deleted successfully.");
+        }
+
+        if ($action === 'feature') {
+            Property::whereIn('id', $propertyIds)->update(['is_featured' => true]);
+            return back()->with('success', "{$count} properties marked as featured.");
+        }
+
+        if ($action === 'unfeature') {
+            Property::whereIn('id', $propertyIds)->update(['is_featured' => false]);
+            return back()->with('success', "{$count} properties removed from featured.");
+        }
+
+        $newStatus = ($action === 'approve') ? 'approved' : 'rejected';
+        $properties = Property::with('owner')->whereIn('id', $propertyIds)->get();
+        $notificationService = app(\App\Services\NotificationService::class);
+
+        foreach ($properties as $property) {
+            $oldStatus = $property->status;
+            $property->update(['status' => $newStatus]);
+
+            if ($notifyOwner && $property->owner && $oldStatus !== $newStatus) {
+                $title = 'Property Listing ' . ucfirst($newStatus);
+                $msg = ($newStatus === 'approved')
+                    ? 'Your property listing "' . $property->title . '" has been approved and is now live on HomiQ.'
+                    : 'Your property listing "' . $property->title . '" was rejected: ' . ($rejectionReason ?: 'Please review the listing guidelines and resubmit.');
+
+                $notificationService->notify(
+                    $property->owner,
+                    $title,
+                    $msg,
+                    'info',
+                    true,
+                    \App\Mail\PropertyStatusMail::class,
+                    [$property->owner->name, $property->title, $newStatus, $rejectionReason, $rejectionNotes]
+                );
+
+                if ($newStatus === 'approved') {
+                    event(new \App\Events\PropertyApproved($property));
+                }
+            }
+        }
+
+        return back()->with('success', "{$count} properties have been {$newStatus} successfully.");
     }
 
     /**
@@ -754,4 +840,881 @@ class AdminDashboardController extends Controller
         $feedbacks = \App\Models\Feedback::with('user')->latest()->get();
         return view('admin.feedbacks', compact('feedbacks'));
     }
+
+    /**
+     * Display comprehensive Financial Analytics & Revenue Breakdown.
+     */
+    public function financials(Request $request)
+    {
+        // 1. Core KPIs
+        $totalBookingsCount = Booking::count();
+        $approvedBookings = Booking::whereIn('status', ['approved', 'completed']);
+        $grossVolume = (clone $approvedBookings)->sum('total_price');
+        $commissionRevenue = $grossVolume * 0.05;
+
+        // Subscriptions
+        $standardUsersCount = User::where('subscription_plan', 'standard')->count();
+        $unlimitedUsersCount = User::where('subscription_plan', 'unlimited')->count();
+        $subscriptionRevenue = ($standardUsersCount * 499) + ($unlimitedUsersCount * 999);
+
+        $netRevenue = $commissionRevenue + $subscriptionRevenue;
+        $approvedCount = (clone $approvedBookings)->count();
+        $avgDealValue = $approvedCount > 0 ? $grossVolume / $approvedCount : 0;
+
+        // 2. Monthly Timeline (Last 6 Months)
+        $monthlyLabels = [];
+        $monthlyGross = [];
+        $monthlyNet = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+            $monthStart = now()->subMonths($i)->startOfMonth();
+            $monthEnd = now()->subMonths($i)->endOfMonth();
+            $monthName = $monthStart->format('M Y');
+            
+            $monthGtv = Booking::whereIn('status', ['approved', 'completed'])
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->sum('total_price');
+
+            $monthNet = $monthGtv * 0.05;
+
+            $monthlyLabels[] = $monthName;
+            $monthlyGross[] = round((float) $monthGtv, 2);
+            $monthlyNet[] = round((float) $monthNet, 2);
+        }
+
+        // 3. Top Generating Cities Breakdown
+        $cityStats = Property::join('bookings', 'properties.id', '=', 'bookings.property_id')
+            ->whereIn('bookings.status', ['approved', 'completed'])
+            ->selectRaw('properties.address, SUM(bookings.total_price) as city_volume, COUNT(bookings.id) as bookings_count')
+            ->groupBy('properties.address')
+            ->orderByDesc('city_volume')
+            ->take(5)
+            ->get();
+
+        // 4. Paginated Financial Transactions
+        $query = Booking::with(['property.owner', 'renter'])->latest();
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        $transactions = $query->paginate(15)->withQueryString();
+
+        return view('admin.financials', compact(
+            'grossVolume',
+            'netRevenue',
+            'commissionRevenue',
+            'subscriptionRevenue',
+            'standardUsersCount',
+            'unlimitedUsersCount',
+            'avgDealValue',
+            'totalBookingsCount',
+            'monthlyLabels',
+            'monthlyGross',
+            'monthlyNet',
+            'cityStats',
+            'transactions'
+        ));
+    }
+
+    /**
+     * List all referral withdrawal requests.
+     */
+    public function withdrawals(Request $request)
+    {
+        $query = \App\Models\WithdrawalRequest::with('user')->latest();
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('method') && $request->method !== 'all') {
+            $query->where('payout_method', $request->method);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('upi_id', 'like', "%{$search}%")
+                  ->orWhere('account_holder_name', 'like', "%{$search}%")
+                  ->orWhere('account_number', 'like', "%{$search}%")
+                  ->orWhere('transaction_reference', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%")
+                         ->orWhere('email', 'like', "%{$search}%")
+                         ->orWhere('phone', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $withdrawals = $query->paginate(20)->withQueryString();
+
+        $pendingCount = \App\Models\WithdrawalRequest::where('status', 'pending')->count();
+        $approvedCount = \App\Models\WithdrawalRequest::where('status', 'approved')->count();
+        $rejectedCount = \App\Models\WithdrawalRequest::where('status', 'rejected')->count();
+        $totalPaidAmount = \App\Models\WithdrawalRequest::where('status', 'approved')->sum('amount');
+
+        return view('admin.withdrawals', compact(
+            'withdrawals',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount',
+            'totalPaidAmount'
+        ));
+    }
+
+    /**
+     * Approve and mark a referral withdrawal request as paid.
+     */
+    public function approveWithdrawal(Request $request, $id)
+    {
+        $withdrawal = \App\Models\WithdrawalRequest::with('user')->findOrFail($id);
+
+        if ($withdrawal->status !== 'pending') {
+            return back()->with('error', 'This withdrawal request has already been processed.');
+        }
+
+        $ref = $request->input('transaction_reference') ?: 'TXN-' . strtoupper(\Illuminate\Support\Str::random(10));
+
+        $withdrawal->update([
+            'status' => 'approved',
+            'transaction_reference' => $ref,
+            'admin_notes' => $request->input('admin_notes'),
+            'processed_at' => now(),
+        ]);
+
+        // Update transaction status
+        \App\Models\ReferralTransaction::where('withdrawal_request_id', $withdrawal->id)
+            ->update(['status' => 'completed']);
+
+        // Send push/in-app notification to user
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->notify(
+                $withdrawal->user,
+                'Withdrawal Processed! 💸',
+                "Your withdrawal request for ₹{$withdrawal->amount} via " . strtoupper($withdrawal->payout_method) . " has been approved and paid. Ref: {$ref}",
+                'success'
+            );
+        } catch (\Exception $e) {
+            // fallback
+        }
+
+        return back()->with('success', "Withdrawal #{$withdrawal->id} of ₹{$withdrawal->amount} marked as approved.");
+    }
+
+    /**
+     * Reject a withdrawal request and refund balance to user.
+     */
+    public function rejectWithdrawal(Request $request, $id)
+    {
+        $withdrawal = \App\Models\WithdrawalRequest::with('user')->findOrFail($id);
+
+        if ($withdrawal->status !== 'pending') {
+            return back()->with('error', 'This withdrawal request has already been processed.');
+        }
+
+        $reason = $request->input('admin_notes') ?: 'Details provided were invalid or rejected by bank.';
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($withdrawal, $reason) {
+            // Mark withdrawal rejected
+            $withdrawal->update([
+                'status' => 'rejected',
+                'admin_notes' => $reason,
+                'processed_at' => now(),
+            ]);
+
+            // Update original debit transaction
+            \App\Models\ReferralTransaction::where('withdrawal_request_id', $withdrawal->id)
+                ->update(['status' => 'rejected']);
+
+            // Refund balance to user
+            $user = $withdrawal->user;
+            $user->increment('referral_balance', $withdrawal->amount);
+
+            // Create refund credit transaction
+            \App\Models\ReferralTransaction::create([
+                'user_id' => $user->id,
+                'amount' => $withdrawal->amount,
+                'type' => 'refund',
+                'description' => "Refund: Withdrawal #{$withdrawal->id} rejected ({$reason})",
+                'withdrawal_request_id' => $withdrawal->id,
+                'status' => 'completed',
+            ]);
+        });
+
+        // Send notification to user
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->notify(
+                $withdrawal->user,
+                'Withdrawal Request Update',
+                "Your withdrawal request of ₹{$withdrawal->amount} could not be processed: {$reason}. The amount has been refunded back to your referral wallet.",
+                'warning'
+            );
+        } catch (\Exception $e) {
+            // fallback
+        }
+
+        return back()->with('success', "Withdrawal #{$withdrawal->id} rejected and ₹{$withdrawal->amount} refunded to user wallet.");
+    }
+
+    /**
+     * Export all transaction ledgers to CSV.
+     */
+    public function exportTransactionsCsv(Request $request)
+    {
+        $fileName = 'homiq-transactions-' . now()->format('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'Booking ID',
+                'Property Title',
+                'Category',
+                'Property Address',
+                'Renter Name',
+                'Renter Email',
+                'Renter Phone',
+                'Host Name',
+                'Host Email',
+                'Base Rent (INR)',
+                'Platform Fee (INR)',
+                'Taxes (INR)',
+                'Total Price (INR)',
+                'Platform Commission 5% (INR)',
+                'Check-in Date',
+                'Check-out Date',
+                'Status',
+                'Created At'
+            ]);
+
+            Booking::with(['property.owner', 'renter'])->chunk(200, function ($bookings) use ($file) {
+                foreach ($bookings as $b) {
+                    $commission = round($b->total_price * 0.05, 2);
+                    fputcsv($file, [
+                        $b->id,
+                        $b->property->title ?? 'N/A',
+                        $b->property->category ?? 'N/A',
+                        $b->property->address ?? 'N/A',
+                        $b->renter->name ?? 'N/A',
+                        $b->renter->email ?? 'N/A',
+                        $b->renter->phone ?? 'N/A',
+                        $b->property->owner->name ?? 'N/A',
+                        $b->property->owner->email ?? 'N/A',
+                        $b->base_rent,
+                        $b->platform_fee,
+                        $b->taxes,
+                        $b->total_price,
+                        $commission,
+                        $b->check_in ? $b->check_in->format('Y-m-d') : 'N/A',
+                        $b->check_out ? $b->check_out->format('Y-m-d') : 'N/A',
+                        ucfirst($b->status),
+                        $b->created_at ? $b->created_at->format('Y-m-d H:i:s') : 'N/A',
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export all properties catalog to CSV.
+     */
+    public function exportPropertiesCsv(Request $request)
+    {
+        $fileName = 'homiq-properties-' . now()->format('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'Property ID',
+                'Title',
+                'Category',
+                'Status',
+                'Price (INR)',
+                'Currency',
+                'Billing Frequency',
+                'Listing Type',
+                'Owner Name',
+                'Owner Email',
+                'Address',
+                'Bedrooms',
+                'Bathrooms',
+                'Is Furnished',
+                'Is Featured',
+                'Created At'
+            ]);
+
+            Property::with('owner')->chunk(200, function ($properties) use ($file) {
+                foreach ($properties as $p) {
+                    fputcsv($file, [
+                        $p->id,
+                        $p->title,
+                        $p->category,
+                        ucfirst($p->status),
+                        $p->price,
+                        $p->currency,
+                        $p->billing_frequency,
+                        $p->listing_type,
+                        $p->owner->name ?? 'N/A',
+                        $p->owner->email ?? 'N/A',
+                        $p->address,
+                        $p->bedrooms,
+                        $p->bathrooms,
+                        $p->is_furnished ? 'Yes' : 'No',
+                        $p->is_featured ? 'Yes' : 'No',
+                        $p->created_at ? $p->created_at->format('Y-m-d H:i:s') : 'N/A',
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export all users to CSV.
+     */
+    public function exportUsersCsv(Request $request)
+    {
+        $fileName = 'homiq-users-' . now()->format('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'User ID',
+                'Name',
+                'Email',
+                'Phone',
+                'Role',
+                'Subscription Plan',
+                'KYC Status',
+                'Is Admin',
+                'Email Verified',
+                'Referral Code',
+                'Created At'
+            ]);
+
+            User::chunk(200, function ($users) use ($file) {
+                foreach ($users as $u) {
+                    $role = $u->is_admin ? 'Admin' : ($u->is_host ? 'Host/Landlord' : 'Renter');
+                    fputcsv($file, [
+                        $u->id,
+                        $u->name,
+                        $u->email,
+                        $u->phone ?? 'N/A',
+                        $role,
+                        ucfirst($u->subscription_plan ?? 'free'),
+                        ucfirst($u->kyc_status ?? 'unverified'),
+                        $u->is_admin ? 'Yes' : 'No',
+                        $u->email_verified_at ? 'Yes' : 'No',
+                        $u->referral_code ?? 'N/A',
+                        $u->created_at ? $u->created_at->format('Y-m-d H:i:s') : 'N/A',
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Display Demand Board / Property Requests management.
+     */
+    public function demands(Request $request)
+    {
+        $totalCount = PropertyRequest::count();
+        $activeCount = PropertyRequest::where('status', 'active')->count();
+        $fulfilledCount = PropertyRequest::where('status', 'fulfilled')->count();
+        $closedCount = PropertyRequest::whereIn('status', ['closed', 'expired'])->count();
+        $rentCount = PropertyRequest::where('purpose', 'rent')->count();
+        $buyCount = PropertyRequest::where('purpose', 'buy')->count();
+
+        $query = PropertyRequest::with('user')->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('purpose')) {
+            $query->where('purpose', $request->purpose);
+        }
+
+        if ($request->filled('city')) {
+            $query->where('city', $request->city);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('seeker_name', 'like', "%{$search}%")
+                  ->orWhere('seeker_email', 'like', "%{$search}%")
+                  ->orWhere('seeker_phone', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhere('locality', 'like', "%{$search}%")
+                  ->orWhere('property_type', 'like', "%{$search}%")
+                  ->orWhere('bedrooms', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $demands = $query->paginate(15)->withQueryString();
+
+        // Calculate matching properties count for each demand in current view
+        $approvedProperties = Property::where('status', 'approved')->get();
+        foreach ($demands as $demand) {
+            $matchingCount = $approvedProperties->filter(function ($property) use ($demand) {
+                return $demand->matchesProperty($property);
+            })->count();
+            $demand->matching_inventory_count = $matchingCount;
+        }
+
+        $cities = PropertyRequest::select('city')->distinct()->whereNotNull('city')->where('city', '!=', '')->pluck('city');
+
+        return view('admin.demands', compact(
+            'demands',
+            'totalCount',
+            'activeCount',
+            'fulfilledCount',
+            'closedCount',
+            'rentCount',
+            'buyCount',
+            'cities'
+        ));
+    }
+
+    /**
+     * Update status of property request (demand).
+     */
+    public function updateDemandStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,fulfilled,closed,expired',
+        ]);
+
+        $demand = PropertyRequest::findOrFail($id);
+        $demand->update(['status' => $request->status]);
+
+        return back()->with('success', "Demand request #{$demand->id} status updated to " . ucfirst($request->status));
+    }
+
+    /**
+     * Delete property request (demand).
+     */
+    public function deleteDemand($id)
+    {
+        $demand = PropertyRequest::findOrFail($id);
+        $demand->delete();
+
+        return back()->with('success', 'Demand request deleted successfully.');
+    }
+
+    /**
+     * Export property requests to CSV.
+     */
+    public function exportDemandsCsv(Request $request)
+    {
+        $fileName = 'homiq-demands-' . now()->format('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'Request ID',
+                'Seeker Name',
+                'Seeker Email',
+                'Seeker Phone',
+                'Purpose',
+                'Property Type',
+                'Bedrooms',
+                'City',
+                'Locality',
+                'Min Budget (INR)',
+                'Max Budget (INR)',
+                'Move In Date',
+                'Tenant Type',
+                'Furnishing Preference',
+                'Status',
+                'Responses Count',
+                'Created At'
+            ]);
+
+            PropertyRequest::chunk(200, function ($demands) use ($file) {
+                foreach ($demands as $d) {
+                    fputcsv($file, [
+                        $d->id,
+                        $d->seeker_name,
+                        $d->seeker_email ?? 'N/A',
+                        $d->seeker_phone ?? 'N/A',
+                        strtoupper($d->purpose),
+                        $d->property_type,
+                        $d->bedrooms ?? 'Any',
+                        $d->city,
+                        $d->locality ?? 'N/A',
+                        $d->min_budget,
+                        $d->max_budget,
+                        $d->move_in_date ?? 'Immediate',
+                        ucfirst(str_replace('_', ' ', $d->tenant_type ?? 'N/A')),
+                        ucfirst(str_replace('_', ' ', $d->furnishing_preference ?? 'N/A')),
+                        ucfirst($d->status),
+                        $d->responses_count,
+                        $d->created_at ? $d->created_at->format('Y-m-d H:i:s') : 'N/A',
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * AJAX Instant Search endpoint for Admin Command Palette (⌘K).
+     */
+    public function quickSearch(Request $request)
+    {
+        $q = trim($request->input('q', ''));
+
+        if (empty($q)) {
+            // Return top system shortcuts & navigation suggestions
+            $shortcuts = [
+                [
+                    'title' => 'Property Moderation',
+                    'subtitle' => 'Approve, reject, or feature listings',
+                    'icon' => 'apartment',
+                    'badge' => 'Management',
+                    'url' => route('admin.properties'),
+                ],
+                [
+                    'title' => 'Demand Board & Seeker Inquiries',
+                    'subtitle' => 'View active seeker tenant and buyer requests',
+                    'icon' => 'manage_search',
+                    'badge' => 'Leads',
+                    'url' => route('admin.demands'),
+                ],
+                [
+                    'title' => 'Financial Analytics & Revenue',
+                    'subtitle' => 'Live commission revenue, GTV, and transactions ledger',
+                    'icon' => 'payments',
+                    'badge' => 'Finance',
+                    'url' => route('admin.financials'),
+                ],
+                [
+                    'title' => 'User & Member Directory',
+                    'subtitle' => 'Manage user accounts, KYC documents, and roles',
+                    'icon' => 'group',
+                    'badge' => 'Members',
+                    'url' => route('admin.users'),
+                ],
+                [
+                    'title' => 'Export Financial Ledger CSV',
+                    'subtitle' => 'Download complete transactions audit log',
+                    'icon' => 'download',
+                    'badge' => 'Export',
+                    'url' => route('admin.export.transactions'),
+                ],
+                [
+                    'title' => 'Platform Settings & Pages',
+                    'subtitle' => 'Edit terms, privacy, FAQ, and platform pages',
+                    'icon' => 'settings',
+                    'badge' => 'CMS',
+                    'url' => route('admin.settings'),
+                ],
+            ];
+
+            return response()->json([
+                'query' => '',
+                'total' => count($shortcuts),
+                'results' => [
+                    'shortcuts' => $shortcuts,
+                    'properties' => [],
+                    'users' => [],
+                    'demands' => [],
+                ],
+            ]);
+        }
+
+        // 1. Search Properties
+        $properties = Property::with('owner')
+            ->where(function ($query) use ($q) {
+                $query->where('title', 'like', "%{$q}%")
+                      ->orWhere('address', 'like', "%{$q}%")
+                      ->orWhere('category', 'like', "%{$q}%")
+                      ->orWhere('price', 'like', "%{$q}%")
+                      ->orWhereHas('owner', function ($oq) use ($q) {
+                          $oq->where('name', 'like', "%{$q}%")
+                             ->orWhere('email', 'like', "%{$q}%");
+                      });
+            })
+            ->take(5)
+            ->get()
+            ->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'title' => $p->title,
+                    'subtitle' => $p->address . ' • ₹' . number_format($p->price) . ($p->listing_type === 'rent' ? '/mo' : ''),
+                    'badge' => ucfirst($p->status),
+                    'badge_color' => $p->status === 'approved' ? 'emerald' : ($p->status === 'pending' ? 'amber' : 'rose'),
+                    'category' => $p->category,
+                    'url' => route('admin.properties.show', $p->id),
+                    'owner' => $p->owner->name ?? 'N/A',
+                ];
+            });
+
+        // 2. Search Users
+        $users = User::where(function ($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                      ->orWhere('email', 'like', "%{$q}%")
+                      ->orWhere('phone', 'like', "%{$q}%");
+            })
+            ->take(5)
+            ->get()
+            ->map(function ($u) {
+                $role = $u->is_admin ? 'Admin' : ($u->is_host ? 'Host' : 'Member');
+                return [
+                    'id' => $u->id,
+                    'title' => $u->name,
+                    'subtitle' => $u->email . ($u->phone ? ' • ' . $u->phone : ''),
+                    'badge' => $role,
+                    'badge_color' => $u->is_admin ? 'purple' : 'blue',
+                    'plan' => ucfirst($u->subscription_plan ?? 'free'),
+                    'url' => route('admin.users') . '?search=' . urlencode($u->name),
+                ];
+            });
+
+        // 3. Search Demands
+        $demands = PropertyRequest::where(function ($query) use ($q) {
+                $query->where('seeker_name', 'like', "%{$q}%")
+                      ->orWhere('city', 'like', "%{$q}%")
+                      ->orWhere('locality', 'like', "%{$q}%")
+                      ->orWhere('bedrooms', 'like', "%{$q}%")
+                      ->orWhere('property_type', 'like', "%{$q}%")
+                      ->orWhere('seeker_phone', 'like', "%{$q}%")
+                      ->orWhere('seeker_email', 'like', "%{$q}%");
+            })
+            ->take(5)
+            ->get()
+            ->map(function ($d) {
+                return [
+                    'id' => $d->id,
+                    'title' => $d->seeker_name . ' (' . ($d->bedrooms ?: 'Any') . ' ' . $d->property_type . ')',
+                    'subtitle' => $d->location . ' • Budget: ' . $d->formatted_budget,
+                    'badge' => ucfirst($d->status),
+                    'badge_color' => $d->status === 'active' ? 'emerald' : 'slate',
+                    'url' => route('admin.demands') . '?search=' . urlencode($d->seeker_name),
+                ];
+            });
+
+        // 4. Search System Shortcuts
+        $allShortcuts = [
+            ['title' => 'Overview Dashboard', 'subtitle' => 'Main analytics overview', 'keywords' => 'overview home dashboard stats metrics', 'icon' => 'dashboard', 'badge' => 'Nav', 'url' => route('admin.dashboard')],
+            ['title' => 'Property Moderation', 'subtitle' => 'Manage listings, approve, reject', 'keywords' => 'properties listings real estate houses villas', 'icon' => 'apartment', 'badge' => 'Nav', 'url' => route('admin.properties')],
+            ['title' => 'Demand Board', 'subtitle' => 'Seeker inquiries and tenant requirements', 'keywords' => 'demands requests seekers tenant requirements leads', 'icon' => 'manage_search', 'badge' => 'Nav', 'url' => route('admin.demands')],
+            ['title' => 'User Management', 'subtitle' => 'Members, admins, KYC verification', 'keywords' => 'users members customers clients accounts kyc', 'icon' => 'group', 'badge' => 'Nav', 'url' => route('admin.users')],
+            ['title' => 'Financial Analytics', 'subtitle' => 'Revenue, commissions, transaction ledger', 'keywords' => 'financials revenue transactions money gtv commissions earnings', 'icon' => 'payments', 'badge' => 'Nav', 'url' => route('admin.financials')],
+            ['title' => 'Platform Settings & CMS', 'subtitle' => 'Pages, terms, policies, content', 'keywords' => 'settings pages cms content terms privacy about', 'icon' => 'settings', 'badge' => 'Nav', 'url' => route('admin.settings')],
+            ['title' => 'System Configurations', 'subtitle' => 'App configurations and parameters', 'keywords' => 'configurations config system options environment', 'icon' => 'tune', 'badge' => 'Nav', 'url' => route('admin.config')],
+            ['title' => 'Categories & Attributes', 'subtitle' => 'Listing amenities, specifications, features', 'keywords' => 'attributes categories amenities specifications features tags', 'icon' => 'category', 'badge' => 'Nav', 'url' => route('admin.attributes')],
+            ['title' => 'Inquiries & Feedback', 'subtitle' => 'Customer support feedback and inquiries', 'keywords' => 'feedback inquiries support contact messages complaints', 'icon' => 'feedback', 'badge' => 'Nav', 'url' => route('admin.feedbacks')],
+            ['title' => 'Admin Profile Settings', 'subtitle' => 'Your account credentials and photo', 'keywords' => 'profile account password email avatar admin', 'icon' => 'person', 'badge' => 'Nav', 'url' => route('admin.profile')],
+            ['title' => 'Push Notifications', 'subtitle' => 'Broadcast announcements and FCM push alerts', 'keywords' => 'push notifications broadcast alerts announcements fcm messages marketing', 'icon' => 'campaign', 'badge' => 'Nav', 'url' => route('admin.notifications')],
+            ['title' => 'Export Transactions CSV', 'subtitle' => 'Download all financial transactions', 'keywords' => 'export csv transactions excel ledger download', 'icon' => 'download', 'badge' => 'Export', 'url' => route('admin.export.transactions')],
+            ['title' => 'Export Properties CSV', 'subtitle' => 'Download full property catalog', 'keywords' => 'export csv properties catalog excel download', 'icon' => 'download', 'badge' => 'Export', 'url' => route('admin.export.properties')],
+            ['title' => 'Export Members CSV', 'subtitle' => 'Download all registered users list', 'keywords' => 'export csv users members excel download', 'icon' => 'download', 'badge' => 'Export', 'url' => route('admin.export.users')],
+            ['title' => 'Export Demands CSV', 'subtitle' => 'Download all seeker demand requests', 'keywords' => 'export csv demands requests leads download', 'icon' => 'download', 'badge' => 'Export', 'url' => route('admin.export.demands')],
+        ];
+
+        $matchedShortcuts = array_values(array_filter($allShortcuts, function ($s) use ($q) {
+            $qLower = strtolower($q);
+            return str_contains(strtolower($s['title']), $qLower)
+                || str_contains(strtolower($s['subtitle']), $qLower)
+                || str_contains(strtolower($s['keywords']), $qLower);
+        }));
+
+        $totalCount = count($matchedShortcuts) + count($properties) + count($users) + count($demands);
+
+        return response()->json([
+            'query' => $q,
+            'total' => $totalCount,
+            'results' => [
+                'shortcuts' => $matchedShortcuts,
+                'properties' => $properties,
+                'users' => $users,
+                'demands' => $demands,
+            ],
+        ]);
+    }
+
+    /**
+     * Display push notifications management and campaign history.
+     */
+    public function notifications(Request $request)
+    {
+        $broadcasts = NotificationBroadcast::with(['sender', 'targetUser'])
+            ->latest()
+            ->paginate(15);
+
+        $totalBroadcasts = NotificationBroadcast::count();
+        $totalInAppDelivered = NotificationBroadcast::sum('recipients_count');
+        $totalFcmPushesSent = NotificationBroadcast::sum('fcm_sent_count');
+        $registeredDevicesCount = User::whereNotNull('fcm_token')->where('fcm_token', '!=', '')->count();
+        $totalUsersCount = User::count();
+        $hostsCount = User::whereHas('properties')->count();
+        $tenantsCount = User::whereDoesntHave('properties')->count();
+
+        // Recent users for the individual recipient selector dropdown
+        $recentUsers = User::select('id', 'name', 'email', 'fcm_token')
+            ->latest()
+            ->take(100)
+            ->get();
+
+        return view('admin.notifications', compact(
+            'broadcasts',
+            'totalBroadcasts',
+            'totalInAppDelivered',
+            'totalFcmPushesSent',
+            'registeredDevicesCount',
+            'totalUsersCount',
+            'hostsCount',
+            'tenantsCount',
+            'recentUsers'
+        ));
+    }
+
+    /**
+     * Dispatch notification broadcast to selected audience.
+     */
+    public function sendNotification(Request $request, FcmService $fcmService)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'message' => 'required|string|max:1000',
+            'target_audience' => 'required|in:all,hosts,tenants,pro,business,individual',
+            'target_user_id' => 'required_if:target_audience,individual|nullable|exists:users,id',
+            'type' => 'required|in:announcement,promotion,alert,system,info',
+            'action_url' => 'nullable|string|max:255',
+            'send_push' => 'nullable|boolean',
+        ]);
+
+        $sendPush = $request->boolean('send_push', true);
+        $targetAudience = $validated['target_audience'];
+
+        // Determine recipient query
+        $recipientsQuery = match ($targetAudience) {
+            'all' => User::query(),
+            'hosts' => User::whereHas('properties'),
+            'tenants' => User::whereDoesntHave('properties'),
+            'pro' => User::where('subscription_plan', 'pro'),
+            'business' => User::where('subscription_plan', 'business'),
+            'individual' => User::where('id', $validated['target_user_id']),
+        };
+
+        $recipients = $recipientsQuery->get();
+        $recipientsCount = $recipients->count();
+        $fcmSentCount = 0;
+
+        if ($recipientsCount === 0) {
+            return back()->withErrors(['target_audience' => 'No active users found matching the selected target segment.']);
+        }
+
+        foreach ($recipients as $user) {
+            // 1. Create In-App Notification Record
+            $notification = Notification::create([
+                'user_id' => $user->id,
+                'title' => $validated['title'],
+                'message' => $validated['message'],
+                'type' => $validated['type'],
+                'is_read' => false,
+            ]);
+
+            // 2. Dispatch FCM Push Notification if enabled and token is present
+            if ($sendPush && !empty($user->fcm_token)) {
+                try {
+                    $pushSuccess = $fcmService->sendToUser(
+                        $user,
+                        $validated['title'],
+                        $validated['message'],
+                        [
+                            'type' => $validated['type'],
+                            'action_url' => $validated['action_url'] ?? '',
+                            'notification_id' => (string) $notification->id,
+                        ]
+                    );
+                    if ($pushSuccess) {
+                        $fcmSentCount++;
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning("FCM Broadcast exception for user #{$user->id}: " . $e->getMessage());
+                }
+            }
+        }
+
+        // 3. Record Broadcast Campaign History
+        NotificationBroadcast::create([
+            'title' => $validated['title'],
+            'message' => $validated['message'],
+            'target_audience' => $targetAudience,
+            'target_user_id' => $targetAudience === 'individual' ? $validated['target_user_id'] : null,
+            'type' => $validated['type'],
+            'action_url' => $validated['action_url'] ?? null,
+            'recipients_count' => $recipientsCount,
+            'fcm_sent_count' => $fcmSentCount,
+            'sent_by_user_id' => Auth::id(),
+            'status' => 'sent',
+        ]);
+
+        $pushDetail = $sendPush ? " ({$fcmSentCount} FCM push notifications delivered to active devices)" : " (In-App notifications saved)";
+
+        return redirect()->route('admin.notifications')->with('success', "Notification broadcast sent successfully to {$recipientsCount} recipient(s){$pushDetail}!");
+    }
+
+    /**
+     * Delete a broadcast campaign history log.
+     */
+    public function deleteBroadcast($id)
+    {
+        $broadcast = NotificationBroadcast::findOrFail($id);
+        $broadcast->delete();
+
+        return redirect()->route('admin.notifications')->with('success', 'Broadcast campaign record deleted.');
+    }
 }
+

@@ -113,51 +113,74 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Protected Admin Dashboard Routes
-Route::middleware(['admin'])->prefix('old-admin')->group(function () {
-    Route::get('/', [AdminDashboardController::class, 'index']);
-    Route::get('/properties', [AdminDashboardController::class, 'properties']);
-    Route::get('/properties/{id}', [AdminDashboardController::class, 'showProperty']);
-    Route::get('/properties/{id}/edit', [AdminDashboardController::class, 'editProperty']);
-    Route::post('/properties/{id}', [AdminDashboardController::class, 'updateProperty']);
-    Route::post('/properties/{id}/status', [AdminDashboardController::class, 'updatePropertyStatus']);
-    Route::post('/properties/{id}/toggle-featured', [AdminDashboardController::class, 'toggleFeatured']);
-    Route::delete('/properties/{id}', [AdminDashboardController::class, 'deleteProperty']);
+Route::middleware(['admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/properties', [AdminDashboardController::class, 'properties'])->name('admin.properties');
+    Route::post('/properties/bulk-status', [AdminDashboardController::class, 'bulkPropertyStatus'])->name('admin.properties.bulk-status');
+    Route::get('/properties/{id}', [AdminDashboardController::class, 'showProperty'])->name('admin.properties.show');
+    Route::get('/properties/{id}/edit', [AdminDashboardController::class, 'editProperty'])->name('admin.properties.edit');
+    Route::post('/properties/{id}', [AdminDashboardController::class, 'updateProperty'])->name('admin.properties.update');
+    Route::post('/properties/{id}/status', [AdminDashboardController::class, 'updatePropertyStatus'])->name('admin.properties.status');
+    Route::post('/properties/{id}/toggle-featured', [AdminDashboardController::class, 'toggleFeatured'])->name('admin.properties.toggle-featured');
+    Route::delete('/properties/{id}', [AdminDashboardController::class, 'deleteProperty'])->name('admin.properties.delete');
 
-    Route::get('/users', [AdminDashboardController::class, 'users']);
-    Route::post('/users', [AdminDashboardController::class, 'storeUser']);
-    Route::post('/users/{id}', [AdminDashboardController::class, 'updateUser']);
-    Route::post('/users/{id}/toggle-admin', [AdminDashboardController::class, 'toggleAdmin']);
-    Route::post('/users/{id}/change-plan', [AdminDashboardController::class, 'changeUserPlan']);
-    Route::post('/users/{id}/verify-kyc', [AdminDashboardController::class, 'verifyKyc']);
-    Route::post('/users/{id}/reject-kyc', [AdminDashboardController::class, 'rejectKyc']);
-    Route::delete('/users/{id}', [AdminDashboardController::class, 'deleteUser']);
-    Route::get('/feedbacks', [AdminDashboardController::class, 'feedbacks']);
-    Route::get('/settings', [AdminDashboardController::class, 'settings']);
-    Route::get('/settings/{slug}', [AdminDashboardController::class, 'editPage']);
-    Route::post('/settings/{slug}', [AdminDashboardController::class, 'updatePage']);
-    Route::get('/config', [AdminDashboardController::class, 'config']);
-    Route::post('/config', [AdminDashboardController::class, 'updateConfig']);
-    Route::get('/profile', [AdminDashboardController::class, 'profile']);
-    Route::post('/profile', [AdminDashboardController::class, 'updateProfile']);
+    Route::get('/users', [AdminDashboardController::class, 'users'])->name('admin.users');
+    Route::post('/users', [AdminDashboardController::class, 'storeUser'])->name('admin.users.store');
+    Route::post('/users/{id}', [AdminDashboardController::class, 'updateUser'])->name('admin.users.update');
+    Route::post('/users/{id}/toggle-admin', [AdminDashboardController::class, 'toggleAdmin'])->name('admin.users.toggle-admin');
+    Route::post('/users/{id}/change-plan', [AdminDashboardController::class, 'changeUserPlan'])->name('admin.users.change-plan');
+    Route::post('/users/{id}/verify-kyc', [AdminDashboardController::class, 'verifyKyc'])->name('admin.users.verify-kyc');
+    Route::post('/users/{id}/reject-kyc', [AdminDashboardController::class, 'rejectKyc'])->name('admin.users.reject-kyc');
+    Route::delete('/users/{id}', [AdminDashboardController::class, 'deleteUser'])->name('admin.users.delete');
+    Route::get('/feedbacks', [AdminDashboardController::class, 'feedbacks'])->name('admin.feedbacks');
+    Route::get('/settings', [AdminDashboardController::class, 'settings'])->name('admin.settings');
+    Route::get('/settings/{slug}', [AdminDashboardController::class, 'editPage'])->name('admin.settings.edit');
+    Route::post('/settings/{slug}', [AdminDashboardController::class, 'updatePage'])->name('admin.settings.update');
+    Route::get('/config', [AdminDashboardController::class, 'config'])->name('admin.config');
+    Route::post('/config', [AdminDashboardController::class, 'updateConfig'])->name('admin.config.update');
+    Route::get('/withdrawals', [AdminDashboardController::class, 'withdrawals'])->name('admin.withdrawals');
+    Route::post('/withdrawals/{id}/approve', [AdminDashboardController::class, 'approveWithdrawal'])->name('admin.withdrawals.approve');
+    Route::post('/withdrawals/{id}/reject', [AdminDashboardController::class, 'rejectWithdrawal'])->name('admin.withdrawals.reject');
+    Route::get('/profile', [AdminDashboardController::class, 'profile'])->name('admin.profile');
+    Route::post('/profile', [AdminDashboardController::class, 'updateProfile'])->name('admin.profile.update');
+
+    Route::get('/financials', [AdminDashboardController::class, 'financials'])->name('admin.financials');
+    Route::get('/export/transactions', [AdminDashboardController::class, 'exportTransactionsCsv'])->name('admin.export.transactions');
+    Route::get('/export/properties', [AdminDashboardController::class, 'exportPropertiesCsv'])->name('admin.export.properties');
+    Route::get('/export/users', [AdminDashboardController::class, 'exportUsersCsv'])->name('admin.export.users');
+
+    // Demand Board & Property Requests
+    Route::get('/demands', [AdminDashboardController::class, 'demands'])->name('admin.demands');
+    Route::post('/demands/{id}/status', [AdminDashboardController::class, 'updateDemandStatus'])->name('admin.demands.status');
+    Route::delete('/demands/{id}', [AdminDashboardController::class, 'deleteDemand'])->name('admin.demands.delete');
+    Route::get('/export/demands', [AdminDashboardController::class, 'exportDemandsCsv'])->name('admin.export.demands');
+
+    // Push Notification Broadcasting
+    Route::get('/notifications', [AdminDashboardController::class, 'notifications'])->name('admin.notifications');
+    Route::post('/notifications/send', [AdminDashboardController::class, 'sendNotification'])->name('admin.notifications.send');
+    Route::delete('/notifications/broadcasts/{id}', [AdminDashboardController::class, 'deleteBroadcast'])->name('admin.notifications.delete');
+
+    // Command Palette Quick Search (⌘K)
+    Route::get('/quick-search', [AdminDashboardController::class, 'quickSearch'])->name('admin.quick-search');
 
     // Listing Options Attribute Management
-    Route::get('/attributes', [AttributeController::class, 'index']);
+    Route::get('/attributes', [AttributeController::class, 'index'])->name('admin.attributes');
     
-    Route::post('/categories', [AttributeController::class, 'storeCategory']);
-    Route::post('/categories/{id}', [AttributeController::class, 'updateCategory']);
-    Route::delete('/categories/{id}', [AttributeController::class, 'deleteCategory']);
+    Route::post('/categories', [AttributeController::class, 'storeCategory'])->name('admin.categories.store');
+    Route::post('/categories/{id}', [AttributeController::class, 'updateCategory'])->name('admin.categories.update');
+    Route::delete('/categories/{id}', [AttributeController::class, 'deleteCategory'])->name('admin.categories.delete');
 
-    Route::post('/specifications', [AttributeController::class, 'storeSpecification']);
-    Route::post('/specifications/{id}', [AttributeController::class, 'updateSpecification']);
-    Route::delete('/specifications/{id}', [AttributeController::class, 'deleteSpecification']);
+    Route::post('/specifications', [AttributeController::class, 'storeSpecification'])->name('admin.specifications.store');
+    Route::post('/specifications/{id}', [AttributeController::class, 'updateSpecification'])->name('admin.specifications.update');
+    Route::delete('/specifications/{id}', [AttributeController::class, 'deleteSpecification'])->name('admin.specifications.delete');
 
-    Route::post('/key-features', [AttributeController::class, 'storeKeyFeature']);
-    Route::post('/key-features/{id}', [AttributeController::class, 'updateKeyFeature']);
-    Route::delete('/key-features/{id}', [AttributeController::class, 'deleteKeyFeature']);
+    Route::post('/key-features', [AttributeController::class, 'storeKeyFeature'])->name('admin.key-features.store');
+    Route::post('/key-features/{id}', [AttributeController::class, 'updateKeyFeature'])->name('admin.key-features.update');
+    Route::delete('/key-features/{id}', [AttributeController::class, 'deleteKeyFeature'])->name('admin.key-features.delete');
 
-    Route::post('/amenities', [AttributeController::class, 'storeAmenity']);
-    Route::post('/amenities/{id}', [AttributeController::class, 'updateAmenity']);
-    Route::delete('/amenities/{id}', [AttributeController::class, 'deleteAmenity']);
+    Route::post('/amenities', [AttributeController::class, 'storeAmenity'])->name('admin.amenities.store');
+    Route::post('/amenities/{id}', [AttributeController::class, 'updateAmenity'])->name('admin.amenities.update');
+    Route::delete('/amenities/{id}', [AttributeController::class, 'deleteAmenity'])->name('admin.amenities.delete');
 });
 
 // Analytics & Event Tracking (Tasks 46 & 47)
