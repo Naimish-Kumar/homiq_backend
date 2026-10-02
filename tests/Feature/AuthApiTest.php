@@ -230,4 +230,32 @@ class AuthApiTest extends TestCase
 
         $this->assertEquals($referrer->id, $referred->fresh()->referred_by_id);
     }
+
+    /**
+     * Test user can delete account.
+     */
+    public function test_user_can_delete_account()
+    {
+        $user = User::create([
+            'name' => 'Delete Me',
+            'email' => 'deleteme@example.com',
+            'password' => Hash::make('password123'),
+        ]);
+
+        $token = $user->createToken('test_token')->plainTextToken;
+
+        $response = $this->deleteJson('/api/profile', [], [
+            'Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Account deleted successfully.',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
+            'id' => $user->id,
+        ]);
+    }
 }

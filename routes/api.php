@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile', [AuthController::class, 'updateProfile']);
+    Route::delete('/profile', [AuthController::class, 'deleteAccount']);
     Route::put('/change-password', [AuthController::class, 'changePassword']);
     Route::put('/fcm-token', [AuthController::class, 'updateFcmToken']);
     Route::post('/referral/apply', [AuthController::class, 'applyReferralCode']);

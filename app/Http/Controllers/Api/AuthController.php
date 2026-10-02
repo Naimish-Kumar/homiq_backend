@@ -462,4 +462,47 @@ class AuthController extends Controller
             'user' => $user->fresh(),
         ], 200);
     }
+
+    /**
+     * Delete the authenticated user account and clean up resources.
+     */
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->user();
+
+        DB::beginTransaction();
+        try {
+            // Revoke all personal access tokens
+            $user->tokens()->delete();
+
+            // Set referred_by_id to null for users referred by this user
+            User::where('referred_by_id', $user->id)->update(['referred_by_id' => null]);
+
+            // Clean up profile photo file if hosted locally
+            if ($user->profile_photo && str_starts_with($user->profile_photo, '/uploads/profiles/')) {
+                $filePath = public_path($user->profile_photo);
+                if (file_exists($filePath)) {
+                    @unlink($filePath);
+                }
+            }
+
+            // Delete the user record (cascading deletes handle properties, bookings, notifications, wishlist, etc.)
+            $user->delete();
+
+            DB::commit();
+
+            return response([
+                'success' => true,
+                'message' => 'Account deleted successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to delete account for user {$user->id}: " . $e->getMessage());
+
+            return response([
+                'success' => false,
+                'message' => 'Failed to delete account. Please try again or contact support.',
+            ], 500);
+        }
+    }
 }
