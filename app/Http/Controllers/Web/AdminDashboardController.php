@@ -99,14 +99,22 @@ class AdminDashboardController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:6|confirmed',
+            'referral_code' => 'nullable|string|exists:users,referral_code',
         ]);
+
+        $referrer = !empty($fields['referral_code']) ? User::where('referral_code', $fields['referral_code'])->first() : null;
 
         $user = User::create([
             'name' => $fields['name'],
             'email' => $fields['email'],
             'phone' => $fields['phone'] ?? null,
             'password' => \Illuminate\Support\Facades\Hash::make($fields['password']),
+            'referred_by_id' => $referrer?->id,
         ]);
+
+        if ($referrer && $referrer->id !== $user->id) {
+            app(\App\Services\ReferralService::class)->rewardSignup($user, $referrer);
+        }
 
         Auth::login($user);
 

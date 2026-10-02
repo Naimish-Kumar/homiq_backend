@@ -120,6 +120,12 @@
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brandNavy focus:bg-white focus:ring-2 focus:ring-brandNavy/10 transition text-sm">
                 </div>
 
+                <div>
+                    <label for="referral_code" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Referral Code (Optional)</label>
+                    <input type="text" name="referral_code" id="referral_code" placeholder="e.g. HQ-XXXXXX" value="{{ old('referral_code', request('ref')) }}"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 uppercase placeholder-slate-400 focus:outline-none focus:border-brandNavy focus:bg-white focus:ring-2 focus:ring-brandNavy/10 transition text-sm">
+                </div>
+
                 <div class="pt-2">
                     <button type="submit" class="w-full py-4 bg-brandNavy hover:bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-brandNavy/15 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 text-sm flex justify-center items-center gap-2">
                         <span>Create Account</span>
