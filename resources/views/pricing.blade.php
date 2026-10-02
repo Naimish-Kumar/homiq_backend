@@ -1,191 +1,271 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-b from-[#f5f8fc] to-white py-20 px-6 sm:px-8">
-    <div class="max-w-[1440px] mx-auto text-center">
-        <span class="text-xs font-black uppercase tracking-widest text-[#133e74] bg-[#133e74]/10 px-4 py-1.5 rounded-full mb-4 inline-block">Pricing Plans</span>
-        <h1 class="text-4xl md:text-6xl font-black text-[#1a2d42] tracking-tight mb-4">Subscription Packages</h1>
-        <p class="text-slate-500 text-sm md:text-base max-w-xl mx-auto mb-20 leading-relaxed">
-            All customers can rent spaces by default. If you want to lease or list your own properties, choose a plan below.
-        </p>
-
-        <!-- Pricing Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
+<div class="min-h-screen bg-slate-50/70 py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white shadow-xs border border-slate-200 mb-4">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-semibold text-slate-800">Direct Owners &amp; Hosts</span>
+                <span class="text-slate-300">&bull;</span>
+                <span class="text-xs font-bold text-emerald-700">0% Commission</span>
+            </div>
             
-            <!-- Free Plan -->
-            <div class="bg-white border border-slate-100 rounded-[32px] p-8 md:p-10 flex flex-col justify-between shadow-[0_15px_30px_rgba(0,0,0,0.01)] relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(0,0,0,0.04)] group">
-                <div class="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div class="relative z-10">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest block mb-5">Free Starter</span>
-                    <span class="text-7xl font-black text-[#1a2d42] block mb-2 tracking-tight">₹0</span>
-                    <span class="text-xs text-slate-400 font-bold block mb-10">Free Forever</span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
+                Simple, Transparent Owner Packages
+            </h1>
+            
+            <p class="text-slate-600 text-sm sm:text-base font-normal leading-relaxed">
+                Tenants and buyers browse 100% free forever. If you are an owner, builder, or host listing properties, choose the right package to scale your reach.
+            </p>
+        </div>
+
+        <!-- Pricing Cards Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto mb-20">
+            
+            <!-- Tier 1: Free Starter -->
+            <div class="bg-white rounded-3xl border border-slate-200 hover:border-slate-300 p-8 sm:p-9 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-300">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Free Starter</span>
+                    </div>
                     
-                    <div class="space-y-8 my-8">
-                        <!-- Feature 1 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                List <strong class="text-slate-900 font-extrabold text-base">10</strong><br>up to <strong class="text-slate-900 font-extrabold text-base">Properties</strong>
-                            </div>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">₹0</span>
+                        <span class="text-xs font-semibold text-slate-500">/ forever</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-8 font-normal">Ideal for individual owners with a single rental home or PG room.</p>
+                    
+                    <div class="space-y-4 pt-6 border-t border-slate-100">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">List up to <strong class="text-slate-900 font-bold">10 Properties</strong></span>
                         </div>
-                        <!-- Feature 2 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                Rent unlimited<br>spaces
-                            </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Direct WhatsApp &amp; In-App Inquiries</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Browse Unlimited Tenant Requests</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Standard Verification Review</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-12 relative z-10">
+
+                <div class="mt-10 pt-6">
                     @auth
                         @if(Auth::user()->subscription_plan === 'free')
-                            <button disabled class="w-full py-4 bg-[#ebf0f6] text-[#8ea4be] font-bold text-sm rounded-2xl cursor-default transition duration-300">
+                            <div class="w-full py-3.5 bg-slate-100 text-slate-500 font-bold text-xs rounded-xl text-center cursor-default border border-slate-200">
                                 Active Package
-                            </button>
+                            </div>
                         @else
                             <form action="/upgrade-subscription" method="POST" class="m-0">
                                 @csrf
                                 <input type="hidden" name="plan" value="free">
-                                <button type="submit" class="w-full py-4 border border-[#dce4ec] hover:bg-[#133e74]/5 text-[#133e74] font-bold text-sm rounded-2xl transition duration-300">
+                                <button type="submit" class="w-full py-3.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-colors cursor-pointer">
                                     Downgrade to Free
                                 </button>
                             </form>
                         @endif
                     @else
-                        <a href="/login" class="block w-full py-4 border border-[#dce4ec] hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-2xl transition duration-300">
-                            Sign In
+                        <a href="/login" class="block w-full py-3.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 text-center transition-colors">
+                            Sign In to Choose
                         </a>
                     @endauth
                 </div>
             </div>
 
-            <!-- Standard Plan -->
-            <div class="bg-white border-2 border-[#133e74] rounded-[32px] p-8 md:p-10 flex flex-col justify-between shadow-[0_20px_40px_rgba(19,62,116,0.03)] relative transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(19,62,116,0.08)] group">
-                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#133e74] text-white text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-md z-20">
-                    Best Value
+            <!-- Tier 2: Standard Growth (Most Popular) -->
+            <div class="bg-white rounded-3xl border-2 border-slate-900 p-8 sm:p-9 flex flex-col justify-between shadow-xl shadow-slate-900/5 relative transform lg:-translate-y-2">
+                <!-- Floating Popular Badge -->
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-extrabold uppercase tracking-wider px-4 py-1 rounded-full shadow-sm flex items-center gap-1.5 border border-slate-800">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>Most Popular</span>
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-b from-[#133e74]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[30px]"></div>
-                <div class="relative z-10">
-                    <span class="text-xs font-black text-[#133e74] uppercase tracking-widest block mb-5 mt-2">Standard Growth</span>
-                    <span class="text-7xl font-black text-[#1a2d42] block mb-2 tracking-tight">₹499</span>
-                    <span class="text-xs text-slate-400 font-bold block mb-10">Per Month</span>
+
+                <div>
+                    <div class="flex items-center justify-between mb-4 mt-2">
+                        <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Standard Growth</span>
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">Save 20%</span>
+                    </div>
                     
-                    <div class="space-y-8 my-8">
-                        <!-- Feature 1 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                List <strong class="text-slate-900 font-extrabold text-base">50</strong><br>up to <strong class="text-slate-900 font-extrabold text-base">Properties</strong>
-                            </div>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">₹499</span>
+                        <span class="text-xs font-semibold text-slate-500">/ month</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-8 font-normal">Best for active landlords and property managers seeking rapid occupancy.</p>
+                    
+                    <div class="space-y-4 pt-6 border-t border-slate-100">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">List up to <strong class="text-slate-900 font-bold">50 Properties</strong></span>
                         </div>
-                        <!-- Feature 2 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                Standard<br>Support response
-                            </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed"><strong class="text-slate-900 font-bold">Verified Owner Badge</strong> on all spaces</span>
                         </div>
-                        <!-- Feature 3 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                Rent unlimited<br>spaces
-                            </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Direct Priority Broadcast in <strong class="text-slate-900 font-bold">Demand Board</strong></span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Instant WhatsApp Contact Lead Notifications</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Standard Support Response (Within 2h)</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-12 relative z-10">
+
+                <div class="mt-10 pt-6">
                     @auth
                         @if(Auth::user()->subscription_plan === 'standard')
-                            <button disabled class="w-full py-4 bg-[#ebf0f6] text-[#8ea4be] font-bold text-sm rounded-2xl cursor-default transition duration-300">
+                            <div class="w-full py-3.5 bg-slate-100 text-slate-500 font-bold text-xs rounded-xl text-center cursor-default border border-slate-200">
                                 Active Package
-                            </button>
+                            </div>
                         @else
-                            <button type="button" onclick="payWithRazorpay('standard')" class="w-full py-4 bg-[#133e74] hover:bg-[#0f325e] text-white font-bold text-sm rounded-2xl transition duration-300 shadow-md shadow-[#133e74]/15">
-                                Buy Standard
+                            <button type="button" onclick="payWithRazorpay('standard')" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all duration-200 cursor-pointer">
+                                Buy Standard Package
                             </button>
                         @endif
                     @else
-                        <a href="/login" class="block w-full py-4 bg-[#133e74] hover:bg-[#0f325e] text-white font-bold text-sm rounded-2xl transition duration-300 shadow-md shadow-[#133e74]/15">
-                            Sign In to Buy
+                        <a href="/login" class="block w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl text-center shadow-sm transition-all duration-200">
+                            Sign In to Buy Standard
                         </a>
                     @endauth
                 </div>
             </div>
 
-            <!-- Unlimited Plan -->
-            <div class="bg-white border border-slate-100 rounded-[32px] p-8 md:p-10 flex flex-col justify-between shadow-[0_15px_30px_rgba(0,0,0,0.01)] relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(0,0,0,0.04)] group">
-                <div class="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div class="relative z-10">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest block mb-5">Unlimited Pro</span>
-                    <span class="text-7xl font-black text-[#1a2d42] block mb-2 tracking-tight">₹999</span>
-                    <span class="text-xs text-slate-400 font-bold block mb-10">Per Month</span>
+            <!-- Tier 3: Unlimited Pro -->
+            <div class="bg-white rounded-3xl border border-slate-200 hover:border-slate-300 p-8 sm:p-9 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-300">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Unlimited Pro</span>
+                        <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">Portfolios &amp; Brokers</span>
+                    </div>
                     
-                    <div class="space-y-8 my-8">
-                        <!-- Feature 1 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                List <strong class="text-slate-900 font-extrabold text-base">Unlimited</strong><br><strong class="text-slate-900 font-extrabold text-base">Properties</strong>
-                            </div>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">₹999</span>
+                        <span class="text-xs font-semibold text-slate-500">/ month</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-8 font-normal">Designed for commercial builders, co-living operators, and real estate agencies.</p>
+                    
+                    <div class="space-y-4 pt-6 border-t border-slate-100">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed"><strong class="text-slate-900 font-bold">Unlimited Property Listings</strong></span>
                         </div>
-                        <!-- Feature 2 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                24/7 Priority<br>Support line
-                            </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed"><strong class="text-slate-900 font-bold">Top Featured Placement</strong> on Search &amp; Locality Pages</span>
                         </div>
-                        <!-- Feature 3 -->
-                        <div class="flex items-center gap-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#00b074" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-[#00b074] shrink-0">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                            <div class="text-left text-sm text-slate-600 font-semibold leading-snug">
-                                Rent unlimited<br>spaces
-                            </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Automated Multi-Tenant Lead Matching</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">24/7 Priority Support &amp; Listing Assistance</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+                            <span class="text-xs font-medium text-slate-700 leading-relaxed">Advanced Impression &amp; Inquiry Analytics</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-12 relative z-10">
+
+                <div class="mt-10 pt-6">
                     @auth
                         @if(Auth::user()->subscription_plan === 'unlimited')
-                            <button disabled class="w-full py-4 bg-[#ebf0f6] text-[#8ea4be] font-bold text-sm rounded-2xl cursor-default transition duration-300">
+                            <div class="w-full py-3.5 bg-slate-100 text-slate-500 font-bold text-xs rounded-xl text-center cursor-default border border-slate-200">
                                 Active Package
-                            </button>
+                            </div>
                         @else
-                            <button type="button" onclick="payWithRazorpay('unlimited')" class="w-full py-4 border border-[#dce4ec] hover:bg-[#133e74]/5 text-[#133e74] font-bold text-sm rounded-2xl transition duration-300">
-                                Buy Unlimited
+                            <button type="button" onclick="payWithRazorpay('unlimited')" class="w-full py-3.5 bg-white hover:bg-slate-50 text-slate-900 font-bold text-xs rounded-xl border border-slate-300 transition-colors cursor-pointer">
+                                Buy Unlimited Pro
                             </button>
                         @endif
                     @else
-                        <a href="/login" class="block w-full py-4 border border-[#dce4ec] hover:bg-[#133e74]/5 text-[#133e74] font-bold text-sm rounded-2xl transition duration-300">
-                            Sign In to Buy
+                        <a href="/login" class="block w-full py-3.5 bg-white hover:bg-slate-50 text-slate-900 font-bold text-xs rounded-xl border border-slate-300 text-center transition-colors">
+                            Sign In to Buy Pro
                         </a>
                     @endauth
                 </div>
             </div>
 
         </div>
+
+        <!-- Trust & Guarantee Grid -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 max-w-5xl mx-auto mb-16 shadow-xs">
+            <h3 class="text-lg font-bold text-slate-900 text-center mb-8">Why List on HomiQ?</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[20px]">money_off</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-900 mb-1">0% Brokerage</h4>
+                    <p class="text-[11px] text-slate-500 font-normal leading-relaxed">Direct connection between landlords and verified tenants.</p>
+                </div>
+
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[20px]">bolt</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-900 mb-1">Instant Activation</h4>
+                    <p class="text-[11px] text-slate-500 font-normal leading-relaxed">Package limits and verified badges take effect immediately.</p>
+                </div>
+
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[20px]">chat</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-900 mb-1">Direct WhatsApp Leads</h4>
+                    <p class="text-[11px] text-slate-500 font-normal leading-relaxed">Real seekers message you directly without intermediaries.</p>
+                </div>
+
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined text-[20px]">cancel</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-900 mb-1">Cancel Anytime</h4>
+                    <p class="text-[11px] text-slate-500 font-normal leading-relaxed">No lock-ins or contracts. Switch plans whenever you need.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="max-w-3xl mx-auto text-left">
+            <h3 class="text-xl font-extrabold text-slate-900 text-center mb-8">Frequently Asked Questions</h3>
+            
+            <div class="space-y-4">
+                <div class="p-5 rounded-2xl bg-white border border-slate-200">
+                    <h4 class="text-xs font-bold text-slate-900 mb-1.5">Do tenants or buyers have to pay for a subscription?</h4>
+                    <p class="text-xs text-slate-600 font-normal leading-relaxed">No. Browsing, scheduling physical visits, and contacting owners on HomiQ is 100% free with 0% brokerage.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-white border border-slate-200">
+                    <h4 class="text-xs font-bold text-slate-900 mb-1.5">How does the Tenant Demand Board matching work?</h4>
+                    <p class="text-xs text-slate-600 font-normal leading-relaxed">When verified seekers post their specific BHK, budget, and locality requirements, standard and pro hosts can view and match their vacant properties instantly.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-white border border-slate-200">
+                    <h4 class="text-xs font-bold text-slate-900 mb-1.5">Which payment methods are supported?</h4>
+                    <p class="text-xs text-slate-600 font-normal leading-relaxed">We support all major payment options via Razorpay including UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, and Net Banking.</p>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
 
 <!-- Forms for verification fallback -->
 <form id="razorpay-response-form" action="/pricing/razorpay/verify" method="POST" style="display: none;">
@@ -224,7 +304,7 @@
                 "currency": data.currency,
                 "name": "HomiQ Subscriptions",
                 "description": plan.toUpperCase() + " Plan Upgrade",
-                "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=100&h=100&q=80",
+                "image": "{{ url('/logo.png') }}",
                 "order_id": data.id,
                 "handler": function (response){
                     // 3. Post verification payload back to verify endpoint
@@ -240,7 +320,7 @@
                     "contact": "{{ Auth::user() ? Auth::user()->phone : '' }}"
                 },
                 "theme": {
-                    "color": "#4A6FA5"
+                    "color": "#0F172A"
                 }
             };
             var rzp = new Razorpay(options);
