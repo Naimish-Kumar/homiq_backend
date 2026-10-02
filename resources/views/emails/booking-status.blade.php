@@ -1,62 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Status Update</title>
-    <style>
-        /* Email client resets */
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>HomiQ - Booking Status Update</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td { font-family: Arial, Helvetica, sans-serif !important; }
+    </style>
+    <![endif]-->
+    <style type="text/css">
+        /* Client resets */
         body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-        img { -ms-interpolation-mode: bicubic; }
-
-        /* General styles */
-        img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
         table { border-collapse: collapse !important; }
         body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #F8FAFC; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 
-        /* Custom Styles */
-        .wrapper { width: 100%; table-layout: fixed; background-color: #F8FAFC; padding: 40px 0; }
-        .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02); }
-        .top-bar { height: 6px; background: linear-gradient(90deg, #5C33CF 0%, #8A5CF5 100%); }
-        .header { padding: 32px 40px 24px 40px; border-bottom: 1px solid #F1F5F9; text-align: left; }
-        .logo { font-size: 26px; font-weight: 800; color: #5C33CF; text-decoration: none; letter-spacing: -0.5px; }
-        .content { padding: 40px; }
-        .greeting { font-size: 20px; font-weight: 700; color: #0F172A; margin: 0 0 16px 0; letter-spacing: -0.25px; }
-        .text { font-size: 16px; line-height: 1.6; color: #475569; margin: 0 0 24px 0; }
-        
-        /* Receipt / Details Box */
-        .receipt-card { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; margin-bottom: 28px; width: 100%; }
-        .receipt-header { background-color: #F1F5F9; padding: 16px 24px; border-bottom: 1px solid #E2E8F0; }
-        .receipt-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; margin: 0; }
-        .receipt-body { padding: 20px 24px; }
-        .receipt-row { display: table; width: 100%; margin-bottom: 14px; }
-        .receipt-row:last-child { margin-bottom: 0; }
-        .receipt-cell-label { display: table-cell; font-size: 14px; color: #64748B; font-weight: 500; width: 40%; vertical-align: top; }
-        .receipt-cell-value { display: table-cell; font-size: 15px; color: #0F172A; font-weight: 600; text-align: right; vertical-align: top; }
-        
-        /* Status Badges */
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .status-approved { background-color: #DCFCE7; color: #15803D; }
-        .status-rejected { background-color: #FEE2E2; color: #B91C1C; }
-        .status-cancelled { background-color: #F1F5F9; color: #475569; }
-        .status-pending { background-color: #FEF3C7; color: #B45309; }
-
-        /* Action box */
-        .action-box { background-color: #EEF2FF; border-left: 4px solid #5C33CF; border-radius: 4px 8px 8px 4px; padding: 20px; margin-bottom: 28px; }
-        .action-text { font-size: 15px; line-height: 1.5; color: #3730A3; margin: 0; }
-
-        /* Button */
-        .btn-container { text-align: center; margin: 32px 0 16px 0; }
-        .btn { display: inline-block; padding: 14px 32px; background-color: #5C33CF; color: #FFFFFF !important; text-decoration: none; font-weight: 700; font-size: 16px; border-radius: 8px; box-shadow: 0 4px 10px rgba(92, 51, 207, 0.2); transition: all 0.2s ease; }
-        
-        /* Footer */
-        .footer { padding: 32px 40px; background-color: #F8FAFC; border-top: 1px solid #E2E8F0; text-align: center; }
-        .footer-text { font-size: 13px; line-height: 1.5; color: #64748B; margin: 0 0 12px 0; }
-        .footer-links { font-size: 13px; font-weight: 600; color: #5C33CF; text-decoration: none; margin: 0 8px; }
+        /* Mobile Responsive */
+        @media screen and (max-width: 600px) {
+            .wrapper { padding: 16px 8px !important; }
+            .card-body { padding: 28px 20px !important; }
+            .header-container { padding: 24px 20px !important; }
+            .footer-container { padding: 24px 20px !important; }
+        }
     </style>
 </head>
-<body>
+<body style="background-color: #F8FAFC; margin: 0; padding: 0; -webkit-font-smoothing: antialiased;">
     @php
         $currencySymbol = match($currency ?? 'INR') {
             'USD' => '$',
@@ -65,87 +36,165 @@
             default => '₹',
         };
     @endphp
-    <div class="wrapper">
-        <div class="container">
-            <div class="top-bar"></div>
-            <div class="header">
-                <a href="#" class="logo">HomiQ</a>
-            </div>
-            <div class="content">
-                <h1 class="greeting">Hello {{ $userName }},</h1>
-                <p class="text">We are writing to update you on the status of your booking request. Here are the booking details:</p>
-                
-                <div class="receipt-card">
-                    <div class="receipt-header">
-                        <h2 class="receipt-title">Booking Summary</h2>
-                    </div>
-                    <div class="receipt-body">
-                        <div class="receipt-row">
-                            <div class="receipt-cell-label">Property</div>
-                            <div class="receipt-cell-value">{{ $propertyTitle }}</div>
-                        </div>
-                        <div class="receipt-row">
-                            <div class="receipt-cell-label">Status</div>
-                            <div class="receipt-cell-value">
-                                @if($status === 'approved')
-                                    <span class="status-badge status-approved">Approved</span>
-                                @elseif($status === 'rejected')
-                                    <span class="status-badge status-rejected">Rejected</span>
-                                @elseif($status === 'cancelled')
-                                    <span class="status-badge status-cancelled">Cancelled</span>
-                                @else
-                                    <span class="status-badge status-pending">{{ ucfirst($status) }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="receipt-row">
-                            <div class="receipt-cell-label">Check-in</div>
-                            <div class="receipt-cell-value">{{ \Carbon\Carbon::parse($checkIn)->format('M d, Y') }}</div>
-                        </div>
-                        <div class="receipt-row">
-                            <div class="receipt-cell-label">Check-out</div>
-                            <div class="receipt-cell-value">{{ \Carbon\Carbon::parse($checkOut)->format('M d, Y') }}</div>
-                        </div>
-                        <div style="height: 1px; background-color: #E2E8F0; margin: 12px 0;"></div>
-                        <div class="receipt-row">
-                            <div class="receipt-cell-label" style="font-weight: 700; color: #0F172A;">Total Paid</div>
-                            <div class="receipt-cell-value" style="font-weight: 800; color: #5C33CF; font-size: 18px;">
-                                {{ $currencySymbol }} {{ number_format((float)$totalPrice, 2) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                @if($status === 'approved')
-                    <div class="action-box" style="background-color: #ECFDF5; border-left-color: #10B981;">
-                        <p class="action-text" style="color: #065F46;"><strong>Booking Confirmed!</strong> Your request has been accepted by the host. You are all set for your stay. Enjoy your trip!</p>
-                    </div>
-                @elseif($status === 'rejected')
-                    <div class="action-box" style="background-color: #FEF2F2; border-left-color: #EF4444;">
-                        <p class="action-text" style="color: #991B1B;"><strong>Booking Declined:</strong> Unfortunately, the host declined your request. Any pre-authorized amount has been released back to your payment method.</p>
-                    </div>
-                @elseif($status === 'cancelled')
-                    <div class="action-box" style="background-color: #F8FAFC; border-left-color: #64748B;">
-                        <p class="action-text" style="color: #334155;"><strong>Booking Cancelled:</strong> This booking has been successfully cancelled and is no longer active.</p>
-                    </div>
-                @endif
+    <div class="wrapper" style="background-color: #F8FAFC; padding: 40px 12px; width: 100%; min-height: 100%;">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);">
+            
+            <!-- Top Gradient Accent Bar -->
+            <tr>
+                <td style="height: 5px; background: linear-gradient(90deg, #0F172A 0%, #059669 50%, #0F172A 100%);"></td>
+            </tr>
 
-                <div class="btn-container">
-                    <a href="{{ url('/dashboard') }}" class="btn">View Booking Details</a>
-                </div>
+            <!-- Header with Official Logo -->
+            <tr>
+                <td class="header-container" align="center" style="padding: 32px 40px 24px 40px; border-bottom: 1px solid #F1F5F9; background-color: #FFFFFF;">
+                    <a href="{{ url('/') }}" target="_blank" style="text-decoration: none; display: inline-block;">
+                        <img src="{{ url('/logo.png') }}" alt="HomiQ" width="130" height="38" style="display: block; width: 130px; max-width: 140px; height: auto; margin: 0 auto; border: 0;" />
+                    </a>
+                    <div style="margin-top: 10px;">
+                        <span style="display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #0F172A; background-color: #F1F5F9; border: 1px solid #E2E8F0; padding: 3px 10px; border-radius: 9999px;">
+                            Booking Update
+                        </span>
+                    </div>
+                </td>
+            </tr>
 
-                <p class="text" style="margin-top: 32px; font-size: 15px; color: #64748B;">If you have any questions or need to contact your host, please log in and use our in-app chat.</p>
-            </div>
-            <div class="footer">
-                <p class="footer-text">This is an automated operational email from HomiQ. Please do not reply directly to this message.</p>
-                <p class="footer-text" style="font-weight: 600;">&copy; {{ date('Y') }} HomiQ Inc. All rights reserved.</p>
-                <div style="margin-top: 16px;">
-                    <a href="{{ url('/privacy') }}" class="footer-links">Privacy Policy</a>
-                    <span style="color: #CBD5E1;">&bull;</span>
-                    <a href="{{ url('/terms') }}" class="footer-links">Terms of Service</a>
-                </div>
-            </div>
-        </div>
+            <!-- Main Content -->
+            <tr>
+                <td class="card-body" style="padding: 36px 40px; background-color: #FFFFFF; text-align: left;">
+                    
+                    <h1 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 12px 0; letter-spacing: -0.25px;">
+                        Hello {{ $userName }},
+                    </h1>
+                    
+                    <p style="font-size: 15px; line-height: 1.6; color: #475569; margin: 0 0 24px 0;">
+                        We are writing to update you on the status of your booking request. Here are the latest details for your reservation:
+                    </p>
+
+                    <!-- Receipt / Details Card -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; margin-bottom: 24px;">
+                        <tr>
+                            <td style="padding: 14px 20px; background-color: #F1F5F9; border-bottom: 1px solid #E2E8F0;">
+                                <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #475569;">
+                                    Booking Summary
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px;">
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 6px 0; font-size: 13px; color: #64748B; font-weight: 500; width: 35%;">Property</td>
+                                        <td style="padding: 6px 0; font-size: 14px; color: #0F172A; font-weight: 700; text-align: right;">{{ $propertyTitle }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0; font-size: 13px; color: #64748B; font-weight: 500;">Status</td>
+                                        <td style="padding: 6px 0; text-align: right;">
+                                            @if($status === 'approved')
+                                                <span style="display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background-color: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0;">Approved</span>
+                                            @elseif($status === 'rejected')
+                                                <span style="display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background-color: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA;">Rejected</span>
+                                            @elseif($status === 'cancelled')
+                                                <span style="display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background-color: #F1F5F9; color: #475569; border: 1px solid #E2E8F0;">Cancelled</span>
+                                            @else
+                                                <span style="display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background-color: #FEF3C7; color: #B45309; border: 1px solid #FDE68A;">{{ ucfirst($status) }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0; font-size: 13px; color: #64748B; font-weight: 500;">Check-in</td>
+                                        <td style="padding: 6px 0; font-size: 14px; color: #0F172A; font-weight: 600; text-align: right;">{{ \Carbon\Carbon::parse($checkIn)->format('M d, Y') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0; font-size: 13px; color: #64748B; font-weight: 500;">Check-out</td>
+                                        <td style="padding: 6px 0; font-size: 14px; color: #0F172A; font-weight: 600; text-align: right;">{{ \Carbon\Carbon::parse($checkOut)->format('M d, Y') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="padding-top: 10px; border-top: 1px solid #E2E8F0;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0; font-size: 14px; color: #0F172A; font-weight: 800;">Total Amount</td>
+                                        <td style="padding: 4px 0; font-size: 17px; color: #059669; font-weight: 800; text-align: right;">{{ $currencySymbol }} {{ number_format((float)$totalPrice, 2) }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Status Action Callout -->
+                    @if($status === 'approved')
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; margin-bottom: 28px;">
+                            <tr>
+                                <td style="padding: 16px 20px;">
+                                    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #065F46;">
+                                        <strong>Booking Confirmed!</strong> Your request has been accepted by the host. You are all set for your stay.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    @elseif($status === 'rejected')
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FEF2F2; border: 1px solid #FECDD3; border-radius: 10px; margin-bottom: 28px;">
+                            <tr>
+                                <td style="padding: 16px 20px;">
+                                    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #991B1B;">
+                                        <strong>Booking Declined:</strong> The host was unable to accept your request. Any payment hold has been released.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    @elseif($status === 'cancelled')
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; margin-bottom: 28px;">
+                            <tr>
+                                <td style="padding: 16px 20px;">
+                                    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #475569;">
+                                        <strong>Booking Cancelled:</strong> This booking has been cancelled and is no longer active.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    @endif
+
+                    <!-- Action Button -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 28px 0;">
+                        <tr>
+                            <td align="center">
+                                <a href="{{ url('/dashboard') }}" target="_blank" style="display: inline-block; background-color: #0F172A; color: #FFFFFF !important; font-size: 14px; font-weight: 700; text-decoration: none; padding: 13px 32px; border-radius: 10px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);">
+                                    View Booking Details
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p style="font-size: 13px; line-height: 1.5; color: #64748B; margin: 24px 0 0 0; text-align: center;">
+                        If you have questions or wish to contact your host directly, please open your HomiQ App or web dashboard.
+                    </p>
+
+                </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+                <td class="footer-container" align="center" style="padding: 28px 40px; background-color: #F8FAFC; border-top: 1px solid #E2E8F0; text-align: center;">
+                    <p style="font-size: 12px; line-height: 1.6; color: #64748B; margin: 0 0 10px 0;">
+                        This is an automated operational notification from HomiQ Space Rentals.<br>
+                        Connecting verified owners and seekers with 0% brokerage.
+                    </p>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <a href="{{ url('/') }}" style="font-size: 12px; font-weight: 600; color: #0F172A; text-decoration: none; margin: 0 8px;">Explore Homes</a>
+                        <span style="color: #CBD5E1;">&bull;</span>
+                        <a href="{{ url('/privacy') }}" style="font-size: 12px; font-weight: 600; color: #0F172A; text-decoration: none; margin: 0 8px;">Privacy Policy</a>
+                        <span style="color: #CBD5E1;">&bull;</span>
+                        <a href="{{ url('/terms') }}" style="font-size: 12px; font-weight: 600; color: #0F172A; text-decoration: none; margin: 0 8px;">Terms of Service</a>
+                    </div>
+
+                    <p style="font-size: 11px; color: #94A3B8; margin: 0;">
+                        &copy; {{ date('Y') }} HomiQ Space Rentals Pvt. Ltd. All rights reserved.
+                    </p>
+                </td>
+            </tr>
+
+        </table>
     </div>
 </body>
 </html>
