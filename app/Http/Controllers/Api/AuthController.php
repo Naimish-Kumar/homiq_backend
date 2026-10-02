@@ -375,6 +375,8 @@ class AuthController extends Controller
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/profiles'), $filename);
             $fields['profile_photo'] = '/uploads/profiles/' . $filename;
+        } else {
+            unset($fields['profile_photo']);
         }
 
         $user->update($fields);

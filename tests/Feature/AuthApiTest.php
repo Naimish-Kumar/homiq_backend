@@ -258,4 +258,40 @@ class AuthApiTest extends TestCase
             'id' => $user->id,
         ]);
     }
+
+    /**
+     * Test user can update profile via POST (multipart/form-data) and PUT.
+     */
+    public function test_user_can_update_profile_via_post_and_put()
+    {
+        $user = User::create([
+            'name' => 'Original Name',
+            'email' => 'updateprofile@example.com',
+            'password' => Hash::make('password123'),
+        ]);
+
+        $token = $user->createToken('test_token')->plainTextToken;
+
+        // Test POST with multipart simulation
+        $responsePost = $this->postJson('/api/profile', [
+            'name' => 'Updated via POST',
+            'phone' => '9988776655',
+            '_method' => 'PUT',
+        ], [
+            'Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $responsePost->assertStatus(200);
+        $this->assertEquals('Updated via POST', $user->fresh()->name);
+
+        // Test PUT
+        $responsePut = $this->putJson('/api/profile', [
+            'name' => 'Updated via PUT',
+        ], [
+            'Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $responsePut->assertStatus(200);
+        $this->assertEquals('Updated via PUT', $user->fresh()->name);
+    }
 }
