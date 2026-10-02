@@ -14,7 +14,12 @@ class HostPropertyController extends Controller
      */
     public function create()
     {
-        return view('host.add-property');
+        $categories = \App\Models\Category::all();
+        $amenities = \App\Models\Amenity::all();
+        $specifications = \App\Models\Specification::all();
+        $features = \App\Models\KeyFeature::all();
+
+        return view('host.add-property', compact('categories', 'amenities', 'specifications', 'features'));
     }
 
     /**
