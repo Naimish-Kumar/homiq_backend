@@ -243,7 +243,7 @@
                 </div>
 
                 <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-3">
-                    <span class="px-3 py-1 rounded-full bg-blue-700 text-white text-xs font-bold inline-flex items-center gap-1">
+                    <span class="px-3 py-1 rounded-full bg-slate-900 text-white text-xs font-bold inline-flex items-center gap-1 border border-slate-700">
                         <span class="material-symbols-outlined text-sm">business</span>
                         Verified Agent
                     </span>

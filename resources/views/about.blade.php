@@ -231,7 +231,7 @@
 
                 <!-- Hub 2: Greater Noida -->
                 <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs hover:border-emerald-300 transition">
-                    <div class="h-10 w-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center mb-4">
+                    <div class="h-10 w-10 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-xl">apartment</span>
                     </div>
                     <h3 class="text-base font-black text-slate-900 mb-1">Greater Noida &amp; Extension</h3>

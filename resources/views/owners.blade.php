@@ -70,7 +70,7 @@
         <!-- HERO SECTION -->
         <section class="relative bg-brandNavy text-white overflow-hidden py-16 sm:py-24 border-b border-slate-800">
             <div class="absolute -right-20 -top-20 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-20 bottom-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 bottom-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="max-w-[1440px] mx-auto px-6 sm:px-8 relative z-10">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -195,7 +195,7 @@
 
                 <!-- Advantage 2 -->
                 <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:border-emerald-500 transition-all duration-300 space-y-4">
-                    <div class="h-12 w-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+                    <div class="h-12 w-12 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center font-bold">
                         <span class="material-symbols-outlined text-2xl">chat</span>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900">Direct WhatsApp &amp; Inquiries</h3>
@@ -427,7 +427,7 @@
                                 </div>
                                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                                     <span class="text-[11px] font-bold text-slate-500 uppercase block">Response Rate</span>
-                                    <span class="text-2xl font-black text-blue-600">98%</span>
+                                    <span class="text-2xl font-black text-slate-900">98%</span>
                                     <span class="text-[10px] font-bold text-emerald-600">Top 5% Host</span>
                                 </div>
                                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">

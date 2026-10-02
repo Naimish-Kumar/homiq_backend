@@ -351,7 +351,7 @@ function initPropertyDetail() {
                     Listed by Owner
                 </span>
             @else
-                <span class="px-3 py-1 rounded-full bg-blue-700 text-white text-[11px] font-bold uppercase tracking-wider shadow-xs flex items-center gap-1 border border-blue-400/30">
+                <span class="px-3 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider shadow-xs flex items-center gap-1 border border-slate-700/50">
                     <span class="material-symbols-outlined text-sm">business</span>
                     Verified Agent
                 </span>
@@ -724,7 +724,7 @@ function initPropertyDetail() {
 
                     <!-- Offices & IT Hubs -->
                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3">
-                        <div class="h-10 w-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center shrink-0">
+                        <div class="h-10 w-10 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center shrink-0">
                             <span class="material-symbols-outlined text-xl">corporate_fare</span>
                         </div>
                         <div>

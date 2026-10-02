@@ -760,11 +760,11 @@
                     html += `
                         <a href="${p.url}" class="cmd-item flex items-center justify-between p-2.5 px-3.5 rounded-xl hover:bg-slate-100/80 border border-transparent transition group cursor-pointer">
                             <div class="flex items-center gap-3 max-w-[80%]">
-                                <div class="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition flex-shrink-0">
+                                <div class="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition flex-shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.75a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 011.5 1.5V21m6-9h.75m-.75 3h.75m-.75 3h.75"/></svg>
                                 </div>
                                 <div class="text-left overflow-hidden">
-                                    <p class="text-xs font-bold text-slate-800 truncate group-hover:text-blue-950 transition">${p.title}</p>
+                                    <p class="text-xs font-bold text-slate-800 truncate group-hover:text-slate-900 transition">${p.title}</p>
                                     <p class="text-[10px] text-slate-400 truncate">${p.subtitle}</p>
                                 </div>
                             </div>

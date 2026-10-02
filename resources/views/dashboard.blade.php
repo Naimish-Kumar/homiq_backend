@@ -4,7 +4,7 @@
 <style>
     /* Premium Dashboard Styles */
     .dashboard-nav-item.active {
-        background-color: #1e3a8a; /* Slate Blue primary */
+        background-color: #0f172a; /* Slate 900 primary */
         color: #ffffff;
     }
     .dashboard-nav-item:not(.active):hover {
@@ -36,7 +36,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-10">
         <!-- Stat Card 1 -->
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="p-3 bg-blue-50 text-steelAzure rounded-xl">
+            <div class="p-3 bg-slate-100 text-slate-800 rounded-xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             </div>
             <div>
@@ -123,22 +123,22 @@
             </div>
 
             <!-- Compact Subscriptions Widget -->
-            <div class="bg-gradient-to-tr from-slate-900 via-blue-950 to-slate-900 p-6 rounded-3xl text-white space-y-4">
-                <span class="text-[9px] text-blue-300 font-bold uppercase tracking-widest block">Limits & Subscriptions</span>
+            <div class="bg-gradient-to-tr from-slate-950 via-slate-900 to-slate-950 p-6 rounded-3xl text-white space-y-4 border border-slate-800 shadow-md">
+                <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-widest block">Limits &amp; Subscriptions</span>
                 <div class="flex items-baseline gap-2">
                     <span class="text-2xl font-extrabold capitalize">{{ Auth::user()->subscription_plan }}</span>
-                    <span class="text-xs text-blue-200">tier</span>
+                    <span class="text-xs text-slate-400">tier</span>
                 </div>
                 <div class="space-y-1.5">
-                    <div class="flex justify-between text-[10px] text-blue-200">
+                    <div class="flex justify-between text-[10px] text-slate-400">
                         <span>Listings created</span>
-                        <span class="font-bold">{{ $currentListingsCount }} / {{ $limit == 999999 ? 'Unlimited' : $limit }}</span>
+                        <span class="font-bold text-white">{{ $currentListingsCount }} / {{ $limit == 999999 ? 'Unlimited' : $limit }}</span>
                     </div>
                     <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                        <div class="bg-blue-400 h-full rounded-full" style="width: {{ $limit == 999999 ? 100 : ($currentListingsCount / $limit) * 100 }}%"></div>
+                        <div class="bg-emerald-500 h-full rounded-full" style="width: {{ $limit == 999999 ? 100 : ($currentListingsCount / $limit) * 100 }}%"></div>
                     </div>
                 </div>
-                <a href="/pricing" class="block w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-center rounded-xl text-xs font-bold transition">
+                <a href="/pricing" class="block w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-center rounded-xl text-xs font-bold transition shadow-sm">
                     Upgrade Account
                 </a>
             </div>
@@ -217,7 +217,7 @@
                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
                         <div class="flex items-center justify-between text-slate-500 mb-1">
                             <span class="text-[10px] font-extrabold uppercase tracking-wider">Search Impressions</span>
-                            <span class="material-symbols-outlined text-base text-blue-500">travel_explore</span>
+                            <span class="material-symbols-outlined text-base text-emerald-600">travel_explore</span>
                         </div>
                         <span class="text-2xl font-black text-slate-900 block">{{ number_format($totalImpressions ?? 0) }}</span>
                         <span class="text-[10px] font-bold text-slate-500 mt-1 block">Feed appearances</span>
@@ -228,7 +228,7 @@
                             <span class="text-[10px] font-extrabold uppercase tracking-wider">Host Response Rate</span>
                             <span class="material-symbols-outlined text-base text-amber-500">bolt</span>
                         </div>
-                        <span class="text-2xl font-black text-blue-700 block">98%</span>
+                        <span class="text-2xl font-black text-slate-900 block">98%</span>
                         <span class="text-[10px] font-bold text-emerald-600 mt-1 block">Top Rated Landlord</span>
                     </div>
                 </div>
@@ -282,8 +282,8 @@
                 </div>
 
                 <!-- Recent Activity/Guidance widget -->
-                <div class="p-6 bg-slate-50 rounded-2xl flex items-start gap-4">
-                    <div class="text-blue-500 mt-1">
+                <div class="p-6 bg-slate-50 rounded-2xl flex items-start gap-4 border border-slate-100">
+                    <div class="text-emerald-600 mt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
                     <div class="space-y-1">
@@ -339,7 +339,7 @@
                         <p class="text-xs text-slate-400 mt-1">Manage listed spaces or add a new space instantly.</p>
                     </div>
                     @if ($currentListingsCount < $limit)
-                        <button onclick="toggleAddSpaceForm()" class="px-4 py-2.5 bg-steelAzure hover:bg-steelAzure/95 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <button onclick="toggleAddSpaceForm()" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
                             Add New Space
                         </button>
@@ -376,7 +376,7 @@
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">
                                             <h4 class="font-bold text-slate-800 text-sm truncate max-w-[200px]">{{ $listing->title }}</h4>
-                                            <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase {{ $listing->listing_type === 'sale' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800' }}">
+                                            <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase {{ $listing->listing_type === 'sale' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-800' }}">
                                                 For {{ ucfirst($listing->listing_type) }}
                                             </span>
                                         </div>

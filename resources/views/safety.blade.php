@@ -120,7 +120,7 @@
 
                 <!-- Rule 7 -->
                 <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs hover:shadow-soft transition space-y-3">
-                    <div class="h-10 w-10 rounded-2xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center">
+                    <div class="h-10 w-10 rounded-2xl bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center">
                         <span class="material-symbols-outlined text-xl">edit_document</span>
                     </div>
                     <h3 class="text-base font-black text-slate-900">7. Sign a Formal Rent Agreement</h3>
