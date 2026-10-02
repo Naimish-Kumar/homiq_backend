@@ -215,10 +215,17 @@
                             </div>
                         </div>
 
-                        <div class="hidden sm:flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-2 shadow-sm">
-                            <div class="h-7 w-7 rounded-full bg-gradient-to-br from-brandNavy to-brandEmerald text-white text-[10px] font-black flex items-center justify-center">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
-                            <span class="text-xs font-semibold text-slate-700">{{ Auth::user()->name }}</span>
-                        </div>
+                        <a href="/dashboard" class="flex items-center gap-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 px-3 py-1.5 shadow-xs transition-all duration-200 group cursor-pointer" title="Open Dashboard">
+                            @if(Auth::user()->profile_photo)
+                                <img alt="{{ Auth::user()->name }}" class="h-7 w-7 rounded-full object-cover shrink-0" src="{{ Auth::user()->profile_photo }}">
+                            @else
+                                <div class="h-7 w-7 rounded-full bg-slate-900 group-hover:bg-emerald-700 text-white text-[10px] font-black flex items-center justify-center transition-colors shrink-0">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                            @endif
+                            <div class="hidden sm:flex flex-col text-left">
+                                <span class="text-xs font-bold text-slate-800 group-hover:text-slate-900 leading-tight">{{ Auth::user()->name }}</span>
+                                <span class="text-[9px] text-slate-500 font-medium leading-none">{{ Auth::user()->is_admin ? 'Admin Dashboard' : (Auth::user()->is_host ? 'Host Dashboard' : 'User Dashboard') }}</span>
+                            </div>
+                        </a>
                         <form id="logout-form" action="/logout" method="POST" class="m-0">
                             @csrf
                             <button type="button" onclick="showLogoutModal()" class="px-4 py-2.5 border border-slate-200 rounded-full text-xs font-bold text-slate-700 hover:bg-slate-50 transition">
