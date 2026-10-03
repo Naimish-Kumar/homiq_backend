@@ -67,9 +67,9 @@ class HomepageSectionOrderTest extends TestCase
         $response->assertSee('List Property Free', false);
         $response->assertSee('Sign In', false);
 
-        // 2. Hero Carousel (Hero Carousel & Slides)
+        // 2. Hero Carousel & Centered Search
         $response->assertSee('hero-carousel', false);
-        $response->assertSee('Prime Plots &amp; Residential Land near Jewar Airport', false);
+        $response->assertSee('hero-search', false);
 
         // 3. Popular Locations (Noida, Delhi, Gurugram, Bangalore, Pune)
         $response->assertSee('Popular Locations', false);

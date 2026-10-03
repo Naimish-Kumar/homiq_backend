@@ -28,8 +28,7 @@ class PropertyRequestTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Prime Plots & Residential Land near Jewar Airport');
-        $response->assertSee('Direct Yamuna Expressway Access');
+        $response->assertSee('hero-search', false);
         $response->assertSee('Tenant &amp; Buyer Demand Board', false);
         $response->assertSee('Sector 137, Noida');
         $response->assertSee('Why HomiQ?');

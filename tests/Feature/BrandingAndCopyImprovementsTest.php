@@ -46,8 +46,8 @@ class BrandingAndCopyImprovementsTest extends TestCase
         $response->assertStatus(200);
 
         // Task 54: High-impact, value-driven copy
-        $response->assertSee('Prime Plots & Residential Land near Jewar Airport');
-        $response->assertSee('Direct Yamuna Expressway Access');
+        $response->assertSee('hero-search', false);
+        $response->assertSee('Location or Keyword', false);
 
         // Task 55: Indian terminology
         $response->assertSee('Flat', false);

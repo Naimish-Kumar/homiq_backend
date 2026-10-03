@@ -269,9 +269,7 @@
                         'image_url' => asset('images/hero/hero_gated_villas_township.jpg'),
                     ],
                 ]);
-            @endphp
-
-            <section class="relative w-full bg-slate-950 overflow-hidden" 
+            @endphp            <section class="relative w-full bg-slate-950 overflow-hidden min-h-[440px] sm:min-h-[500px] lg:min-h-[560px] flex items-center justify-center" 
                      x-data="{
                         activeSlide: 0,
                         slidesCount: {{ $slidesList->count() }},
@@ -279,7 +277,7 @@
                         startAutoplay() {
                             this.autoplayTimer = setInterval(() => {
                                 this.next();
-                            }, 6000);
+                            }, 4500);
                         },
                         stopAutoplay() {
                             if (this.autoplayTimer) clearInterval(this.autoplayTimer);
@@ -295,139 +293,49 @@
                         }
                      }"
                      x-init="startAutoplay()"
-                     @mouseenter="stopAutoplay()"
-                     @mouseleave="startAutoplay()"
                      id="hero-carousel">
                      
-                <!-- Slides Background Container -->
-                <div class="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] w-full flex items-center">
+                <!-- Background Sliding/Fading Carousel Container -->
+                <div class="absolute inset-0 w-full h-full pointer-events-none">
                     @foreach($slidesList as $idx => $slide)
                         <div x-show="activeSlide === {{ $idx }}"
                              x-cloak
-                             x-transition:enter="transition ease-out duration-700 transform"
+                             x-transition:enter="transition ease-out duration-1000 transform"
                              x-transition:enter-start="opacity-0 scale-105"
                              x-transition:enter-end="opacity-100 scale-100"
-                             x-transition:leave="transition ease-in duration-500 transform absolute inset-0"
+                             x-transition:leave="transition ease-in duration-800 transform absolute inset-0"
                              x-transition:leave-start="opacity-100 scale-100"
-                             x-transition:leave-end="opacity-0 scale-95"
+                             x-transition:leave-end="opacity-0 scale-98"
                              class="absolute inset-0 w-full h-full">
                             
                             <!-- Background Image -->
                             <img src="{{ is_object($slide) && method_exists($slide, 'getImageUrlAttribute') ? $slide->image_url : ($slide->image_url ?? (str_starts_with($slide->image ?? '', 'http') ? $slide->image : asset($slide->image ?? 'images/hero/hero_jewar_airport_plots.jpg'))) }}" 
-                                 alt="{{ $slide->title }}" 
+                                 alt="HomiQ Hero Property Background" 
                                  class="w-full h-full object-cover object-center">
 
                             <!-- Cinematic Dark Gradient Overlays for High Contrast Readability -->
-                            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/30"></div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-slate-950/80"></div>
+                            <div class="absolute inset-0 bg-slate-950/30"></div>
                         </div>
                     @endforeach
-
-                    <!-- Slide Content Overlay (Rendered above active slide) -->
-                    <div class="relative z-10 max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 py-14 sm:py-20 w-full">
-                        @foreach($slidesList as $idx => $slide)
-                            <div x-show="activeSlide === {{ $idx }}"
-                                 x-cloak
-                                 x-transition:enter="transition ease-out duration-700 delay-100 transform"
-                                 x-transition:enter-start="opacity-0 translate-y-6"
-                                 x-transition:enter-end="opacity-100 translate-y-0"
-                                 class="max-w-3xl">
-
-                                <!-- Badge Pill -->
-                                @if(!empty($slide->badge_text))
-                                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 backdrop-blur-md text-xs font-bold mb-4 shadow-lg shadow-emerald-950/40">
-                                        <span class="material-symbols-outlined text-[17px] text-emerald-400">{{ $slide->badge_icon ?: 'location_on' }}</span>
-                                        <span>{{ $slide->badge_text }}</span>
-                                    </div>
-                                @endif
-
-                                <!-- Main Title / Headline -->
-                                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.12] mb-3 drop-shadow-lg">
-                                    {{ $slide->title }}
-                                </h1>
-
-                                <!-- Subtitle -->
-                                @if(!empty($slide->subtitle))
-                                    <p class="text-base sm:text-xl lg:text-2xl font-semibold text-slate-200 mb-5 drop-shadow-md">
-                                        {{ $slide->subtitle }}
-                                    </p>
-                                @endif
-
-                                <!-- Feature Highlights List -->
-                                @php
-                                    $highlights = is_array($slide->highlights) ? $slide->highlights : (json_decode($slide->highlights ?? '[]', true) ?: []);
-                                @endphp
-                                @if(!empty($highlights))
-                                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm font-bold text-slate-200 mb-7">
-                                        @foreach($highlights as $h)
-                                            <div class="flex items-center gap-1.5 bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 backdrop-blur-md shadow-xs">
-                                                <span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
-                                                <span>{{ $h }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                <!-- CTA Action Buttons -->
-                                <div class="flex flex-wrap items-center gap-4">
-                                    <!-- Primary CTA -->
-                                    <a href="{{ $slide->primary_cta_link ?: '/#listings' }}" 
-                                       class="px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/30 transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
-                                        <span>{{ $slide->primary_cta_text ?: 'Explore Projects' }}</span>
-                                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
-                                    </a>
-
-                                    <!-- Secondary CTA -->
-                                    @if(($slide->secondary_cta_action ?? 'request_modal') === 'request_modal' || ($slide->secondary_cta_link ?? '') === 'javascript:void(0)')
-                                        <button type="button" 
-                                                @click="requestModalOpen = true"
-                                                class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base border border-white/30 backdrop-blur-md shadow-lg transition-all hover:border-white/60 active:scale-95 cursor-pointer flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-lg">contact_mail</span>
-                                            <span>{{ $slide->secondary_cta_text ?: 'Contact Us' }}</span>
-                                        </button>
-                                    @else
-                                        <a href="{{ $slide->secondary_cta_link ?: '/about#contact' }}"
-                                           class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base border border-white/30 backdrop-blur-md shadow-lg transition-all hover:border-white/60 active:scale-95 cursor-pointer flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-lg">contact_mail</span>
-                                            <span>{{ $slide->secondary_cta_text ?: 'Contact Us' }}</span>
-                                        </a>
-                                    @endif
-                                </div>
-
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <!-- Previous / Next Navigation Arrows -->
-                    <button type="button" 
-                            @click="prev()" 
-                            class="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-950/60 hover:bg-emerald-500 hover:text-slate-950 text-white border border-white/20 backdrop-blur-md items-center justify-center transition-all duration-200 shadow-xl cursor-pointer" 
-                            title="Previous Slide">
-                        <span class="material-symbols-outlined text-2xl">chevron_left</span>
-                    </button>
-                    <button type="button" 
-                            @click="next()" 
-                            class="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-950/60 hover:bg-emerald-500 hover:text-slate-950 text-white border border-white/20 backdrop-blur-md items-center justify-center transition-all duration-200 shadow-xl cursor-pointer" 
-                            title="Next Slide">
-                        <span class="material-symbols-outlined text-2xl">chevron_right</span>
-                    </button>
-
-                    <!-- Indicators / Dots (Bottom Center) -->
-                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/10">
-                        <template x-for="idx in slidesCount" :key="idx">
-                            <button type="button" 
-                                    @click="goTo(idx - 1)"
-                                    :class="activeSlide === (idx - 1) ? 'w-7 bg-emerald-400' : 'w-2.5 bg-white/40 hover:bg-white/80'"
-                                    class="h-2.5 rounded-full transition-all duration-300 cursor-pointer" 
-                                    :title="'Go to slide ' + idx">
-                            </button>
-                        </template>
-                    </div>
-
                 </div>
 
-                <!-- Floating Search Bar Container Overlapping Bottom of Hero -->
-                <div id="hero-search" class="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 mb-10 text-left" x-data="{
+                <!-- Subtle Previous / Next Navigation Arrows -->
+                <button type="button" 
+                        @click="prev()" 
+                        class="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-950/40 hover:bg-emerald-500 hover:text-slate-950 text-white border border-white/20 backdrop-blur-md items-center justify-center transition-all duration-200 shadow-xl cursor-pointer" 
+                        title="Previous Slide">
+                    <span class="material-symbols-outlined text-2xl">chevron_left</span>
+                </button>
+                <button type="button" 
+                        @click="next()" 
+                        class="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-950/40 hover:bg-emerald-500 hover:text-slate-950 text-white border border-white/20 backdrop-blur-md items-center justify-center transition-all duration-200 shadow-xl cursor-pointer" 
+                        title="Next Slide">
+                    <span class="material-symbols-outlined text-2xl">chevron_right</span>
+                </button>
+
+                <!-- Centered Search Bar Container in Hero Section -->
+                <div id="hero-search" class="relative z-30 max-w-5xl w-full mx-auto px-4 sm:px-6 py-12 text-left" x-data="{
                     activePillar: '{{ (request('search_type') === 'Studio') ? 'pg' : ((request('search_type') === 'Shop') ? 'commercial' : (request('listing_type') === 'sale' ? 'buy' : 'rent')) }}',
                     subCategories: {
                         rent: [
@@ -472,27 +380,27 @@
                     }
                 }">
                     <!-- Top 4 Primary Pillars -->
-                    <div class="flex items-center justify-center gap-2 mb-3 flex-wrap">
-                        <button type="button" @click="setPillar('rent')" :class="activePillar === 'rent' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                            <span class="material-symbols-outlined text-[16px]">key</span>
+                    <div class="flex items-center justify-center gap-2 mb-4 flex-wrap">
+                        <button type="button" @click="setPillar('rent')" :class="activePillar === 'rent' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg ring-2 ring-emerald-400/50 scale-105' : 'bg-slate-950/70 backdrop-blur-md text-white hover:bg-slate-900 border border-white/20 shadow-sm'" class="h-10 sm:h-11 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px]">key</span>
                             <span>Rent</span>
                         </button>
-                        <button type="button" @click="setPillar('buy')" :class="activePillar === 'buy' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                            <span class="material-symbols-outlined text-[16px]">real_estate_agent</span>
+                        <button type="button" @click="setPillar('buy')" :class="activePillar === 'buy' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg ring-2 ring-emerald-400/50 scale-105' : 'bg-slate-950/70 backdrop-blur-md text-white hover:bg-slate-900 border border-white/20 shadow-sm'" class="h-10 sm:h-11 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px]">real_estate_agent</span>
                             <span>Buy</span>
                         </button>
-                        <button type="button" @click="setPillar('pg')" :class="activePillar === 'pg' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                            <span class="material-symbols-outlined text-[16px]">single_bed</span>
+                        <button type="button" @click="setPillar('pg')" :class="activePillar === 'pg' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg ring-2 ring-emerald-400/50 scale-105' : 'bg-slate-950/70 backdrop-blur-md text-white hover:bg-slate-900 border border-white/20 shadow-sm'" class="h-10 sm:h-11 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px]">single_bed</span>
                             <span>PG / Rooms</span>
                         </button>
-                        <button type="button" @click="setPillar('commercial')" :class="activePillar === 'commercial' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                            <span class="material-symbols-outlined text-[16px]">storefront</span>
+                        <button type="button" @click="setPillar('commercial')" :class="activePillar === 'commercial' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg ring-2 ring-emerald-400/50 scale-105' : 'bg-slate-950/70 backdrop-blur-md text-white hover:bg-slate-900 border border-white/20 shadow-sm'" class="h-10 sm:h-11 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px]">storefront</span>
                             <span>Commercial</span>
                         </button>
                     </div>
 
                     <!-- Modern Unified Search Bar -->
-                    <form action="/#listings" method="GET" id="search-form" class="bg-white rounded-3xl md:rounded-full border border-slate-200/90 shadow-xl hover:shadow-2xl transition-all p-2 flex flex-col md:flex-row items-stretch md:items-center">
+                    <form action="/#listings" method="GET" id="search-form" class="bg-white rounded-3xl md:rounded-full border border-slate-200/90 shadow-2xl p-2.5 flex flex-col md:flex-row items-stretch md:items-center">
                         <input type="hidden" name="listing_type" id="listing-type-hidden" value="{{ request('listing_type', 'rent') }}">
                         <input type="hidden" name="search_type" id="search-type-hidden" value="{{ request('search_type', '') }}">
 
@@ -501,7 +409,7 @@
                             <label for="search-input" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Location or Keyword</label>
                             <div class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">location_on</span>
-                                <input id="search-input" name="search" type="text" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 placeholder-slate-400" placeholder="e.g. Near Jewar Airport, Sector 137..." value="{{ request('search', '') }}">
+                                <input id="search-input" name="search" type="text" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 placeholder-slate-400" placeholder="e.g. Near Jewar Airport, Sector 137, Noida..." value="{{ request('search', '') }}">
                             </div>
                         </div>
 
@@ -554,28 +462,41 @@
 
                         <!-- 5. Search Button -->
                         <div class="p-1 flex items-center justify-center gap-1.5 shrink-0">
-                            <button type="button" @click="filtersModalOpen = true" class="h-10 px-3.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 border border-slate-200 transition-colors cursor-pointer" title="More Filters">
-                                <span class="material-symbols-outlined text-[17px] text-slate-500">tune</span>
+                            <button type="button" @click="filtersModalOpen = true" class="h-11 px-4 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 border border-slate-200 transition-colors cursor-pointer" title="More Filters">
+                                <span class="material-symbols-outlined text-[18px] text-slate-500">tune</span>
                                 <span class="hidden xl:inline">Filters</span>
                             </button>
-                            <button type="submit" class="w-full md:w-auto h-10 px-6 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98 cursor-pointer shrink-0">
-                                <span class="material-symbols-outlined text-[16px]">search</span>
+                            <button type="submit" class="w-full md:w-auto h-11 px-7 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98 cursor-pointer shrink-0">
+                                <span class="material-symbols-outlined text-[18px]">search</span>
                                 <span>Search</span>
                             </button>
                         </div>
                     </form>
 
                     <!-- Contextual Quick Pills -->
-                    <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
-                        <span class="text-[11px] font-semibold text-slate-500">Quick links:</span>
+                    <div class="flex items-center justify-center gap-2 mt-4 flex-wrap">
+                        <span class="text-[11px] font-semibold text-slate-300 drop-shadow">Quick links:</span>
                         <template x-for="sub in subCategories[activePillar]" :key="sub.label">
                             <a :href="'/?listing_type=' + (activePillar === 'buy' ? 'sale' : (activePillar === 'commercial' ? '' : 'rent')) + (sub.type ? '&search_type=' + encodeURIComponent(sub.type) : '') + '#listings'" 
-                               class="h-7 px-3 rounded-full bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-[11px] font-medium transition-colors flex items-center justify-center shadow-2xs">
+                               class="h-7 px-3 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white border border-white/15 backdrop-blur-md text-[11px] font-medium transition-colors flex items-center justify-center shadow-xs">
                                 <span x-text="sub.label"></span>
                             </a>
                         </template>
                     </div>
                 </div>
+
+                <!-- Indicators / Dots (Bottom Center) -->
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
+                    <template x-for="idx in slidesCount" :key="idx">
+                        <button type="button" 
+                                @click="goTo(idx - 1)"
+                                :class="activeSlide === (idx - 1) ? 'w-6 bg-emerald-400' : 'w-2 bg-white/40 hover:bg-white/80'"
+                                class="h-2 rounded-full transition-all duration-300 cursor-pointer" 
+                                :title="'Go to slide ' + idx">
+                        </button>
+                    </template>
+                </div>
+
             </section>
 
             <!-- ==========================================
