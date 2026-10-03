@@ -269,7 +269,7 @@
                         'image_url' => asset('images/hero/hero_gated_villas_township.jpg'),
                     ],
                 ]);
-            @endphp            <section class="relative w-full bg-slate-950 overflow-hidden min-h-[440px] sm:min-h-[500px] lg:min-h-[560px] flex items-center justify-center" 
+            @endphp            <section class="relative w-full bg-slate-900 overflow-hidden min-h-[580px] sm:min-h-[660px] lg:min-h-[740px] flex items-center justify-center" 
                      x-data="{
                         activeSlide: 0,
                         slidesCount: {{ $slidesList->count() }},
@@ -277,7 +277,7 @@
                         startAutoplay() {
                             this.autoplayTimer = setInterval(() => {
                                 this.next();
-                            }, 4500);
+                            }, 5000);
                         },
                         stopAutoplay() {
                             if (this.autoplayTimer) clearInterval(this.autoplayTimer);
@@ -293,31 +293,27 @@
                         }
                      }"
                      x-init="startAutoplay()"
+                     @mouseenter="stopAutoplay()"
+                     @mouseleave="startAutoplay()"
                      id="hero-carousel">
                      
-                <!-- Background Sliding/Fading Carousel Container -->
-                <div class="absolute inset-0 w-full h-full pointer-events-none">
-                    @foreach($slidesList as $idx => $slide)
-                        <div x-show="activeSlide === {{ $idx }}"
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-1000 transform"
-                             x-transition:enter-start="opacity-0 scale-105"
-                             x-transition:enter-end="opacity-100 scale-100"
-                             x-transition:leave="transition ease-in duration-800 transform absolute inset-0"
-                             x-transition:leave-start="opacity-100 scale-100"
-                             x-transition:leave-end="opacity-0 scale-98"
-                             class="absolute inset-0 w-full h-full">
-                            
-                            <!-- Background Image -->
-                            <img src="{{ is_object($slide) && method_exists($slide, 'getImageUrlAttribute') ? $slide->image_url : ($slide->image_url ?? (str_starts_with($slide->image ?? '', 'http') ? $slide->image : asset($slide->image ?? 'images/hero/hero_jewar_airport_plots.jpg'))) }}" 
-                                 alt="HomiQ Hero Property Background" 
-                                 class="w-full h-full object-cover object-center">
+                <!-- Background Horizontal Sliding Carousel Strip -->
+                <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+                    <div class="flex h-full w-full transition-transform duration-1000 ease-in-out will-change-transform"
+                         :style="'transform: translateX(-' + (activeSlide * 100) + '%);'">
+                        @foreach($slidesList as $idx => $slide)
+                            <div class="relative w-full h-full flex-shrink-0">
+                                <!-- Background Image -->
+                                <img src="{{ is_object($slide) && method_exists($slide, 'getImageUrlAttribute') ? $slide->image_url : ($slide->image_url ?? (str_starts_with($slide->image ?? '', 'http') ? $slide->image : asset($slide->image ?? 'images/hero/hero_jewar_airport_plots.jpg'))) }}" 
+                                     alt="HomiQ Hero Property Background" 
+                                     class="w-full h-full object-cover object-center">
 
-                            <!-- Cinematic Dark Gradient Overlays for High Contrast Readability -->
-                            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-slate-950/80"></div>
-                            <div class="absolute inset-0 bg-slate-950/30"></div>
-                        </div>
-                    @endforeach
+                                <!-- Reduced, Subtle Natural Dark Scrim for High Image Clarity and Natural Vibrant Colors -->
+                                <div class="absolute inset-0 bg-black/25"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25"></div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Subtle Previous / Next Navigation Arrows -->
