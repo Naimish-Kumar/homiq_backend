@@ -55,7 +55,7 @@ class SeoChangesTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('<title>HomiQ - Verified Flats, PGs &amp; Properties for Rent, Buy and Sell</title>', false);
-        $response->assertSee('Find Verified Properties Without Brokerage');
+        $response->assertSee('Prime Plots & Residential Land near Jewar Airport');
         $response->assertSee('Active Verified Inventory');
     }
 

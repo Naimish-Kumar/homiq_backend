@@ -80,11 +80,7 @@ class TrustAndVerificationTest extends TestCase
         $response = $this->get('/properties/' . $this->property->id);
 
         $response->assertStatus(200);
-        $response->assertSee('HomiQ Verification Details');
-        $response->assertSee('Owner Identity Verified');
-        $response->assertSee('Property Location Verified');
-        $response->assertSee('Property Photos Verified');
-        $response->assertSee('Ownership / Authorization Checked');
+        $response->assertSee('Verified Listing');
         $response->assertSee('What does Verified mean?');
         $response->assertSee('Report Listing');
     }

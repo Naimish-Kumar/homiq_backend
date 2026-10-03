@@ -46,10 +46,8 @@ class BrandingAndCopyImprovementsTest extends TestCase
         $response->assertStatus(200);
 
         // Task 54: High-impact, value-driven copy
-        $response->assertSee('Find Verified Properties Without Brokerage', false);
-        $response->assertSee('Real Listings. Direct Owners. Clear Pricing.', false);
-        $response->assertSee('Search Flats, PGs and Rooms That Match Your Budget', false);
-        $response->assertSee('Built for direct, zero-brokerage renting', false);
+        $response->assertSee('Prime Plots & Residential Land near Jewar Airport');
+        $response->assertSee('Direct Yamuna Expressway Access');
 
         // Task 55: Indian terminology
         $response->assertSee('Flat', false);

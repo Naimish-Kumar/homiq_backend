@@ -382,5 +382,6 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(PropertyRequestSeeder::class);
+        $this->call(HeroSlideSeeder::class);
     }
 }

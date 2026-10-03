@@ -28,8 +28,8 @@ class PropertyRequestTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Find Verified Properties Without Brokerage');
-        $response->assertSee('Real Listings. Direct Owners. Clear Pricing.');
+        $response->assertSee('Prime Plots & Residential Land near Jewar Airport');
+        $response->assertSee('Direct Yamuna Expressway Access');
         $response->assertSee('Tenant &amp; Buyer Demand Board', false);
         $response->assertSee('Sector 137, Noida');
         $response->assertSee('Why HomiQ?');

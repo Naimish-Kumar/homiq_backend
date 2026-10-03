@@ -12,6 +12,7 @@ use App\Models\Notification;
 use App\Models\PropertyRequest;
 use App\Models\PropertyReport;
 use App\Models\Feedback;
+use App\Models\HeroSlide;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -412,7 +413,11 @@ class WebHomeController extends Controller
                 ->values();
         }
 
+        // Active Hero Carousel Slides
+        $heroSlides = HeroSlide::where('is_active', true)->orderBy('order', 'asc')->get();
+
         return view('home', compact(
+            'heroSlides',
             'properties',
             'featuredProperties',
             'categories',

@@ -222,178 +222,358 @@
         <div class="flex flex-col w-full">
 
             <!-- ==========================================
-                 SECTION 2: HERO SEARCH
+                 SECTION 2: IMMERSIVE HERO CAROUSEL & SEARCH
                  ========================================== -->
-            <section class="w-full bg-slate-50 border-b border-slate-200/80 py-14 sm:py-18" id="hero-search">
-                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    
-                    <!-- Trust Pill -->
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white shadow-xs border border-slate-200 mb-5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span class="text-xs font-semibold text-slate-800">Verified Living Spaces</span>
-                        <span class="text-slate-300">•</span>
-                        <span class="text-xs font-bold text-emerald-700">0% Brokerage</span>
+            @php
+                $slidesList = (!empty($heroSlides) && $heroSlides->isNotEmpty()) ? $heroSlides : collect([
+                    (object)[
+                        'id' => 1,
+                        'badge_text' => 'Near Jewar International Airport',
+                        'badge_icon' => 'flight_takeoff',
+                        'title' => 'Prime Plots & Residential Land near Jewar Airport',
+                        'subtitle' => 'Direct Yamuna Expressway Access • Immediate Registry & Possession',
+                        'highlights' => ['100% Clear Title', 'Near Jewar International Airport', 'High ROI Potential'],
+                        'primary_cta_text' => 'Explore Projects',
+                        'primary_cta_link' => '/buy/noida',
+                        'secondary_cta_text' => 'Book Site Visit',
+                        'secondary_cta_link' => 'javascript:void(0)',
+                        'secondary_cta_action' => 'request_modal',
+                        'image_url' => asset('images/hero/hero_jewar_airport_plots.jpg'),
+                    ],
+                    (object)[
+                        'id' => 2,
+                        'badge_text' => 'Zero Brokerage Verified Living',
+                        'badge_icon' => 'verified_user',
+                        'title' => 'Luxury Verified Flats in Noida & NCR',
+                        'subtitle' => 'Direct Landlord Connection with Transparent Pricing',
+                        'highlights' => ['0% Brokerage', 'Physical Audit Passed', 'Immediate Move-In'],
+                        'primary_cta_text' => 'Explore Rentals',
+                        'primary_cta_link' => '/rent/noida',
+                        'secondary_cta_text' => 'Post Requirement',
+                        'secondary_cta_link' => 'javascript:void(0)',
+                        'secondary_cta_action' => 'request_modal',
+                        'image_url' => asset('images/hero/hero_luxury_apartments.jpg'),
+                    ],
+                    (object)[
+                        'id' => 3,
+                        'badge_text' => 'Gated Township & Modern Villas',
+                        'badge_icon' => 'home_work',
+                        'title' => 'Prime Gated Communities & Smart Living',
+                        'subtitle' => 'World-Class Amenities, Green Parks & Seamless Expressways',
+                        'highlights' => ['100% Legal Ownership', 'Near Metro Expressway', 'Clubhouse & 24x7 Security'],
+                        'primary_cta_text' => 'View Townships',
+                        'primary_cta_link' => '/buy/noida',
+                        'secondary_cta_text' => 'Schedule Visit',
+                        'secondary_cta_link' => 'javascript:void(0)',
+                        'secondary_cta_action' => 'request_modal',
+                        'image_url' => asset('images/hero/hero_gated_villas_township.jpg'),
+                    ],
+                ]);
+            @endphp
+
+            <section class="relative w-full bg-slate-950 overflow-hidden" 
+                     x-data="{
+                        activeSlide: 0,
+                        slidesCount: {{ $slidesList->count() }},
+                        autoplayTimer: null,
+                        startAutoplay() {
+                            this.autoplayTimer = setInterval(() => {
+                                this.next();
+                            }, 6000);
+                        },
+                        stopAutoplay() {
+                            if (this.autoplayTimer) clearInterval(this.autoplayTimer);
+                        },
+                        next() {
+                            this.activeSlide = (this.activeSlide + 1) % this.slidesCount;
+                        },
+                        prev() {
+                            this.activeSlide = (this.activeSlide - 1 + this.slidesCount) % this.slidesCount;
+                        },
+                        goTo(index) {
+                            this.activeSlide = index;
+                        }
+                     }"
+                     x-init="startAutoplay()"
+                     @mouseenter="stopAutoplay()"
+                     @mouseleave="startAutoplay()"
+                     id="hero-carousel">
+                     
+                <!-- Slides Background Container -->
+                <div class="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] w-full flex items-center">
+                    @foreach($slidesList as $idx => $slide)
+                        <div x-show="activeSlide === {{ $idx }}"
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-700 transform"
+                             x-transition:enter-start="opacity-0 scale-105"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-500 transform absolute inset-0"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute inset-0 w-full h-full">
+                            
+                            <!-- Background Image -->
+                            <img src="{{ is_object($slide) && method_exists($slide, 'getImageUrlAttribute') ? $slide->image_url : ($slide->image_url ?? (str_starts_with($slide->image ?? '', 'http') ? $slide->image : asset($slide->image ?? 'images/hero/hero_jewar_airport_plots.jpg'))) }}" 
+                                 alt="{{ $slide->title }}" 
+                                 class="w-full h-full object-cover object-center">
+
+                            <!-- Cinematic Dark Gradient Overlays for High Contrast Readability -->
+                            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/30"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"></div>
+                        </div>
+                    @endforeach
+
+                    <!-- Slide Content Overlay (Rendered above active slide) -->
+                    <div class="relative z-10 max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 py-14 sm:py-20 w-full">
+                        @foreach($slidesList as $idx => $slide)
+                            <div x-show="activeSlide === {{ $idx }}"
+                                 x-cloak
+                                 x-transition:enter="transition ease-out duration-700 delay-100 transform"
+                                 x-transition:enter-start="opacity-0 translate-y-6"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 class="max-w-3xl">
+
+                                <!-- Badge Pill -->
+                                @if(!empty($slide->badge_text))
+                                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 backdrop-blur-md text-xs font-bold mb-4 shadow-lg shadow-emerald-950/40">
+                                        <span class="material-symbols-outlined text-[17px] text-emerald-400">{{ $slide->badge_icon ?: 'location_on' }}</span>
+                                        <span>{{ $slide->badge_text }}</span>
+                                    </div>
+                                @endif
+
+                                <!-- Main Title / Headline -->
+                                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.12] mb-3 drop-shadow-lg">
+                                    {{ $slide->title }}
+                                </h1>
+
+                                <!-- Subtitle -->
+                                @if(!empty($slide->subtitle))
+                                    <p class="text-base sm:text-xl lg:text-2xl font-semibold text-slate-200 mb-5 drop-shadow-md">
+                                        {{ $slide->subtitle }}
+                                    </p>
+                                @endif
+
+                                <!-- Feature Highlights List -->
+                                @php
+                                    $highlights = is_array($slide->highlights) ? $slide->highlights : (json_decode($slide->highlights ?? '[]', true) ?: []);
+                                @endphp
+                                @if(!empty($highlights))
+                                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm font-bold text-slate-200 mb-7">
+                                        @foreach($highlights as $h)
+                                            <div class="flex items-center gap-1.5 bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 backdrop-blur-md shadow-xs">
+                                                <span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+                                                <span>{{ $h }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                <!-- CTA Action Buttons -->
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <!-- Primary CTA -->
+                                    <a href="{{ $slide->primary_cta_link ?: '/#listings' }}" 
+                                       class="px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/30 transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
+                                        <span>{{ $slide->primary_cta_text ?: 'Explore Projects' }}</span>
+                                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                                    </a>
+
+                                    <!-- Secondary CTA -->
+                                    @if(($slide->secondary_cta_action ?? 'request_modal') === 'request_modal' || ($slide->secondary_cta_link ?? '') === 'javascript:void(0)')
+                                        <button type="button" 
+                                                @click="requestModalOpen = true"
+                                                class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base border border-white/30 backdrop-blur-md shadow-lg transition-all hover:border-white/60 active:scale-95 cursor-pointer flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-lg">contact_mail</span>
+                                            <span>{{ $slide->secondary_cta_text ?: 'Contact Us' }}</span>
+                                        </button>
+                                    @else
+                                        <a href="{{ $slide->secondary_cta_link ?: '/about#contact' }}"
+                                           class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base border border-white/30 backdrop-blur-md shadow-lg transition-all hover:border-white/60 active:scale-95 cursor-pointer flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-lg">contact_mail</span>
+                                            <span>{{ $slide->secondary_cta_text ?: 'Contact Us' }}</span>
+                                        </a>
+                                    @endif
+                                </div>
+
+                            </div>
+                        @endforeach
                     </div>
 
-                    <!-- Main Headline & Subtitle -->
-                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight mb-3 max-w-3xl mx-auto">
-                        Find Verified Properties Without Brokerage
-                        <span class="sr-only">Find Your Next Home Without Brokerage</span>
-                    </h1>
-                    <p class="text-sm sm:text-base font-normal text-slate-600 max-w-xl mx-auto mb-8 leading-relaxed">
-                        <span class="block font-semibold text-slate-900 mb-1">Real Listings. Direct Owners. Clear Pricing.</span>
-                        Search Flats, PGs and Rooms That Match Your Budget. Built for direct, zero-brokerage renting in Noida, Delhi NCR &amp; Bangalore.
-                    </p>
+                    <!-- Previous / Next Navigation Arrows -->
+                    <button type="button" 
+                            @click="prev()" 
+                            class="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-950/60 hover:bg-emerald-500 hover:text-slate-950 text-white border border-white/20 backdrop-blur-md items-center justify-center transition-all duration-200 shadow-xl cursor-pointer" 
+                            title="Previous Slide">
+                        <span class="material-symbols-outlined text-2xl">chevron_left</span>
+                    </button>
+                    <button type="button" 
+                            @click="next()" 
+                            class="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-950/60 hover:bg-emerald-500 hover:text-slate-950 text-white border border-white/20 backdrop-blur-md items-center justify-center transition-all duration-200 shadow-xl cursor-pointer" 
+                            title="Next Slide">
+                        <span class="material-symbols-outlined text-2xl">chevron_right</span>
+                    </button>
 
-                    <!-- Intelligent Search Container -->
-                    <div class="w-full max-w-5xl mx-auto text-left" x-data="{
-                        activePillar: '{{ (request('search_type') === 'Studio') ? 'pg' : ((request('search_type') === 'Shop') ? 'commercial' : (request('listing_type') === 'sale' ? 'buy' : 'rent')) }}',
-                        subCategories: {
-                            rent: [
-                                { label: 'All Rent', type: '' },
-                                { label: 'Flats & Apartments', type: 'Apartment' },
-                                { label: 'Houses & Villas', type: 'House' },
-                                { label: 'Rooms & PGs', type: 'Studio' }
-                            ],
-                            buy: [
-                                { label: 'All Buy', type: '' },
-                                { label: 'Flats & Apartments', type: 'Apartment' },
-                                { label: 'Houses & Villas', type: 'House' },
-                                { label: 'Plots & Land', type: 'Plot' }
-                            ],
-                            pg: [
-                                { label: 'All PGs & Rooms', type: 'Studio' },
-                                { label: 'Student Housing', type: 'Studio' },
-                                { label: 'Co-Living Spaces', type: 'Studio' }
-                            ],
-                            commercial: [
-                                { label: 'All Commercial', type: 'Shop' },
-                                { label: 'Retail Shops', type: 'Shop' },
-                                { label: 'Office Spaces', type: 'Office' },
-                                { label: 'Warehouses', type: 'Warehouse' }
-                            ]
-                        },
-                        setPillar(p) {
-                            this.activePillar = p;
-                            if (p === 'rent') {
-                                document.getElementById('listing-type-hidden').value = 'rent';
-                                document.getElementById('search-type-hidden').value = '';
-                            } else if (p === 'buy') {
-                                document.getElementById('listing-type-hidden').value = 'sale';
-                                document.getElementById('search-type-hidden').value = '';
-                            } else if (p === 'pg') {
-                                document.getElementById('listing-type-hidden').value = 'rent';
-                                document.getElementById('search-type-hidden').value = 'Studio';
-                            } else if (p === 'commercial') {
-                                document.getElementById('listing-type-hidden').value = '';
-                                document.getElementById('search-type-hidden').value = 'Shop';
-                            }
+                    <!-- Indicators / Dots (Bottom Center) -->
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/10">
+                        <template x-for="idx in slidesCount" :key="idx">
+                            <button type="button" 
+                                    @click="goTo(idx - 1)"
+                                    :class="activeSlide === (idx - 1) ? 'w-7 bg-emerald-400' : 'w-2.5 bg-white/40 hover:bg-white/80'"
+                                    class="h-2.5 rounded-full transition-all duration-300 cursor-pointer" 
+                                    :title="'Go to slide ' + idx">
+                            </button>
+                        </template>
+                    </div>
+
+                </div>
+
+                <!-- Floating Search Bar Container Overlapping Bottom of Hero -->
+                <div id="hero-search" class="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 mb-10 text-left" x-data="{
+                    activePillar: '{{ (request('search_type') === 'Studio') ? 'pg' : ((request('search_type') === 'Shop') ? 'commercial' : (request('listing_type') === 'sale' ? 'buy' : 'rent')) }}',
+                    subCategories: {
+                        rent: [
+                            { label: 'All Rent', type: '' },
+                            { label: 'Flats & Apartments', type: 'Apartment' },
+                            { label: 'Houses & Villas', type: 'House' },
+                            { label: 'Rooms & PGs', type: 'Studio' }
+                        ],
+                        buy: [
+                            { label: 'All Buy', type: '' },
+                            { label: 'Flats & Apartments', type: 'Apartment' },
+                            { label: 'Houses & Villas', type: 'House' },
+                            { label: 'Plots & Land', type: 'Plot' }
+                        ],
+                        pg: [
+                            { label: 'All PGs & Rooms', type: 'Studio' },
+                            { label: 'Student Housing', type: 'Studio' },
+                            { label: 'Co-Living Spaces', type: 'Studio' }
+                        ],
+                        commercial: [
+                            { label: 'All Commercial', type: 'Shop' },
+                            { label: 'Retail Shops', type: 'Shop' },
+                            { label: 'Office Spaces', type: 'Office' },
+                            { label: 'Warehouses', type: 'Warehouse' }
+                        ]
+                    },
+                    setPillar(p) {
+                        this.activePillar = p;
+                        if (p === 'rent') {
+                            document.getElementById('listing-type-hidden').value = 'rent';
+                            document.getElementById('search-type-hidden').value = '';
+                        } else if (p === 'buy') {
+                            document.getElementById('listing-type-hidden').value = 'sale';
+                            document.getElementById('search-type-hidden').value = '';
+                        } else if (p === 'pg') {
+                            document.getElementById('listing-type-hidden').value = 'rent';
+                            document.getElementById('search-type-hidden').value = 'Studio';
+                        } else if (p === 'commercial') {
+                            document.getElementById('listing-type-hidden').value = '';
+                            document.getElementById('search-type-hidden').value = 'Shop';
                         }
-                    }">
-                        
-                        <!-- Top 4 Primary Pillars -->
-                        <div class="flex items-center justify-center gap-2 mb-3 flex-wrap">
-                            <button type="button" @click="setPillar('rent')" :class="activePillar === 'rent' ? 'bg-slate-900 text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'" class="h-10 px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px]">key</span>
-                                <span>Rent</span>
-                            </button>
-                            <button type="button" @click="setPillar('buy')" :class="activePillar === 'buy' ? 'bg-slate-900 text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'" class="h-10 px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px]">real_estate_agent</span>
-                                <span>Buy</span>
-                            </button>
-                            <button type="button" @click="setPillar('pg')" :class="activePillar === 'pg' ? 'bg-slate-900 text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'" class="h-10 px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px]">single_bed</span>
-                                <span>PG / Rooms</span>
-                            </button>
-                            <button type="button" @click="setPillar('commercial')" :class="activePillar === 'commercial' ? 'bg-slate-900 text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'" class="h-10 px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px]">storefront</span>
-                                <span>Commercial</span>
-                            </button>
+                    }
+                }">
+                    <!-- Top 4 Primary Pillars -->
+                    <div class="flex items-center justify-center gap-2 mb-3 flex-wrap">
+                        <button type="button" @click="setPillar('rent')" :class="activePillar === 'rent' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">key</span>
+                            <span>Rent</span>
+                        </button>
+                        <button type="button" @click="setPillar('buy')" :class="activePillar === 'buy' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">real_estate_agent</span>
+                            <span>Buy</span>
+                        </button>
+                        <button type="button" @click="setPillar('pg')" :class="activePillar === 'pg' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">single_bed</span>
+                            <span>PG / Rooms</span>
+                        </button>
+                        <button type="button" @click="setPillar('commercial')" :class="activePillar === 'commercial' ? 'bg-slate-900 text-white shadow-md ring-2 ring-emerald-400' : 'bg-white/95 backdrop-blur-md text-slate-700 hover:bg-white shadow-sm border border-slate-200'" class="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">storefront</span>
+                            <span>Commercial</span>
+                        </button>
+                    </div>
+
+                    <!-- Modern Unified Search Bar -->
+                    <form action="/#listings" method="GET" id="search-form" class="bg-white rounded-3xl md:rounded-full border border-slate-200/90 shadow-xl hover:shadow-2xl transition-all p-2 flex flex-col md:flex-row items-stretch md:items-center">
+                        <input type="hidden" name="listing_type" id="listing-type-hidden" value="{{ request('listing_type', 'rent') }}">
+                        <input type="hidden" name="search_type" id="search-type-hidden" value="{{ request('search_type', '') }}">
+
+                        <!-- 1. Location Input -->
+                        <div class="flex-[1.4] px-4 sm:px-5 py-2.5 rounded-2xl md:rounded-l-full hover:bg-slate-50 focus-within:bg-slate-50 transition-colors">
+                            <label for="search-input" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Location or Keyword</label>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">location_on</span>
+                                <input id="search-input" name="search" type="text" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 placeholder-slate-400" placeholder="e.g. Near Jewar Airport, Sector 137..." value="{{ request('search', '') }}">
+                            </div>
                         </div>
 
-                        <!-- Modern Unified Intelligent Search Bar -->
-                        <form action="/#listings" method="GET" id="search-form" class="bg-white rounded-3xl md:rounded-full border border-slate-200 shadow-sm hover:shadow-md transition-all p-2 flex flex-col md:flex-row items-stretch md:items-center">
-                            <input type="hidden" name="listing_type" id="listing-type-hidden" value="{{ request('listing_type', 'rent') }}">
-                            <input type="hidden" name="search_type" id="search-type-hidden" value="{{ request('search_type', '') }}">
-
-                            <!-- 1. Location Input -->
-                            <div class="flex-[1.4] px-4 sm:px-5 py-2.5 rounded-2xl md:rounded-l-full hover:bg-slate-50 focus-within:bg-slate-50 transition-colors">
-                                <label for="search-input" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Location or Keyword</label>
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">location_on</span>
-                                    <input id="search-input" name="search" type="text" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 placeholder-slate-400" placeholder="e.g. Sector 137 Noida, near metro..." value="{{ request('search', '') }}">
-                                </div>
+                        <!-- 2. Property Type Dropdown -->
+                        <div class="w-full md:w-48 lg:w-52 px-4 py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
+                            <label for="type-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Property Type</label>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">apartment</span>
+                                <select id="type-select" onchange="document.getElementById('search-type-hidden').value = this.value" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 cursor-pointer">
+                                    <option value="">All Types</option>
+                                    <option value="Apartment" {{ request('search_type') === 'Apartment' ? 'selected' : '' }}>Apartments</option>
+                                    <option value="House" {{ request('search_type') === 'House' ? 'selected' : '' }}>Houses &amp; Villas</option>
+                                    <option value="Plot" {{ request('search_type') === 'Plot' ? 'selected' : '' }}>Plots &amp; Land</option>
+                                    <option value="Studio" {{ request('search_type') === 'Studio' ? 'selected' : '' }}>PGs &amp; Rooms</option>
+                                    <option value="Shop" {{ request('search_type') === 'Shop' ? 'selected' : '' }}>Commercial</option>
+                                </select>
                             </div>
-
-                            <!-- 2. Property Type Dropdown -->
-                            <div class="w-full md:w-48 lg:w-52 px-4 py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
-                                <label for="type-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Property Type</label>
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">apartment</span>
-                                    <select id="type-select" onchange="document.getElementById('search-type-hidden').value = this.value" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 cursor-pointer">
-                                        <option value="">All Types</option>
-                                        <option value="Apartment" {{ request('search_type') === 'Apartment' ? 'selected' : '' }}>Apartments</option>
-                                        <option value="House" {{ request('search_type') === 'House' ? 'selected' : '' }}>Houses &amp; Villas</option>
-                                        <option value="Studio" {{ request('search_type') === 'Studio' ? 'selected' : '' }}>PGs &amp; Rooms</option>
-                                        <option value="Shop" {{ request('search_type') === 'Shop' ? 'selected' : '' }}>Commercial</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 3. Bedrooms Dropdown -->
-                            <div class="w-full md:w-36 px-4 py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
-                                <label for="bedrooms-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Bedrooms</label>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">bed</span>
-                                    <select id="bedrooms-select" name="bedrooms" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 cursor-pointer">
-                                        <option value="all">Any BHK</option>
-                                        <option value="1" {{ request('bedrooms') === '1' ? 'selected' : '' }}>1 BHK</option>
-                                        <option value="2" {{ request('bedrooms') === '2' ? 'selected' : '' }}>2 BHK</option>
-                                        <option value="3" {{ request('bedrooms') === '3' ? 'selected' : '' }}>3+ BHK</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 4. Budget Dropdown -->
-                            <div class="w-full md:w-44 px-4 py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
-                                <label for="budget-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Budget</label>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">payments</span>
-                                    <select id="budget-select" name="max_price" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 cursor-pointer">
-                                        <option value="">Any Budget</option>
-                                        <option value="15000" {{ request('max_price') == '15000' ? 'selected' : '' }}>Under ₹15,000</option>
-                                        <option value="25000" {{ request('max_price') == '25000' ? 'selected' : '' }}>Under ₹25,000</option>
-                                        <option value="40000" {{ request('max_price') == '40000' ? 'selected' : '' }}>Under ₹40,000</option>
-                                        <option value="60000" {{ request('max_price') == '60000' ? 'selected' : '' }}>Under ₹60,000</option>
-                                        <option value="100000" {{ request('max_price') == '100000' ? 'selected' : '' }}>Under ₹1,00,000</option>
-                                        <option value="15000000" {{ request('max_price') == '15000000' ? 'selected' : '' }}>Under ₹1.5 Cr (Sale)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 5. Search Button -->
-                            <div class="p-1 flex items-center justify-center gap-1.5 shrink-0">
-                                <button type="button" @click="filtersModalOpen = true" class="h-10 px-3.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 border border-slate-200 transition-colors cursor-pointer" title="More Filters">
-                                    <span class="material-symbols-outlined text-[17px] text-slate-500">tune</span>
-                                    <span class="hidden xl:inline">Filters</span>
-                                </button>
-                                <button type="submit" class="w-full md:w-auto h-10 px-6 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all active:scale-98 cursor-pointer shrink-0">
-                                    <span class="material-symbols-outlined text-[16px]">search</span>
-                                    <span>Search</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <!-- Contextual Quick Pills -->
-                        <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
-                            <span class="text-[11px] font-semibold text-slate-400">Quick links:</span>
-                            <template x-for="sub in subCategories[activePillar]" :key="sub.label">
-                                <a :href="'/?listing_type=' + (activePillar === 'buy' ? 'sale' : (activePillar === 'commercial' ? '' : 'rent')) + (sub.type ? '&search_type=' + encodeURIComponent(sub.type) : '') + '#listings'" 
-                                   class="h-7 px-3 rounded-full bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 text-[11px] font-medium transition-colors flex items-center justify-center">
-                                    <span x-text="sub.label"></span>
-                                </a>
-                            </template>
                         </div>
+
+                        <!-- 3. Bedrooms Dropdown -->
+                        <div class="w-full md:w-36 px-4 py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
+                            <label for="bedrooms-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Bedrooms</label>
+                            <div class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">bed</span>
+                                <select id="bedrooms-select" name="bedrooms" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 cursor-pointer">
+                                    <option value="all">Any BHK</option>
+                                    <option value="1" {{ request('bedrooms') === '1' ? 'selected' : '' }}>1 BHK</option>
+                                    <option value="2" {{ request('bedrooms') === '2' ? 'selected' : '' }}>2 BHK</option>
+                                    <option value="3" {{ request('bedrooms') === '3' ? 'selected' : '' }}>3+ BHK</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 4. Budget Dropdown -->
+                        <div class="w-full md:w-44 px-4 py-2.5 rounded-2xl hover:bg-slate-50 focus-within:bg-slate-50 transition-colors border-t md:border-t-0 md:border-l border-slate-200">
+                            <label for="budget-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Budget</label>
+                            <div class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-slate-400 text-[18px] shrink-0">payments</span>
+                                <select id="budget-select" name="max_price" class="w-full bg-transparent text-sm font-semibold text-slate-900 border-0 focus:border-0 focus:ring-0 outline-none p-0 cursor-pointer">
+                                    <option value="">Any Budget</option>
+                                    <option value="15000" {{ request('max_price') == '15000' ? 'selected' : '' }}>Under ₹15,000</option>
+                                    <option value="25000" {{ request('max_price') == '25000' ? 'selected' : '' }}>Under ₹25,000</option>
+                                    <option value="40000" {{ request('max_price') == '40000' ? 'selected' : '' }}>Under ₹40,000</option>
+                                    <option value="60000" {{ request('max_price') == '60000' ? 'selected' : '' }}>Under ₹60,000</option>
+                                    <option value="100000" {{ request('max_price') == '100000' ? 'selected' : '' }}>Under ₹1,00,000</option>
+                                    <option value="15000000" {{ request('max_price') == '15000000' ? 'selected' : '' }}>Under ₹1.5 Cr (Sale)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 5. Search Button -->
+                        <div class="p-1 flex items-center justify-center gap-1.5 shrink-0">
+                            <button type="button" @click="filtersModalOpen = true" class="h-10 px-3.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 border border-slate-200 transition-colors cursor-pointer" title="More Filters">
+                                <span class="material-symbols-outlined text-[17px] text-slate-500">tune</span>
+                                <span class="hidden xl:inline">Filters</span>
+                            </button>
+                            <button type="submit" class="w-full md:w-auto h-10 px-6 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98 cursor-pointer shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">search</span>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Contextual Quick Pills -->
+                    <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
+                        <span class="text-[11px] font-semibold text-slate-500">Quick links:</span>
+                        <template x-for="sub in subCategories[activePillar]" :key="sub.label">
+                            <a :href="'/?listing_type=' + (activePillar === 'buy' ? 'sale' : (activePillar === 'commercial' ? '' : 'rent')) + (sub.type ? '&search_type=' + encodeURIComponent(sub.type) : '') + '#listings'" 
+                               class="h-7 px-3 rounded-full bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-[11px] font-medium transition-colors flex items-center justify-center shadow-2xs">
+                                <span x-text="sub.label"></span>
+                            </a>
+                        </template>
                     </div>
                 </div>
             </section>
