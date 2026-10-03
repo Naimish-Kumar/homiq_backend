@@ -413,8 +413,14 @@ class WebHomeController extends Controller
                 ->values();
         }
 
-        // Active Hero Carousel Slides
-        $heroSlides = HeroSlide::where('is_active', true)->orderBy('order', 'asc')->get();
+        // Active Hero Carousel Slides (Fault-tolerant if migration is pending)
+        try {
+            $heroSlides = \Illuminate\Support\Facades\Schema::hasTable('hero_slides')
+                ? HeroSlide::where('is_active', true)->orderBy('order', 'asc')->get()
+                : collect();
+        } catch (\Throwable $e) {
+            $heroSlides = collect();
+        }
 
         return view('home', compact(
             'heroSlides',
