@@ -98,9 +98,11 @@
                     @if($property->has_price_drop)
                         <span class="text-xs font-semibold text-slate-400 line-through mr-1">{{ $property->formatted_original_price }}</span>
                     @endif
-                    <span class="font-extrabold text-2xl text-slate-900 tracking-tight">{{ $property->formatted_price }}</span>
-                    @if($property->listing_type === 'rent')
-                        <span class="text-xs font-medium text-slate-500">/mo</span>
+                    <span class="font-extrabold text-2xl text-slate-900 tracking-tight">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                    @if(!empty($property->price_unit))
+                        <span class="text-xs font-semibold text-slate-600">{{ $property->price_unit }}</span>
+                    @elseif($property->listing_type === 'rent')
+                        <span class="text-xs font-medium text-slate-500">{{ $property->billing_frequency_suffix }}</span>
                     @endif
                 </div>
                 @if($property->listing_type === 'rent')

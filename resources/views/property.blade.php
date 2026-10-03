@@ -410,11 +410,21 @@ function initPropertyDetail() {
                     @if($property->has_price_drop)
                         <span class="text-sm font-bold text-slate-400 line-through">{{ $property->formatted_original_price }}</span>
                     @endif
-                    <div class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                        {{ $property->currency_symbol }}{{ number_format($property->price, 0) }}
-                        <span class="text-xs font-bold text-slate-500">
-                            {{ $property->listing_type === 'rent' ? '/month' : 'total' }}
-                        </span>
+                    <div class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline md:justify-end gap-1.5">
+                        <span>{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}</span>
+                        @if(!empty($property->price_unit))
+                            <span class="text-base sm:text-lg font-bold text-slate-600">
+                                {{ $property->price_unit }}
+                            </span>
+                        @elseif($property->listing_type === 'rent')
+                            <span class="text-xs sm:text-sm font-bold text-slate-500">
+                                {{ $property->billing_frequency === 'per_day' ? '/day' : ($property->billing_frequency === 'hourly' ? '/hr' : '/month') }}
+                            </span>
+                        @else
+                            <span class="text-xs font-bold text-slate-500">
+                                total
+                            </span>
+                        @endif
                     </div>
                 </div>
                 <span class="text-[11px] font-bold text-emerald-700 block mt-0.5">Zero Brokerage Guaranteed</span>
@@ -978,13 +988,23 @@ function initPropertyDetail() {
                 
                 <!-- Price Box -->
                 <div class="pb-5 border-b border-slate-100 flex items-baseline justify-between">
-                    <div>
+                    <div class="flex items-baseline gap-1">
                         <span class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                             {{ $property->currency_symbol }}{{ number_format($property->price, 0) }}
                         </span>
-                        <span class="text-xs font-bold text-slate-500 ml-1">
-                            {{ $property->listing_type === 'rent' ? '/month' : 'total price' }}
-                        </span>
+                        @if(!empty($property->price_unit))
+                            <span class="text-sm font-bold text-slate-600 ml-1">
+                                {{ $property->price_unit }}
+                            </span>
+                        @elseif($property->listing_type === 'rent')
+                            <span class="text-xs font-bold text-slate-500 ml-1">
+                                {{ $property->billing_frequency === 'per_day' ? '/day' : ($property->billing_frequency === 'hourly' ? '/hr' : '/month') }}
+                            </span>
+                        @else
+                            <span class="text-xs font-bold text-slate-500 ml-1">
+                                total price
+                            </span>
+                        @endif
                     </div>
                     <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
                         0% Brokerage

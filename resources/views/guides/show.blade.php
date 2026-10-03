@@ -218,7 +218,7 @@
                                             {{ $prop->title }}
                                         </h4>
                                         <p class="text-[11px] text-slate-500 truncate">{{ $prop->address }}</p>
-                                        <p class="text-xs font-extrabold text-primary mt-1">₹{{ number_format($prop->price) }}<span class="text-[10px] font-normal text-slate-400">/mo</span></p>
+                                        <p class="text-xs font-extrabold text-primary mt-1">₹{{ number_format($prop->price) }}<span class="text-[10px] font-normal text-slate-400">@if(!empty($prop->price_unit)) {{ $prop->price_unit }}@elseif($prop->listing_type === 'rent')/mo@endif</span></p>
                                     </div>
                                 </a>
                             @endforeach

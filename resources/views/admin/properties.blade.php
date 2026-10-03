@@ -131,7 +131,7 @@
 
                             <!-- Rate -->
                             <td class="p-4 font-black text-slate-900 text-sm whitespace-nowrap">
-                                {{ $property->currency_symbol }}{{ number_format($property->price, 2) }}{{ $property->billing_frequency_suffix }}
+                                {{ $property->currency_symbol }}{{ number_format($property->price, 0) }} <span class="text-xs font-semibold text-slate-500">{{ $property->price_suffix }}</span>
                             </td>
 
                             <!-- Current Status Pill -->

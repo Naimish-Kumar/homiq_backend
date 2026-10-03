@@ -204,10 +204,28 @@ class Property extends Model
     }
 
     /**
+     * Accessor for price suffix / unit.
+     */
+    public function getPriceSuffixAttribute(): string
+    {
+        if (!empty($this->price_unit)) {
+            return $this->price_unit;
+        }
+        if ($this->listing_type === 'rent') {
+            return $this->billing_frequency_suffix;
+        }
+        return '';
+    }
+
+    /**
      * Accessor for fully formatted price.
      */
     public function getFormattedPriceAttribute(): string
     {
+        if (!empty($this->price_unit)) {
+            return $this->currency_symbol . number_format($this->price, 0) . ' ' . $this->price_unit;
+        }
+
         if ($this->listing_type === 'sale') {
             if ($this->price >= 10000000) {
                 return $this->currency_symbol . number_format($this->price / 10000000, 2) . ' Cr';

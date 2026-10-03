@@ -50,8 +50,8 @@
                 </div>
                 
                 <div class="text-right bg-slate-900/80 backdrop-blur-md border border-slate-700/60 px-4 py-3 rounded-xl shadow-lg">
-                    <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block mb-0.5">{{ $property->listing_type === 'sale' ? 'Total Asking Price' : $property->billing_frequency_label }}</span>
-                    <span class="text-xl font-black text-emerald-400 font-mono">{{ $property->currency_symbol }}{{ number_format($property->price, 2) }}</span>
+                    <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block mb-0.5">{{ !empty($property->price_unit) ? 'Rate (' . $property->price_unit . ')' : ($property->listing_type === 'sale' ? 'Total Asking Price' : $property->billing_frequency_label) }}</span>
+                    <span class="text-xl font-black text-emerald-400 font-mono">{{ $property->currency_symbol }}{{ number_format($property->price, 0) }}@if(!empty($property->price_unit)) <span class="text-xs font-normal text-slate-300">{{ $property->price_unit }}</span>@endif</span>
                 </div>
             </div>
         </div>
