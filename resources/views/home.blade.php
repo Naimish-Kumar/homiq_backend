@@ -168,52 +168,212 @@
          SECTION 1: HEADER NAVIGATION
          (Logo | Buy | Rent | PG / Rooms | Commercial | List Property | Sign In)
          ========================================== -->
-    <header class="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
-        <div class="h-20 max-w-[1440px] mx-auto px-6 sm:px-8 flex items-center justify-between gap-6">
-            <div class="flex items-center gap-8 xl:gap-10">
-                <a class="flex items-center gap-3 focus:outline-none" href="/">
-                    <img alt="HomiQ Brand Logo" class="h-8 w-auto object-contain" src="{{ asset('logo.png') }}">
+    <header x-data="{ mobileMenuOpen: false, cityDropdownOpen: false, userDropdownOpen: false, isScrolled: false }"
+            x-init="window.addEventListener('scroll', () => { isScrolled = window.scrollY > 15 })"
+            :class="isScrolled ? 'bg-white/95 backdrop-blur-2xl shadow-[0_10px_35px_rgba(15,23,42,0.07)] border-slate-200/90 py-3' : 'bg-white/90 backdrop-blur-xl border-slate-200/60 py-3.5 sm:py-4'"
+            class="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+            
+            <!-- Left: Logo & City Micro-Selector -->
+            <div class="flex items-center gap-4 lg:gap-6 shrink-0">
+                <a class="flex items-center gap-2.5 focus:outline-none group" href="/">
+                    <img alt="HomiQ Brand Logo" class="h-8 sm:h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105" src="{{ asset('logo.png') }}">
                 </a>
-                <nav class="hidden lg:flex items-center gap-6 xl:gap-8">
-                    <a class="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors" href="/buy/noida">Buy</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors" href="/rent/noida">Rent</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors" href="/explore/student_pg">PG &amp; Rooms</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors" href="/explore/commercial">Commercial</a>
-                    @if(isset($propertyRequests) && $propertyRequests->isNotEmpty())
-                    <a class="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors" href="#demand-board">Demand Board</a>
-                    @endif
-                    <a class="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors" href="/pricing">Pricing</a>
-                </nav>
+
+                <!-- City Selector Badge Dropdown -->
+                <div class="relative hidden sm:block" @click.outside="cityDropdownOpen = false">
+                    <button type="button" 
+                            @click="cityDropdownOpen = !cityDropdownOpen" 
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200/90 text-slate-800 text-xs font-bold border border-slate-200/80 transition-all cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px] text-emerald-600">location_on</span>
+                        <span>{{ (!empty($selectedCity) && $selectedCity !== 'All') ? $selectedCity : 'Noida' }}</span>
+                        <span class="material-symbols-outlined text-[16px] text-slate-400 transition-transform duration-200" :class="cityDropdownOpen ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+
+                    <!-- City Dropdown Menu -->
+                    <div x-show="cityDropdownOpen" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute left-0 top-full mt-2 w-48 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200 shadow-2xl p-2 z-50">
+                        <div class="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Popular Markets</div>
+                        @foreach(['Noida', 'Greater Noida', 'Delhi', 'Gurugram', 'Bangalore', 'Pune'] as $cityOption)
+                            <a href="/?city={{ urlencode($cityOption) }}#listings" 
+                               @click="cityDropdownOpen = false"
+                               class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                                <span>{{ $cityOption }}</span>
+                                @if(($selectedCity ?? 'Noida') === $cityOption)
+                                    <span class="material-symbols-outlined text-emerald-600 text-sm">check</span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center gap-3">
+
+            <!-- Center: Primary Nav Links -->
+            <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all flex items-center gap-1.5 group" href="/buy/noida">
+                    <span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-emerald-600 transition-colors">real_estate_agent</span>
+                    <span>Buy</span>
+                </a>
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all flex items-center gap-1.5 group" href="/rent/noida">
+                    <span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-emerald-600 transition-colors">key</span>
+                    <span>Rent</span>
+                </a>
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all flex items-center gap-1.5 group" href="/explore/student_pg">
+                    <span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-emerald-600 transition-colors">single_bed</span>
+                    <span>PG &amp; Rooms</span>
+                </a>
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all flex items-center gap-1.5 group" href="/explore/commercial">
+                    <span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-emerald-600 transition-colors">storefront</span>
+                    <span>Commercial</span>
+                </a>
+                @if(isset($propertyRequests) && $propertyRequests->isNotEmpty())
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all flex items-center gap-2 group" href="#demand-board">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span>Demand Board</span>
+                </a>
+                @endif
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all" href="/pricing">Pricing</a>
+                <a class="px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/70 transition-all" href="/guides">Guides</a>
+            </nav>
+
+            <!-- Right: Action Buttons & Auth -->
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                 <!-- Request Property Button -->
-                <button type="button" @click="requestModalOpen = true" class="hidden sm:inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition-all cursor-pointer shrink-0">
-                    <span class="material-symbols-outlined text-[17px] text-slate-500">post_add</span>
+                <button type="button" 
+                        @click="requestModalOpen = true" 
+                        class="hidden sm:inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-full bg-slate-100/90 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 text-slate-800 font-bold text-xs border border-slate-200 transition-all cursor-pointer shrink-0">
+                    <span class="material-symbols-outlined text-[18px] text-emerald-600">post_add</span>
                     <span class="whitespace-nowrap">Post Request</span>
                 </button>
 
-                <!-- List Property Free -->
-                <a class="inline-flex items-center justify-center h-10 px-5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all shadow-xs" href="{{ route('host.add-property') }}">
-                    List Property Free
+                <!-- List Property Free CTA -->
+                <a class="inline-flex items-center justify-center gap-2 h-10 px-4 sm:px-5 rounded-full bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 hover:from-slate-900 hover:to-emerald-900 text-white font-extrabold text-xs transition-all shadow-md hover:shadow-emerald-500/20 active:scale-95 border border-emerald-500/30" 
+                   href="{{ route('host.add-property') }}">
+                    <span class="material-symbols-outlined text-[17px] text-emerald-400">add_business</span>
+                    <span>List Property Free</span>
+                    <span class="hidden xl:inline-block px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase">0% Fee</span>
                 </a>
 
+                <!-- User Profile / Auth State -->
                 @auth
-                <a href="/dashboard" class="flex items-center gap-2.5 pl-2 py-1 pr-3 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">
-                    @if(Auth::user()->profile_photo)
-                        <img alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo }}">
-                    @else
-                        <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                <div class="relative" @click.outside="userDropdownOpen = false">
+                    <button type="button" 
+                            @click="userDropdownOpen = !userDropdownOpen" 
+                            class="flex items-center gap-2 p-1 sm:pl-2 sm:pr-3 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200/80 transition-all cursor-pointer">
+                        @if(Auth::user()->profile_photo)
+                            <img alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/30" src="{{ Auth::user()->profile_photo }}">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                            </div>
+                        @endif
+                        <div class="hidden md:flex flex-col text-left">
+                            <span class="text-xs text-slate-900 leading-tight font-bold">{{ Auth::user()->name }}</span>
+                            <span class="text-[10px] text-slate-500 font-medium">{{ Auth::user()->is_admin ? 'Admin' : (Auth::user()->is_host ? 'Host' : 'Seeker') }}</span>
                         </div>
-                    @endif
-                    <div class="hidden md:flex flex-col text-left">
-                        <span class="text-xs text-slate-900 leading-tight font-bold">{{ Auth::user()->name }}</span>
-                        <span class="text-[10px] text-slate-500 font-medium">{{ Auth::user()->is_admin ? 'Admin' : (Auth::user()->is_host ? 'Host' : 'Seeker') }}</span>
+                        <span class="material-symbols-outlined text-slate-400 text-[16px] hidden sm:inline">expand_more</span>
+                    </button>
+
+                    <!-- User Dropdown Menu -->
+                    <div x-show="userDropdownOpen" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200 shadow-2xl p-2 z-50">
+                        <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                            <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                            <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
+                        </div>
+                        <a href="/dashboard" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-[17px] text-slate-500">dashboard</span>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="{{ route('host.properties') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-[17px] text-slate-500">real_estate_agent</span>
+                            <span>My Properties</span>
+                        </a>
+                        <a href="/profile" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-[17px] text-slate-500">account_circle</span>
+                            <span>Profile & Settings</span>
+                        </a>
+                        <form method="POST" action="/logout" class="mt-1 pt-1 border-t border-slate-100">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
+                                <span class="material-symbols-outlined text-[17px] text-rose-500">logout</span>
+                                <span>Sign Out</span>
+                            </button>
+                        </form>
                     </div>
-                </a>
+                </div>
                 @else
-                <a href="/login" class="text-xs font-bold text-slate-700 hover:text-slate-900 px-2 transition-colors">Sign In</a>
+                <a href="/login" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 rounded-full hover:bg-slate-100 transition-all">
+                    <span class="material-symbols-outlined text-[18px]">login</span>
+                    <span>Sign In</span>
+                </a>
                 @endauth
+
+                <!-- Mobile Hamburger Toggle -->
+                <button type="button" 
+                        @click="mobileMenuOpen = !mobileMenuOpen" 
+                        class="lg:hidden w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 cursor-pointer transition-colors" 
+                        aria-label="Toggle Navigation Menu">
+                    <span class="material-symbols-outlined text-xl" x-text="mobileMenuOpen ? 'close' : 'menu'"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer / Dropdown Menu -->
+        <div x-show="mobileMenuOpen" 
+             x-cloak
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="opacity-0 -translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-4"
+             class="lg:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur-2xl px-6 py-5 shadow-2xl space-y-4">
+            <div class="grid grid-cols-2 gap-2">
+                <a href="/buy/noida" @click="mobileMenuOpen = false" class="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-xs font-bold text-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-emerald-600 text-[20px]">real_estate_agent</span>
+                    <span>Buy Properties</span>
+                </a>
+                <a href="/rent/noida" @click="mobileMenuOpen = false" class="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-xs font-bold text-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-emerald-600 text-[20px]">key</span>
+                    <span>Rent Flats & PGs</span>
+                </a>
+                <a href="/explore/student_pg" @click="mobileMenuOpen = false" class="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-xs font-bold text-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-emerald-600 text-[20px]">single_bed</span>
+                    <span>PG &amp; Rooms</span>
+                </a>
+                <a href="/explore/commercial" @click="mobileMenuOpen = false" class="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-xs font-bold text-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-emerald-600 text-[20px]">storefront</span>
+                    <span>Commercial Spaces</span>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2">
+                <button type="button" @click="mobileMenuOpen = false; requestModalOpen = true" class="flex-1 py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-base text-emerald-600">post_add</span>
+                    <span>Post Request</span>
+                </button>
+                <a href="{{ route('host.add-property') }}" @click="mobileMenuOpen = false" class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm">
+                    <span class="material-symbols-outlined text-base text-emerald-400">add_business</span>
+                    <span>List Property Free</span>
+                </a>
             </div>
         </div>
     </header>
