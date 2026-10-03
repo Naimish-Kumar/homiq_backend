@@ -103,8 +103,6 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 @endsection
 
 @section('content')
@@ -342,6 +340,78 @@ function initPropertyDetail() {
         </div>
     </div>
 
+    <!-- Interactive Photo Gallery (Task 30) -->
+    <div class="mb-8">
+        @if($imgCount === 1)
+            <div class="relative h-[380px] sm:h-[480px] lg:h-[540px] rounded-3xl overflow-hidden shadow-soft group cursor-pointer bg-slate-100" @click="openModal(0)">
+                <img src="{{ $images[0] }}" alt="{{ $property->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20 pointer-events-none"></div>
+
+                <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white pointer-events-none">
+                    <div class="space-y-1">
+                        <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-sm">photo_camera</span>
+                            1 Verified Property Photograph
+                        </span>
+                        <p class="text-xs text-white/80 hidden sm:block">Click to view full resolution inspection photo</p>
+                    </div>
+                    <button type="button" class="pointer-events-auto px-4 py-2 rounded-xl bg-white/90 hover:bg-white text-slate-900 font-bold text-xs backdrop-blur-md flex items-center gap-1.5 shadow-lg transition transform hover:scale-105">
+                        <span class="material-symbols-outlined text-base">fullscreen</span>
+                        Expand Photo
+                    </button>
+                </div>
+            </div>
+        @elseif($imgCount === 2)
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 h-[380px] sm:h-[460px] rounded-3xl overflow-hidden shadow-soft">
+                @foreach($images as $idx => $img)
+                    <div class="relative group cursor-pointer overflow-hidden bg-slate-100 h-full" @click="openModal({{ $idx }})">
+                        <img src="{{ $img }}" alt="{{ $property->title }} - Photo {{ $idx + 1 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <span class="px-3 py-1.5 rounded-lg bg-white/90 text-slate-900 font-bold text-xs flex items-center gap-1.5 shadow-md">
+                                <span class="material-symbols-outlined text-sm">fullscreen</span> View Photo {{ $idx + 1 }}
+                            </span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 h-[380px] sm:h-[480px] rounded-3xl overflow-hidden shadow-soft relative">
+                <div class="md:col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden bg-slate-100" @click="openModal(0)">
+                    <img src="{{ $images[0] }}" alt="{{ $property->title }} - Main" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                        <span class="px-3.5 py-2 rounded-xl bg-white/95 text-slate-900 font-bold text-xs flex items-center gap-1.5 shadow-lg">
+                            <span class="material-symbols-outlined text-base">fullscreen</span>
+                            View Main Photo
+                        </span>
+                    </div>
+                </div>
+
+                @for($i = 1; $i < min(5, $imgCount); $i++)
+                    <div class="hidden md:block relative group cursor-pointer overflow-hidden bg-slate-100" @click="openModal({{ $i }})">
+                        <img src="{{ $images[$i] }}" alt="{{ $property->title }} - Photo {{ $i + 1 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        @if($i === 4 || ($i === $imgCount - 1 && $imgCount <= 5))
+                            <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center group-hover:bg-slate-950/70 transition-colors">
+                                <span class="px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 font-bold text-xs flex items-center gap-2 shadow-lg">
+                                    <span class="material-symbols-outlined text-base">photo_library</span>
+                                    View All ({{ $imgCount }})
+                                </span>
+                            </div>
+                        @else
+                            <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white text-2xl drop-shadow-md">zoom_in</span>
+                            </div>
+                        @endif
+                    </div>
+                @endfor
+
+                <button type="button" @click="openModal(0)" class="absolute bottom-4 right-4 px-4 py-2.5 rounded-xl bg-white/95 hover:bg-white text-slate-900 font-bold text-xs flex items-center gap-2 shadow-lg backdrop-blur-md transition transform hover:scale-105 z-10">
+                    <span class="material-symbols-outlined text-base">photo_library</span>
+                    <span>All Photos ({{ $imgCount }})</span>
+                </button>
+            </div>
+        @endif
+    </div>
+
     <!-- Title, Badges & Above-the-Fold Specs Header (Task 30) -->
     <div class="mb-8">
         <div class="flex flex-wrap items-center gap-2 mb-3">
@@ -430,78 +500,6 @@ function initPropertyDetail() {
                 <span class="text-[11px] font-bold text-emerald-700 block mt-0.5">Zero Brokerage Guaranteed</span>
             </div>
         </div>
-    </div>
-
-    <!-- Interactive Photo Gallery (Task 30) -->
-    <div class="mb-10">
-        @if($imgCount === 1)
-            <div class="relative h-[380px] sm:h-[480px] lg:h-[540px] rounded-3xl overflow-hidden shadow-soft group cursor-pointer bg-slate-100" @click="openModal(0)">
-                <img src="{{ $images[0] }}" alt="{{ $property->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20 pointer-events-none"></div>
-
-                <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white pointer-events-none">
-                    <div class="space-y-1">
-                        <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-sm">photo_camera</span>
-                            1 Verified Property Photograph
-                        </span>
-                        <p class="text-xs text-white/80 hidden sm:block">Click to view full resolution inspection photo</p>
-                    </div>
-                    <button type="button" class="pointer-events-auto px-4 py-2 rounded-xl bg-white/90 hover:bg-white text-slate-900 font-bold text-xs backdrop-blur-md flex items-center gap-1.5 shadow-lg transition transform hover:scale-105">
-                        <span class="material-symbols-outlined text-base">fullscreen</span>
-                        Expand Photo
-                    </button>
-                </div>
-            </div>
-        @elseif($imgCount === 2)
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 h-[380px] sm:h-[460px] rounded-3xl overflow-hidden shadow-soft">
-                @foreach($images as $idx => $img)
-                    <div class="relative group cursor-pointer overflow-hidden bg-slate-100 h-full" @click="openModal({{ $idx }})">
-                        <img src="{{ $img }}" alt="{{ $property->title }} - Photo {{ $idx + 1 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                            <span class="px-3 py-1.5 rounded-lg bg-white/90 text-slate-900 font-bold text-xs flex items-center gap-1.5 shadow-md">
-                                <span class="material-symbols-outlined text-sm">fullscreen</span> View Photo {{ $idx + 1 }}
-                            </span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 h-[380px] sm:h-[480px] rounded-3xl overflow-hidden shadow-soft relative">
-                <div class="md:col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden bg-slate-100" @click="openModal(0)">
-                    <img src="{{ $images[0] }}" alt="{{ $property->title }} - Main" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                        <span class="px-3.5 py-2 rounded-xl bg-white/95 text-slate-900 font-bold text-xs flex items-center gap-1.5 shadow-lg">
-                            <span class="material-symbols-outlined text-base">fullscreen</span>
-                            View Main Photo
-                        </span>
-                    </div>
-                </div>
-
-                @for($i = 1; $i < min(5, $imgCount); $i++)
-                    <div class="hidden md:block relative group cursor-pointer overflow-hidden bg-slate-100" @click="openModal({{ $i }})">
-                        <img src="{{ $images[$i] }}" alt="{{ $property->title }} - Photo {{ $i + 1 }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        @if($i === 4 || ($i === $imgCount - 1 && $imgCount <= 5))
-                            <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center group-hover:bg-slate-950/70 transition-colors">
-                                <span class="px-4 py-2.5 rounded-xl bg-white/95 text-slate-900 font-bold text-xs flex items-center gap-2 shadow-lg">
-                                    <span class="material-symbols-outlined text-base">photo_library</span>
-                                    View All ({{ $imgCount }})
-                                </span>
-                            </div>
-                        @else
-                            <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-2xl drop-shadow-md">zoom_in</span>
-                            </div>
-                        @endif
-                    </div>
-                @endfor
-
-                <button type="button" @click="openModal(0)" class="absolute bottom-4 right-4 px-4 py-2.5 rounded-xl bg-white/95 hover:bg-white text-slate-900 font-bold text-xs flex items-center gap-2 shadow-lg backdrop-blur-md transition transform hover:scale-105 z-10">
-                    <span class="material-symbols-outlined text-base">photo_library</span>
-                    <span>All Photos ({{ $imgCount }})</span>
-                </button>
-            </div>
-        @endif
     </div>
 
     <!-- Main Content & Sticky Booking Grid -->
@@ -701,183 +699,7 @@ function initPropertyDetail() {
             </div>
             @endif
 
-            <!-- 3. Location Intelligence & Commute Times (Task 32) -->
-            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft">
-                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
-                    <div>
-                        <div class="inline-flex items-center gap-1.5 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-1">
-                            <span class="material-symbols-outlined text-[16px]">explore</span>
-                            Micro-Market Intelligence
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900">Location &amp; Commute Insights</h3>
-                    </div>
-                    <span class="text-xs font-bold text-slate-500 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm text-emerald-600">navigation</span>
-                        {{ $addr }}
-                    </span>
-                </div>
-
-                <!-- Structured Commute Hubs -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <!-- Metro & Transit -->
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3">
-                        <div class="h-10 w-10 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-xl">subway</span>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-900 block">Metro &amp; Public Transit</span>
-                            <p class="text-xs text-slate-600 mt-0.5">
-                                {{ $property->distance_from_metro ?: 'Sector 137 Metro Station (Aqua Line) - 500m (6 min walk)' }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Offices & IT Hubs -->
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3">
-                        <div class="h-10 w-10 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-xl">corporate_fare</span>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-900 block">Corporate Tech Parks</span>
-                            <p class="text-xs text-slate-600 mt-0.5">
-                                Advant Navis &amp; Sector 135 SEZ (8 mins drive)
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Healthcare & Hospitals -->
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3">
-                        <div class="h-10 w-10 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-xl">local_hospital</span>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-900 block">Hospitals &amp; Clinics</span>
-                            <p class="text-xs text-slate-600 mt-0.5">
-                                Felix Hospital (800m), Jaypee Hospital (7 mins)
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Schools & Daily Needs -->
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3">
-                        <div class="h-10 w-10 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-xl">shopping_cart</span>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-900 block">Daily Needs &amp; Markets</span>
-                            <p class="text-xs text-slate-600 mt-0.5">
-                                High-Street Market (300m), Supermarket &amp; Pharmacy on call
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Map Section with Privacy Circle -->
-                <div class="relative rounded-2xl overflow-hidden border border-slate-200">
-                    <div id="property-map" class="h-72 w-full z-0"></div>
-                    <div class="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-xl border border-slate-200 text-xs text-slate-600 flex items-center justify-between gap-3 shadow-md z-[400]">
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">privacy_tip</span>
-                            <span>Exact unit &amp; house number confirmed after booking a visit for owner privacy.</span>
-                        </div>
-                        <a href="https://maps.google.com/?q={{ $mapLat }},{{ $mapLng }}" target="_blank" rel="noopener noreferrer" class="font-bold text-brandNavy hover:text-emerald-700 flex items-center gap-1 shrink-0">
-                            <span>Open in Google Maps</span>
-                            <span class="material-symbols-outlined text-xs">open_in_new</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. Verification Details Section (Transparent Trust Audit) -->
-            <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-brandNavy text-white shadow-soft relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-sm">verified</span>
-                        HomiQ Verification Details
-                    </span>
-                    <span class="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm text-emerald-400">event_available</span>
-                        Last Verified: <strong class="text-white ml-1">{{ $property->formatted_verified_date }}</strong>
-                    </span>
-                </div>
-
-                <h3 class="text-xl sm:text-2xl font-black tracking-tight mb-2">
-                    Physical On-Site Audit &amp; Document Validation
-                </h3>
-                <p class="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed mb-6">
-                    Every verified listing on HomiQ undergoes on-site physical auditing, ownership title checks, and government ID validation before publication.
-                </p>
-
-                <!-- 4-Point Structured Verification Checklist -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-4 border-t border-white/10 text-xs">
-                    <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-base">badge</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-1 font-bold text-white">
-                                <span class="material-symbols-outlined text-xs text-emerald-400">check_circle</span>
-                                Owner Identity Verified
-                            </div>
-                            <span class="text-slate-400 text-[11px] block mt-0.5">Government ID &amp; mobile validation confirmed</span>
-                        </div>
-                    </div>
-
-                    <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-base">pin_drop</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-1 font-bold text-white">
-                                <span class="material-symbols-outlined text-xs text-emerald-400">check_circle</span>
-                                Property Location Verified
-                            </div>
-                            <span class="text-slate-400 text-[11px] block mt-0.5">Geotagged GPS &amp; landmark cross-checked</span>
-                        </div>
-                    </div>
-
-                    <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-base">photo_camera</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-1 font-bold text-white">
-                                <span class="material-symbols-outlined text-xs text-emerald-400">check_circle</span>
-                                Property Photos Verified
-                            </div>
-                            <span class="text-slate-400 text-[11px] block mt-0.5">100% authentic on-site visual audit</span>
-                        </div>
-                    </div>
-
-                    <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-base">policy</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-1 font-bold text-white">
-                                <span class="material-symbols-outlined text-xs text-emerald-400">check_circle</span>
-                                Ownership / Authorization Checked
-                            </div>
-                            <span class="text-slate-400 text-[11px] block mt-0.5">Title deed, electricity bill or NOC checked</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
-                    <button type="button" @click="isVerifyModalOpen = true" class="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-bold transition cursor-pointer">
-                        <span class="material-symbols-outlined text-base">help</span>
-                        <span>What does Verified mean?</span>
-                    </button>
-                    <button type="button" @click="isReportModalOpen = true; reportSuccess = false; reportError = ''" class="inline-flex items-center gap-1 text-slate-400 hover:text-rose-300 transition cursor-pointer">
-                        <span class="material-symbols-outlined text-sm text-rose-400">flag</span>
-                        <span>Report an issue with this listing</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 5. About This Property Description -->
+            <!-- 3. About This Property Description -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft">
                 <h3 class="text-xl font-bold text-slate-900 mb-1">About This Space</h3>
                 <p class="text-xs text-slate-400 mb-6">Detailed property overview provided by the verified host</p>
@@ -1600,36 +1422,9 @@ function initPropertyDetail() {
 
 </div>
 
-<!-- Initialize Leaflet Map for Location Intelligence (Task 32) -->
+<!-- Analytics: Track Property Viewed (Task 46 & 47) -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const mapContainer = document.getElementById('property-map');
-        if (mapContainer && typeof L !== 'undefined') {
-            const lat = {{ $mapLat }};
-            const lng = {{ $mapLng }};
-            const map = L.map('property-map', {
-                center: [lat, lng],
-                zoom: 14,
-                zoomControl: true,
-                scrollWheelZoom: false
-            });
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            // Add privacy circle with 350m radius representing approximate sector/locality
-            const circle = L.circle([lat, lng], {
-                color: '#10B981',
-                fillColor: '#10B981',
-                fillOpacity: 0.18,
-                radius: 350
-            }).addTo(map);
-
-            circle.bindPopup('<strong>{{ addslashes($property->title) }}</strong><br>{{ addslashes($addr) }}<br><span style="font-size:10px; color:#059669;">Approximate locality area</span>').openPopup();
-        }
-
-        // Analytics: Track Property Viewed (Task 46 & 47)
         if (typeof window.homiqTrack === 'function') {
             window.homiqTrack('property_viewed', {
                 property_id: {{ $property->id }},

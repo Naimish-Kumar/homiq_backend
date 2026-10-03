@@ -183,37 +183,6 @@ class PropertyDetailPageTest extends TestCase
         $response->assertSee('77,000');
     }
 
-    /**
-     * Task 32: Location Intelligence, Commute times & Privacy-Safe Map.
-     */
-    public function test_property_page_renders_location_intelligence_and_map()
-    {
-        $response = $this->get('/property/' . $this->mainProperty->id);
-
-        $response->assertStatus(200);
-
-        // Location Intelligence header
-        $response->assertSee('Location &amp; Commute Insights', false);
-        $response->assertSee('Micro-Market Intelligence');
-
-        // Commute cards
-        $response->assertSee('Metro &amp; Public Transit', false);
-        $response->assertSee('Sector 137 Metro Station (Aqua Line)');
-
-        $response->assertSee('Hospitals &amp; Clinics', false);
-        $response->assertSee('Felix Hospital');
-        $response->assertSee('Jaypee Hospital');
-
-        $response->assertSee('Corporate Tech Parks', false);
-        $response->assertSee('Advant Navis');
-
-        $response->assertSee('Daily Needs &amp; Markets', false);
-
-        // Privacy-safe map section
-        $response->assertSee('Exact unit &amp; house number confirmed after booking a visit for owner privacy.', false);
-        $response->assertSee('Open in Google Maps');
-        $response->assertSee('id="property-map"', false);
-    }
 
     /**
      * Task 33: Similar Properties tabbed recommendations.
