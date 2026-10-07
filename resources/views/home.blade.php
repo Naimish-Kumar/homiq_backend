@@ -298,18 +298,33 @@
                             <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
                             <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
                         </div>
-                        <a href="/dashboard" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                        @if(Auth::user()->is_admin)
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-[17px] text-slate-500">dashboard</span>
+                            <span>Admin Portal</span>
+                        </a>
+                        <a href="{{ route('admin.properties') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-[17px] text-slate-500">real_estate_agent</span>
+                            <span>Manage Properties</span>
+                        </a>
+                        <a href="{{ route('admin.profile') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-[17px] text-slate-500">account_circle</span>
+                            <span>Admin Profile</span>
+                        </a>
+                        @else
+                        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
                             <span class="material-symbols-outlined text-[17px] text-slate-500">dashboard</span>
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('host.properties') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                        <a href="{{ route('dashboard') }}?tab=listings" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
                             <span class="material-symbols-outlined text-[17px] text-slate-500">real_estate_agent</span>
                             <span>My Properties</span>
                         </a>
-                        <a href="/profile" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
+                        <a href="{{ route('dashboard') }}?tab=settings" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors">
                             <span class="material-symbols-outlined text-[17px] text-slate-500">account_circle</span>
                             <span>Profile & Settings</span>
                         </a>
+                        @endif
                         <form method="POST" action="/logout" class="mt-1 pt-1 border-t border-slate-100">
                             @csrf
                             <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">

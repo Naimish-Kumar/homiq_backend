@@ -969,7 +969,13 @@
 
     // Restore last active tab on page load
     document.addEventListener('DOMContentLoaded', () => {
-        const activeTab = localStorage.getItem('active_dashboard_tab') || 'overview';
+        const urlParams = new URLSearchParams(window.location.search);
+        const hashTab = window.location.hash ? window.location.hash.replace('#', '') : null;
+        const tabFromUrl = urlParams.get('tab') || hashTab;
+        const validTabs = ['overview', 'bookings', 'listings', 'requests', 'saved-searches', 'settings'];
+        const activeTab = (tabFromUrl && validTabs.includes(tabFromUrl)) 
+            ? tabFromUrl 
+            : (localStorage.getItem('active_dashboard_tab') || 'overview');
         changeTab(activeTab);
     });
 

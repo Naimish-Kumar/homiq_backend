@@ -82,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/verify-email/resend', [AdminDashboardController::class, 'resendOtpWeb']);
     // Actions requiring verified email (Customer Dashboard & Subscriptions)
     Route::middleware(['verified_otp'])->group(function () {
-        Route::get('/dashboard', [CustomerDashboardController::class, 'index']);
+        Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/listings/{id}/matching-demands', [CustomerDashboardController::class, 'getMatchingDemands'])->name('dashboard.listings.matching-demands');
         Route::post('/dashboard/listings', [CustomerDashboardController::class, 'storeListing']);
         Route::post('/dashboard/listings/{id}/toggle-featured', [CustomerDashboardController::class, 'toggleFeatured']);
