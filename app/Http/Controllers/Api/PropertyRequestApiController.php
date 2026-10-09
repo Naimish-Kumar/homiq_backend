@@ -31,6 +31,25 @@ class PropertyRequestApiController extends Controller
             $query->where('property_type', $request->property_type);
         }
 
+        if ($request->filled('locality')) {
+            $query->where('locality', 'like', '%' . $request->locality . '%');
+        }
+
+        if ($request->filled('bedrooms')) {
+            $query->where('bedrooms', 'like', '%' . $request->bedrooms . '%');
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('locality', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('bedrooms', 'like', "%{$search}%")
+                  ->orWhere('property_type', 'like', "%{$search}%");
+            });
+        }
+
         if ($request->filled('max_budget')) {
             $query->where('max_budget', '<=', $request->max_budget);
         }
