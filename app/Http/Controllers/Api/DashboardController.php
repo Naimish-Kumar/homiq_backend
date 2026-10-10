@@ -36,11 +36,37 @@ class DashboardController extends Controller
         $amenities = \App\Models\Amenity::pluck('name')->toArray();
 
         // Base query scope for approved properties not owned by user
-        $baseQuery = function() use ($user) {
+        $baseQuery = function() use ($user, $request) {
             $query = Property::where('status', 'approved')->with('owner');
             if ($user) {
                 $query->where('owner_id', '!=', $user->id);
             }
+
+            // Country filter
+            if ($request->filled('country') && $request->country !== 'All') {
+                $query->where('country', $request->country);
+            }
+
+            // State filter
+            if ($request->filled('state') && $request->state !== 'All') {
+                $state = $request->state;
+                $query->where(function ($q) use ($state) {
+                    $q->where('address->state', $state)
+                      ->orWhere('address', 'like', "%\"state\":\"{$state}\"%")
+                      ->orWhere('address', 'like', "%{$state}%");
+                });
+            }
+
+            // City filter
+            if ($request->filled('city') && $request->city !== 'All') {
+                $city = $request->city;
+                $query->where(function ($q) use ($city) {
+                    $q->where('address->city', $city)
+                      ->orWhere('address', 'like', "%\"city\":\"{$city}\"%")
+                      ->orWhere('address', 'like', "%{$city}%");
+                });
+            }
+
             return $query;
         };
 
@@ -107,6 +133,10 @@ class DashboardController extends Controller
             'featured' => $featured,
             'recommended' => $recommended,
             'active_bookings_count' => $activeBookingsCount,
+            'total_properties' => $baseQuery()->count(),
+            'selected_country' => $request->input('country'),
+            'selected_state' => $request->input('state'),
+            'selected_city' => $request->input('city'),
             'sections' => [
                 [
                     'key' => 'top_flats',

@@ -23,6 +23,7 @@ Route::post('/subscription/revenuecat-webhook', [\App\Http\Controllers\Api\Reven
 
 // Public Property browse routes
 Route::get('/properties', [PropertyController::class, 'index']);
+Route::get('/properties/locations', [PropertyController::class, 'locations']);
 Route::post('/properties/map-search', [\App\Http\Controllers\MapSearchController::class, 'search']);
 Route::get('/properties/{id}', [PropertyController::class, 'show']);
 Route::get('/properties/{id}/insights', [\App\Http\Controllers\NeighborhoodInsightController::class, 'getInsights']);

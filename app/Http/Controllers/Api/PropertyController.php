@@ -68,25 +68,104 @@ class PropertyController extends Controller
             $query->where('status', 'approved');
         }
 
-        // Filter by country
-        if ($request->has('country') && $request->country !== 'All') {
+        // Filter by country (strict: no silent fallback to other countries)
+        if ($request->filled('country') && $request->country !== 'All') {
             $query->where('country', $request->country);
         } elseif (!$request->has('owner_id')) {
-            // Auto-detect country based on user IP address
+            // Auto-detect country based on user IP address if no country is specified
             $userIp = $request->ip();
             $detectedCountry = \App\Helpers\LocationHelper::detectCountryFromIp($userIp);
             if ($detectedCountry) {
-                // Check if any listings exist in this country before filtering (fallback strategy)
-                $exists = (clone $query)->where('country', $detectedCountry)->exists();
-                if ($exists) {
-                    $query->where('country', $detectedCountry);
-                }
+                $query->where('country', $detectedCountry);
             }
+        }
+
+        // Filter by state
+        if ($request->filled('state') && $request->state !== 'All') {
+            $state = $request->state;
+            $query->where(function ($q) use ($state) {
+                $q->where('address->state', $state)
+                  ->orWhere('address', 'like', "%\"state\":\"{$state}\"%")
+                  ->orWhere('address', 'like', "%{$state}%");
+            });
+        }
+
+        // Filter by city
+        if ($request->filled('city') && $request->city !== 'All') {
+            $city = $request->city;
+            $query->where(function ($q) use ($city) {
+                $q->where('address->city', $city)
+                  ->orWhere('address', 'like', "%\"city\":\"{$city}\"%")
+                  ->orWhere('address', 'like', "%{$city}%");
+            });
         }
 
         $properties = $query->latest()->get();
 
         return response($properties, 200);
+    }
+
+    /**
+     * Get distinct countries, states, and cities that have active property listings.
+     */
+    public function locations(Request $request)
+    {
+        $country = $request->input('country');
+        $state = $request->input('state');
+
+        // Extract distinct countries from approved properties
+        $dbCountries = Property::where('status', 'approved')
+            ->whereNotNull('country')
+            ->where('country', '!=', '')
+            ->distinct()
+            ->pluck('country')
+            ->toArray();
+
+        $defaultCountries = ['India', 'United States', 'United Arab Emirates', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'Singapore'];
+        $countries = array_values(array_unique(array_merge($dbCountries, $defaultCountries)));
+        sort($countries);
+
+        // Extract states and cities from approved properties
+        $statesQuery = Property::where('status', 'approved');
+        if ($country && $country !== 'All') {
+            $statesQuery->where('country', $country);
+        }
+        $properties = $statesQuery->select('id', 'address', 'country')->get();
+
+        $states = [];
+        $cities = [];
+
+        foreach ($properties as $prop) {
+            $addr = $prop->address;
+            $decoded = null;
+            if (is_string($addr) && (str_starts_with(trim($addr), '{') || str_starts_with(trim($addr), '['))) {
+                $decoded = json_decode($addr, true);
+            }
+
+            if (is_array($decoded)) {
+                $st = trim($decoded['state'] ?? '');
+                $ct = trim($decoded['city'] ?? '');
+                if (!empty($st)) {
+                    $states[] = $st;
+                }
+                if (!empty($ct)) {
+                    if (!$state || $state === 'All' || strcasecmp($st, $state) === 0) {
+                        $cities[] = $ct;
+                    }
+                }
+            }
+        }
+
+        $states = array_values(array_unique($states));
+        sort($states);
+        $cities = array_values(array_unique($cities));
+        sort($cities);
+
+        return response()->json([
+            'countries' => $countries,
+            'states' => $states,
+            'cities' => $cities,
+        ]);
     }
 
     public function store(Request $request)
