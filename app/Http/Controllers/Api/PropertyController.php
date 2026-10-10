@@ -70,13 +70,20 @@ class PropertyController extends Controller
 
         // Filter by country (strict: no silent fallback to other countries)
         if ($request->filled('country') && $request->country !== 'All') {
-            $query->where('country', $request->country);
+            $country = trim($request->country);
+            $query->where(function ($q) use ($country) {
+                $q->where('country', $country)
+                  ->orWhere('country', 'like', "%{$country}%");
+            });
         } elseif (!$request->has('owner_id')) {
             // Auto-detect country based on user IP address if no country is specified
             $userIp = $request->ip();
             $detectedCountry = \App\Helpers\LocationHelper::detectCountryFromIp($userIp);
             if ($detectedCountry) {
-                $query->where('country', $detectedCountry);
+                $query->where(function ($q) use ($detectedCountry) {
+                    $q->where('country', $detectedCountry)
+                      ->orWhere('country', 'like', "%{$detectedCountry}%");
+                });
             }
         }
 
@@ -121,14 +128,25 @@ class PropertyController extends Controller
             ->pluck('country')
             ->toArray();
 
+        $cleanedDbCountries = [];
+        foreach ($dbCountries as $c) {
+            $clean = trim(preg_replace('/[\x{1F1E6}-\x{1F1FF}]/u', '', $c));
+            if (!empty($clean)) {
+                $cleanedDbCountries[] = $clean;
+            }
+        }
+
         $defaultCountries = ['India', 'United States', 'United Arab Emirates', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'Singapore'];
-        $countries = array_values(array_unique(array_merge($dbCountries, $defaultCountries)));
+        $countries = array_values(array_unique(array_merge($cleanedDbCountries, $defaultCountries)));
         sort($countries);
 
         // Extract states and cities from approved properties
         $statesQuery = Property::where('status', 'approved');
         if ($country && $country !== 'All') {
-            $statesQuery->where('country', $country);
+            $statesQuery->where(function ($q) use ($country) {
+                $q->where('country', $country)
+                  ->orWhere('country', 'like', "%{$country}%");
+            });
         }
         $properties = $statesQuery->select('id', 'address', 'country')->get();
 
@@ -151,6 +169,19 @@ class PropertyController extends Controller
                 if (!empty($ct)) {
                     if (!$state || $state === 'All' || strcasecmp($st, $state) === 0) {
                         $cities[] = $ct;
+                    }
+                }
+            } elseif (is_string($addr) && !empty($addr)) {
+                $parts = array_map('trim', explode(',', $addr));
+                $count = count($parts);
+                if ($count >= 2) {
+                    $st = $parts[$count - 1];
+                    $ct = $parts[$count - 2];
+                    if (!empty($st)) $states[] = $st;
+                    if (!empty($ct)) {
+                        if (!$state || $state === 'All' || strcasecmp($st, $state) === 0) {
+                            $cities[] = $ct;
+                        }
                     }
                 }
             }
